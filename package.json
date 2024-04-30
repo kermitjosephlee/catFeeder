@@ -1,0 +1,21 @@
+{
+  "name": "catFeeder",
+  "version": "1.0.0",
+  "description": "v1 of cat food review and comparison site",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "delay": "^6.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "pg": "^8.11.5"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "type": "module"
+}
