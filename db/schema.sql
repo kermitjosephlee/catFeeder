@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS products;
+
+CREATE TABLE IF NOT EXISTS products (
+  id SERIAL PRIMARY KEY,
+  brand VARCHAR(255) NOT NULL,
+  name TEXT NOT NULL,
+  image_url TEXT NOT NULL,
+  link_url TEXT NOT NULL,
+  ingredients TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP
+);
