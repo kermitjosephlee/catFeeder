@@ -1,0 +1,7 @@
+2024-05-02 18:53:49:5349 [32minfo[39m: [32mServer is running on port 3001[39m
+2024-05-02 18:54:07:547 [35mhttp[39m: [35m::1 GET /products/ingredients?exclude=duck,fish 304 - - 7647.431 ms[39m
+[35m[39m
+2024-05-02 18:54:35:5435 [35mhttp[39m: [35m::1 GET /products/ingredients?exclude=duck,fish,chicken 200 2539746 - 12176.933 ms[39m
+[35m[39m
+2024-05-02 18:55:10:5510 [35mhttp[39m: [35m::1 GET /products/ingredients?exclude=chicken 200 2605999 - 3872.298 ms[39m
+[35m[39m
