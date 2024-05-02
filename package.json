@@ -6,5 +6,8 @@
   "author": "Kermit Joseph Lee <37561135+kermitjosephlee@users.noreply.github.com>",
   "license": "MIT",
   "private": true,
-  "workspaces": ["api", "web"]
+  "workspaces": ["api", "web"],
+  "scripts": {
+    "dev": "yarn workspace web dev & yarn workspace api dev"
+  }
 }
