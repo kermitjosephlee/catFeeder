@@ -1,0 +1,28 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "v1 of cat food review and comparison api",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "delay": "^6.0.0",
+    "nodemon": "^3.1.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "pg-format": "^1.0.4"
+  },
+  "scripts": {
+    "seed": "node seedDB.js",
+    "testDB": "node testDB.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "type": "module"
+}
