@@ -5,3 +5,12 @@
 [35m[39m
 2024-05-02 18:55:10:5510 [35mhttp[39m: [35m::1 GET /products/ingredients?exclude=chicken 200 2605999 - 3872.298 ms[39m
 [35m[39m
+2024-05-02 18:56:31:5631 [32minfo[39m: [32mServer is running on port 3001[39m
+2024-05-02 18:57:10:5710 [35mhttp[39m: [35m::1 GET /products/ingredients?exclude=chicken 304 - - 3783.883 ms[39m
+[35m[39m
+2024-05-02 18:58:13:5813 [32minfo[39m: [32mServer is running on port 3001[39m
+2024-05-02 18:58:21:5821 [35mhttp[39m: [35m::1 GET /products/ingredients?exclude=chicken 304 - - 5392.107 ms[39m
+[35m[39m
+2024-05-02 18:59:26:5926 [35mhttp[39m: [35m::1 GET /products/ingredients?include=fish,duck&exclude=chicken 200 2473 - 7236.455 ms[39m
+[35m[39m
+2024-05-02 19:11:00:110 [32minfo[39m: [32mServer is running on port 3001[39m

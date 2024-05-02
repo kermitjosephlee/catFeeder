@@ -35,6 +35,8 @@ export const getProductsByIngredients = async (req, res) => {
     excludeIngredients,
   });
 
+  console.log({ ingredientsQuery });
+
   const response = await pool.query(ingredientsQuery);
   return res.json(response.rows);
 };
