@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS product_ingredients (
   updated_at TIMESTAMP
 );
 
+-- *** updates ingredients table with unique ingredients from products table ***
+--
 -- INSERT INTO ingredients (name)
 -- SELECT DISTINCT LOWER(TRIM(ingredient))
 -- FROM (
@@ -35,7 +37,10 @@ CREATE TABLE IF NOT EXISTS product_ingredients (
 --     FROM products
 -- ) AS subquery
 -- WHERE TRIM(ingredient) <> '';
-
+--
+--
+-- *** updates product_ingredients table with product_id and ingredient_id ***
+--
 -- INSERT INTO product_ingredients (product_id, ingredient_id)
 -- SELECT 
 --     products.id AS product_id,
@@ -46,3 +51,12 @@ CREATE TABLE IF NOT EXISTS product_ingredients (
 --     unnest(string_to_array(products.ingredients, ',')) AS ingredient_name
 -- JOIN 
 --     ingredients ON TRIM(ingredients.name) = TRIM(ingredient_name);
+--
+--
+-- *** query returns products searched by ingredient name *** 
+--
+-- SELECT *
+-- FROM products
+-- JOIN product_ingredients ON products.id = product_ingredients.product_id
+-- JOIN ingredients ON product_ingredients.ingredient_id = ingredients.id
+-- WHERE LOWER(ingredients.name) LIKE '%' || LOWER('QUERY_INGREDIENT_NAME') || '%';
