@@ -60,3 +60,13 @@ CREATE TABLE IF NOT EXISTS product_ingredients (
 -- JOIN product_ingredients ON products.id = product_ingredients.product_id
 -- JOIN ingredients ON product_ingredients.ingredient_id = ingredients.id
 -- WHERE LOWER(ingredients.name) LIKE '%' || LOWER('QUERY_INGREDIENT_NAME') || '%';
+
+-- SELECT *
+-- FROM products
+-- JOIN product_ingredients ON products.id = product_ingredients.product_id
+-- JOIN ingredients ON product_ingredients.ingredient_id = ingredients.id
+-- WHERE (
+--     LOWER(ingredients.name) LIKE '%' || LOWER('ingredient1') || '%' OR
+--     LOWER(ingredients.name) LIKE '%' || LOWER('ingredient2') || '%' OR
+--     LOWER(ingredients.name) LIKE '%' || LOWER('ingredient3') || '%'
+-- );

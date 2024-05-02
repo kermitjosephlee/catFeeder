@@ -16,11 +16,14 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
-    "pg": "^8.11.5"
+    "pg": "^8.11.5",
+    "pg-format": "^1.0.4"
   },
   "scripts": {
     "seed": "node seedDB.js",
-    "start": "node index.js"
+    "testDB": "node testDB.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "type": "module"
 }
