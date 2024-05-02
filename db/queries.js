@@ -24,12 +24,18 @@ export const getProductsByBrand = async (req, res) => {
 };
 
 export const getProductsByIngredients = async (req, res) => {
-  const includeIngredients = req.query.include.split(",") || [];
-  const excludeIngredients = req.query.exclude.split(",") || [];
+  const includeIngredients = req.query.include
+    ? req.query.include.split(",")
+    : [];
+  const excludeIngredients = req.query.exclude
+    ? req.query.exclude.split(",")
+    : [];
   const ingredientsQuery = ingredientsQueryBuilder({
     includeIngredients,
     excludeIngredients,
   });
+
+  console.log({ ingredientsQuery })
 
   const response = await pool.query(ingredientsQuery);
   return res.json(response.rows);
