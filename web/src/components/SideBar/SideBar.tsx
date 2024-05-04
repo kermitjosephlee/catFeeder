@@ -1,6 +1,6 @@
 export function SideBar() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col max-w-[50%]">
       <h2>Menu</h2>
       <a href="#">Home</a>
       <a href="#">About</a>

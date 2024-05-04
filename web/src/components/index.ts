@@ -1,3 +1,4 @@
+export * from "./CatFoodCard";
 export * from "./CatFoodData";
 export * from "./Footer";
 export * from "./Main";

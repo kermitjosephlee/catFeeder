@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { CatFoodCard, ICatFoodCard } from "@components";
 
 export function CatFoodData() {
   const [catFoodData, setCatFoodData] = useState([]);
@@ -9,5 +10,11 @@ export function CatFoodData() {
       .then((data) => setCatFoodData(data));
   }, []);
 
-  return <pre>{JSON.stringify(catFoodData, null, 2)}</pre>;
+  return (
+    <div className="columns-4 gap-4">
+      {catFoodData.map((catFood: ICatFoodCard) => {
+        return <CatFoodCard {...catFood} />;
+      })}
+    </div>
+  );
 }
