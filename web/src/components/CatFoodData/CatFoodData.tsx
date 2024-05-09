@@ -11,7 +11,7 @@ export function CatFoodData() {
   }, []);
 
   return (
-    <div className="columns-4 gap-4">
+    <div className="columns-4 px-4">
       {catFoodData.map((catFood: ICatFoodCard) => {
         return <CatFoodCard {...catFood} />;
       })}

@@ -20,10 +20,7 @@ export function CatFoodCard({
   console.log({ image_url, fixedImageUrl });
 
   return (
-    <div
-      key={id}
-      className="h-auto max-w-full gap-13 m-4 p-4 rounded-lg bg-red-200"
-    >
+    <div key={id} className="h-auto max-w-full my-4 p-4 rounded-lg bg-red-200">
       <a href={link_url} target="_blank">
         <h2>
           {brand} {name}
