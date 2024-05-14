@@ -1,14 +1,17 @@
 services:
   db:
     container_name: postgres
-    image: postgres:16
+    image: postgres:16-alpine
     restart: always
     environment:
-      POSTGRES_USER: nodeserver
-      POSTGRES_DB: catFeeder
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=catFeeder
+      - POSTGRES_PASSWORD=password
     ports:
-      - "5432:5432"
+      - 5432:5432
+    volumes:
+      - /usr/local/var/postgressql@16:/var/lib/postgresql/data
+      - ./api/db:/docker-entrypoint-initdb.d
 
   node:
     container_name: node
@@ -17,24 +20,24 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3000:3000"
+      - 3000:3000
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://nodeserver:password@db:5432/catFeeder
+      - DATABASE_URL=postgres://postgres:password@0.0.0.0:5432/catFeeder
     command:
       - yarn
       - dev
 
-  web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-    container_name: react
-    ports:
-      - "5173:8080"
-    command:
-      - yarn
-      - dev
-    depends_on:
-      - node
+  # web:
+  #   build:
+  #     context: ./web
+  #     dockerfile: Dockerfile
+  #   container_name: react
+  #   ports:
+  #     - 5173:5173
+  #   command:
+  #     - yarn
+  #     - dev
+  #   depends_on:
+  #     - node

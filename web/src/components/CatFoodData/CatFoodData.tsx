@@ -5,7 +5,7 @@ export function CatFoodData() {
   const [catFoodData, setCatFoodData] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/products")
+    fetch("http://localhost:3000/products")
       .then((response) => response.json())
       .then((data) => setCatFoodData(data));
   }, []);

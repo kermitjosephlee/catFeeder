@@ -26,5 +26,17 @@
     "start": "node --require dotenv/config index.js",
     "dev": "nodemon --require dotenv/config index.js"
   },
-  "type": "module"
+  "type": "module",
+  "nodemonConfig": {
+    "ignore": [
+      "logs",
+      "node_modules",
+      "seedDB.js",
+      "testDB.js",
+      "README.md",
+      "package.json",
+      "package-lock.json",
+      "yarn.lock"
+    ]
+  }
 }

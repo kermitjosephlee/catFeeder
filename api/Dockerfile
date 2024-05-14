@@ -6,6 +6,6 @@ COPY . .
 
 RUN yarn install
 
-CMD ["yarn", "dev"]
+CMD ["node", "index.js"]
 
 EXPOSE 3000

@@ -9,7 +9,7 @@ export default defineConfig({
     proxy: {
       node: {
         target: "http://localhost:3000",
-        changeOrigin: true,
+        changeOrigin: false,
         rewrite: (path) => path.replace(/^\/node/, ""),
         secure: false,
       },

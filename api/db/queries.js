@@ -1,10 +1,13 @@
 import "dotenv/config";
 import pg from "pg";
 import { ingredientsQueryBuilder } from "./queryHelpers/ingredients.js";
-const pgCredentials = process.env.DB_CREDENTIALS;
+// const pgCredentials = process.env.DB_CREDENTIALS;
 
 const pool = new pg.Pool({
-  connectionString: pgCredentials,
+  user: "postgres",
+  password: "password",
+  host: "0.0.0.0",
+  port: 5432,
 });
 
 await pool.connect();
