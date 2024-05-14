@@ -1,0 +1,40 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: nodeserver
+      POSTGRES_DB: catFeeder
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  node:
+    container_name: node
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://nodeserver:password@db:5432/catFeeder
+    command:
+      - yarn
+      - dev
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: react
+    ports:
+      - "5173:8080"
+    command:
+      - yarn
+      - dev
+    depends_on:
+      - node
