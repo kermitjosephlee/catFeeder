@@ -10,7 +10,7 @@ import pg from "pg";
 const pool = new pg.Pool({
   user: "postgres",
   password: "password",
-  host: "0.0.0.0",
+  host: "db",
   port: 5432,
 });
 await pool.connect();

@@ -2,14 +2,15 @@ import "dotenv/config";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { logger } from "./utils/logger.js";
-import { morganMiddleware } from "./middlewares/morgan.middlewares.js";
+import { logger } from "../utils/logger.js";
+import { morganMiddleware } from "../middlewares/morgan.middlewares.js";
 
 import {
   getProducts,
   getProductsByBrand,
   getProductsByIngredients,
-} from "./db/queries.js";
+  getStatus
+} from "../db/queries.js";
 
 const PORT = process.env.PORT || 3000;
 
@@ -31,6 +32,8 @@ app.get("/", (req, res) => {
   console.log({ req });
   res.json({ info: "Node.js, Express, and Postgres API" });
 });
+
+app.get('/status', getStatus)
 
 app.get("/products", getProducts);
 

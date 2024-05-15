@@ -6,14 +6,16 @@ import { ingredientsQueryBuilder } from "./queryHelpers/ingredients.js";
 const pool = new pg.Pool({
   user: "postgres",
   password: "password",
-  host: "0.0.0.0",
+  host: "db",
   port: 5432,
+  database: "catFeeder"
 });
 
 await pool.connect();
 
 export const getProducts = async (_, res) => {
-  const response = await pool.query(`SELECT * FROM products;`);
+  console.log("GET products")
+  const response = await pool.query("SELECT * FROM products;");
   return res.json(response.rows);
 };
 
@@ -43,6 +45,11 @@ export const getProductsByIngredients = async (req, res) => {
   const response = await pool.query(ingredientsQuery);
   return res.json(response.rows);
 };
+
+export const getStatus = async (req, res) => {
+  const response = await pool.query(`SELECT NOW();`);
+  return res.json(response.rows);
+}
 
 // const res = await pool.query(`SELECT * FROM ingredients LIMIT 10;`);
 

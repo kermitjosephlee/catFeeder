@@ -23,8 +23,8 @@
   "scripts": {
     "seed": "node seedDB.js",
     "testDB": "node testDB.js",
-    "start": "node --require dotenv/config index.js",
-    "dev": "nodemon --require dotenv/config index.js"
+    "start": "node --require dotenv/config src/index.js",
+    "dev": "nodemon --require dotenv/config src/index.js"
   },
   "type": "module",
   "nodemonConfig": {
