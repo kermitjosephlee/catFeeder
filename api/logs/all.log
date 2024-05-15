@@ -439,3 +439,179 @@
 [35m[39m
 2024-05-14 13:50:05:505 [35mhttp[39m: [35m::1 GET /products 304 - - 580.060 ms[39m
 [35m[39m
+2024-05-15 14:59:01:591 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 14:59:04:594 [35mhttp[39m: [35m::1 GET /products 200 2938105 - 363.396 ms[39m
+[35m[39m
+2024-05-15 14:59:04:594 [35mhttp[39m: [35m::1 GET /products 304 - - 265.506 ms[39m
+[35m[39m
+2024-05-15 14:59:11:5911 [35mhttp[39m: [35m::1 GET /products 304 - - 154.469 ms[39m
+[35m[39m
+2024-05-15 14:59:11:5911 [35mhttp[39m: [35m::1 GET /products 304 - - 118.087 ms[39m
+[35m[39m
+2024-05-15 14:59:21:5921 [35mhttp[39m: [35m::1 GET /products 304 - - 137.414 ms[39m
+[35m[39m
+2024-05-15 14:59:21:5921 [35mhttp[39m: [35m::1 GET /products 304 - - 271.543 ms[39m
+[35m[39m
+2024-05-15 15:00:04:04 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:00:09:09 [35mhttp[39m: [35m::1 GET /products 404 147 - 3.356 ms[39m
+[35m[39m
+2024-05-15 15:00:09:09 [35mhttp[39m: [35m::1 GET /products 404 147 - 2.689 ms[39m
+[35m[39m
+2024-05-15 15:00:13:013 [35mhttp[39m: [35m::1 GET /products 404 147 - 0.463 ms[39m
+[35m[39m
+2024-05-15 15:00:13:013 [35mhttp[39m: [35m::1 GET /products 404 147 - 0.886 ms[39m
+[35m[39m
+2024-05-15 15:00:27:027 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:00:35:035 [35mhttp[39m: [35m::1 GET /products 200 2938105 - 269.097 ms[39m
+[35m[39m
+2024-05-15 15:00:35:035 [35mhttp[39m: [35m::1 GET /products 304 - - 167.451 ms[39m
+[35m[39m
+2024-05-15 15:01:15:115 [35mhttp[39m: [35m::1 GET /products 304 - - 252.706 ms[39m
+[35m[39m
+2024-05-15 15:01:16:116 [35mhttp[39m: [35m::1 GET /products 304 - - 149.637 ms[39m
+[35m[39m
+2024-05-15 15:01:27:127 [35mhttp[39m: [35m::1 GET /products 304 - - 123.835 ms[39m
+[35m[39m
+2024-05-15 15:01:27:127 [35mhttp[39m: [35m::1 GET /products 304 - - 212.792 ms[39m
+[35m[39m
+2024-05-15 15:01:41:141 [35mhttp[39m: [35m::1 GET /products 304 - - 324.191 ms[39m
+[35m[39m
+2024-05-15 15:01:42:142 [35mhttp[39m: [35m::1 GET /products 304 - - 297.129 ms[39m
+[35m[39m
+2024-05-15 15:01:48:148 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:01:50:150 [35mhttp[39m: [35m::1 GET /products 304 - - 219.885 ms[39m
+[35m[39m
+2024-05-15 15:01:50:150 [35mhttp[39m: [35m::1 GET /products 304 - - 134.537 ms[39m
+[35m[39m
+2024-05-15 15:02:41:241 [35mhttp[39m: [35m::1 GET /products 200 2938105 - 101.485 ms[39m
+[35m[39m
+2024-05-15 15:02:41:241 [35mhttp[39m: [35m::1 GET /products 304 - - 108.242 ms[39m
+[35m[39m
+2024-05-15 15:02:44:244 [35mhttp[39m: [35m::1 GET /products 304 - - 94.026 ms[39m
+[35m[39m
+2024-05-15 15:02:44:244 [35mhttp[39m: [35m::1 GET /products 304 - - 114.000 ms[39m
+[35m[39m
+2024-05-15 15:03:00:30 [35mhttp[39m: [35m::1 GET /products 304 - - 111.189 ms[39m
+[35m[39m
+2024-05-15 15:03:00:30 [35mhttp[39m: [35m::1 GET /products 304 - - 191.137 ms[39m
+[35m[39m
+2024-05-15 15:03:55:355 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:04:43:443 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:04:53:453 [35mhttp[39m: [35m::1 GET /products 304 - - 121.345 ms[39m
+[35m[39m
+2024-05-15 15:04:53:453 [35mhttp[39m: [35m::1 GET /products 304 - - 162.417 ms[39m
+[35m[39m
+2024-05-15 15:05:04:54 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:05:06:56 [35mhttp[39m: [35m::1 GET /products 304 - - 159.890 ms[39m
+[35m[39m
+2024-05-15 15:05:06:56 [35mhttp[39m: [35m::1 GET /products 304 - - 231.264 ms[39m
+[35m[39m
+2024-05-15 15:06:04:64 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:06:16:616 [35mhttp[39m: [35m::1 GET /products 200 2938105 - 162.282 ms[39m
+[35m[39m
+2024-05-15 15:06:16:616 [35mhttp[39m: [35m::1 GET /products 304 - - 160.701 ms[39m
+[35m[39m
+2024-05-15 15:07:04:74 [35mhttp[39m: [35m::1 GET / 200 45 - 67.953 ms[39m
+[35m[39m
+2024-05-15 15:07:10:710 [35mhttp[39m: [35m::1 GET / 304 - - 24.413 ms[39m
+[35m[39m
+2024-05-15 15:07:10:710 [35mhttp[39m: [35m::1 GET / 304 - - 56.819 ms[39m
+[35m[39m
+2024-05-15 15:07:29:729 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:07:32:732 [35mhttp[39m: [35m::1 GET / 304 - - 19.011 ms[39m
+[35m[39m
+2024-05-15 15:07:32:732 [35mhttp[39m: [35m::1 GET / 304 - - 32.200 ms[39m
+[35m[39m
+2024-05-15 15:07:46:746 [35mhttp[39m: [35m::1 GET / 304 - - 11.103 ms[39m
+[35m[39m
+2024-05-15 15:07:48:748 [35mhttp[39m: [35m::1 GET /status 200 36 - 77.788 ms[39m
+[35m[39m
+2024-05-15 15:07:48:748 [35mhttp[39m: [35m::1 GET /favicon.ico 404 150 - 1.679 ms[39m
+[35m[39m
+2024-05-15 15:13:35:1335 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:42:43:4243 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:45:14:4514 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:45:21:4521 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken&exclude=fish 200 198817 - 119.554 ms[39m
+[35m[39m
+2024-05-15 15:45:40:4540 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,%20taurine&exclude=fish,biotin 200 18052 - 92.429 ms[39m
+[35m[39m
+2024-05-15 15:46:13:4613 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine&exclude=fish,biotin 200 22749 - 56.431 ms[39m
+[35m[39m
+2024-05-15 15:46:54:4654 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine 200 468902 - 122.681 ms[39m
+[35m[39m
+2024-05-15 15:47:13:4713 [35mhttp[39m: [35m::1 GET / 304 - - 91.705 ms[39m
+[35m[39m
+2024-05-15 15:47:13:4713 [35mhttp[39m: [35m::1 GET / 304 - - 21.812 ms[39m
+[35m[39m
+2024-05-15 15:47:21:4721 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide 200 544881 - 114.874 ms[39m
+[35m[39m
+2024-05-15 15:47:31:4731 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna 200 544881 - 82.991 ms[39m
+[35m[39m
+2024-05-15 15:47:41:4741 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver 200 554722 - 111.061 ms[39m
+[35m[39m
+2024-05-15 15:48:07:487 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver&exclude=water 200 512143 - 144.957 ms[39m
+[35m[39m
+2024-05-15 15:48:19:4819 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver&exclude=water,vitamin 200 112040 - 82.993 ms[39m
+[35m[39m
+2024-05-15 15:49:11:4911 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver&exclude=water,vitamin 304 - - 211.229 ms[39m
+[35m[39m
+2024-05-15 15:49:35:4935 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:49:41:4941 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver&exclude=water,vitamin 304 - - 118.135 ms[39m
+[35m[39m
+2024-05-15 15:49:46:4946 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver&exclude=water 304 - - 111.572 ms[39m
+[35m[39m
+2024-05-15 15:49:50:4950 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver 304 - - 114.056 ms[39m
+[35m[39m
+2024-05-15 15:51:20:5120 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:51:25:5125 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver 304 - - 178.580 ms[39m
+[35m[39m
+2024-05-15 15:51:43:5143 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver&exclude=folic 200 116729 - 75.672 ms[39m
+[35m[39m
+2024-05-15 15:52:27:5227 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:52:39:5239 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver&exclude=folic 200 124114 - 89.944 ms[39m
+[35m[39m
+2024-05-15 15:52:51:5251 [35mhttp[39m: [35m::1 GET /ingredients?include=chicken,taurine,iodide,tuna,beef,liver 200 2928843 - 179.632 ms[39m
+[35m[39m
+2024-05-15 15:54:24:5424 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:54:28:5428 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 276.277 ms[39m
+[35m[39m
+2024-05-15 15:55:25:5525 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 120.908 ms[39m
+[35m[39m
+2024-05-15 15:56:36:5636 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:57:24:5724 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-15 15:57:29:5729 [35mhttp[39m: [35m::1 GET /ingredients?exclude=tuna 200 2424993 - 250.879 ms[39m
+[35m[39m
+2024-05-15 15:57:37:5737 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 106.161 ms[39m
+[35m[39m
+2024-05-15 15:58:38:5838 [35mhttp[39m: [35m::1 GET /ingredients?include=Cholecalciferol 200 45812 - 76.512 ms[39m
+[35m[39m
+2024-05-15 15:59:13:5913 [35mhttp[39m: [35m::1 GET /ingredients?include=broth 200 1288093 - 130.519 ms[39m
+[35m[39m
+2024-05-15 16:11:04:114 [35mhttp[39m: [35m::1 GET / 200 45 - 21.128 ms[39m
+[35m[39m
+2024-05-15 16:11:04:114 [35mhttp[39m: [35m::1 GET / 304 - - 13.690 ms[39m
+[35m[39m
+2024-05-15 16:11:23:1123 [35mhttp[39m: [35m::1 GET / 304 - - 20.353 ms[39m
+[35m[39m
+2024-05-15 16:11:23:1123 [35mhttp[39m: [35m::1 GET / 304 - - 36.172 ms[39m
+[35m[39m
+2024-05-15 16:11:32:1132 [35mhttp[39m: [35m::1 GET / 304 - - 4.971 ms[39m
+[35m[39m
+2024-05-15 16:11:32:1132 [35mhttp[39m: [35m::1 GET / 304 - - 6.056 ms[39m
+[35m[39m
+2024-05-15 16:11:53:1153 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 488.007 ms[39m
+[35m[39m
+2024-05-15 16:11:54:1154 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 334.121 ms[39m
+[35m[39m
+2024-05-15 16:13:20:1320 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 166.605 ms[39m
+[35m[39m
+2024-05-15 16:14:00:140 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 468.111 ms[39m
+[35m[39m
+2024-05-15 16:14:22:1422 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 213.792 ms[39m
+[35m[39m
+2024-05-15 16:14:46:1446 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 146.428 ms[39m
+[35m[39m
+2024-05-15 16:15:03:153 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 476.288 ms[39m
+[35m[39m
+2024-05-15 16:15:57:1557 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 92.135 ms[39m
+[35m[39m

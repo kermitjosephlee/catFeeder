@@ -4,7 +4,7 @@ const queryArrayBuilder = (arr) => {
   return arr.map((each) => `'${each}'`);
 };
 
-export const ingredientsQueryBuilder = ({
+export const ingredientsJoinQueryBuilder = ({
   includeIngredients,
   excludeIngredients,
 }) => {
@@ -15,7 +15,8 @@ export const ingredientsQueryBuilder = ({
 
   const hasIncludeIngredients = formattedIncludeIngredients.length > 0;
   const hasExcludeIngredients = formattedExcludeIngredients.length > 0;
-  const hasBothIncludeAndExcludeIngredients = hasIncludeIngredients && hasExcludeIngredients;
+  const hasBothIncludeAndExcludeIngredients =
+    hasIncludeIngredients && hasExcludeIngredients;
 
   const includeSubQuery = `NOT EXISTS (
       SELECT 1 FROM UNNEST(ARRAY[${formattedIncludeIngredients}]) AS required_ingredient
@@ -48,4 +49,40 @@ export const ingredientsQueryBuilder = ({
  ;`);
 
   return formattedQuery;
+};
+
+export const ingredientsQueryBuilder = ({
+  includeIngredients,
+  excludeIngredients,
+}) => {
+  const formattedIncludeIngredients =
+    queryArrayBuilder(includeIngredients) || [];
+  const formattedExcludeIngredients =
+    queryArrayBuilder(excludeIngredients) || [];
+
+  const hasIncludeIngredients = formattedIncludeIngredients.length > 0;
+  const hasExcludeIngredients = formattedExcludeIngredients.length > 0;
+  const hasBothIncludeAndExcludeIngredients =
+    hasIncludeIngredients && hasExcludeIngredients;
+
+  const includeSubQuery = hasIncludeIngredients
+    ? `(${formattedIncludeIngredients.map(
+        (ingredient) => `LOWER(products.ingredients) LIKE '%' || LOWER(${ingredient}) || '%'`
+      ).join(" OR ")})`
+    : "";
+  
+  const excludeSubQuery = hasExcludeIngredients
+    ? `NOT (${formattedExcludeIngredients.map(
+        (ingredient) => `LOWER(products.ingredients) LIKE '%' || LOWER(${ingredient}) || '%'`
+      ).join(" OR ")})`
+    : "";
+
+    const formattedQuery = `SELECT products.*
+    FROM products
+    ${hasIncludeIngredients || hasExcludeIngredients ? " WHERE " : ""}
+    ${includeSubQuery}
+    ${hasBothIncludeAndExcludeIngredients ? " AND " : ""}
+    ${excludeSubQuery};`;
+    
+    return formattedQuery;
 };

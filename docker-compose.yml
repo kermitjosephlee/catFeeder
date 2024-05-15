@@ -13,21 +13,21 @@ services:
       - /usr/local/var/postgressql@16:/var/lib/postgresql/data
       - ./api/db:/docker-entrypoint-initdb.d
 
-  node:
-    container_name: node
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - 3000:3000
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgres://postgres:password@db:5432/catFeeder
-    command:
-      - yarn
-      - dev
+  # node:
+  #   container_name: node
+  #   build:
+  #     context: ./api
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DATABASE_URL=postgres://postgres:password@db:5432/catFeeder
+  #   command:
+  #     - yarn
+  #     - dev
 
   # web:
   #   build:

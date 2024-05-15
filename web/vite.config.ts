@@ -6,15 +6,15 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
-    proxy: {
-      node: {
-        target: "http://localhost:3000",
-        changeOrigin: false,
-        rewrite: (path) => path.replace(/^\/node/, ""),
-        secure: false,
-      },
-    },
+    port: 8080,
+    // proxy: {
+    //   node: {
+    //     target: "http://localhost:3000",
+    //     changeOrigin: false,
+    //     rewrite: (path) => path.replace(/^\/node/, ""),
+    //     secure: false,
+    //   },
+    // },
   },
   resolve: {
     alias: {

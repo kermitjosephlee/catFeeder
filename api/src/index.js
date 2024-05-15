@@ -39,7 +39,7 @@ app.get("/products", getProducts);
 
 app.get("/brand/:brand", getProductsByBrand);
 
-app.get("/products/ingredients", getProductsByIngredients);
+app.get("/ingredients", getProductsByIngredients);
 
 app.listen(PORT, (err) => {
   err ? logger.error(err) : logger.info(`Server is running on port ${PORT}`);
