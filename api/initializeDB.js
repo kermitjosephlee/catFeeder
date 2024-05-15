@@ -3,10 +3,12 @@ import pg from "pg";
 import fs from "node:fs";
 
 export const baseSchemaString = fs.readFileSync("./db/schema.sql").toString();
-export const pgCredentials = process.env.DB_CREDENTIALS;
-
+// export const pgCredentials = process.env.DB_CREDENTIALS;
 const pool = new pg.Pool({
-  connectionString: pgCredentials,
+  user: "postgres",
+  password: "password",
+  host: "0.0.0.0",
+  port: 5432,
 });
 await pool.connect();
 

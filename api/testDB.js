@@ -6,8 +6,12 @@ export const pgCredentials = process.env.DB_CREDENTIALS;
 console.log(pgCredentials);
 
 const pool = new pg.Pool({
-  connectionString: pgCredentials,
+  user: "postgres",
+  password: "password",
+  host: "0.0.0.0",
+  port: 5432,
 });
+
 await pool.connect();
 
 const res = await pool.query(`SELECT * FROM ingredients LIMIT 10;`);

@@ -5,10 +5,13 @@ import * as cheerio from "cheerio";
 import delay from "delay";
 import pg from "pg";
 
-export const pgCredentials = process.env.DB_CREDENTIALS;
+// export const pgCredentials = process.env.DB_CREDENTIALS;
 
 const pool = new pg.Pool({
-  connectionString: pgCredentials,
+  user: "postgres",
+  password: "password",
+  host: "0.0.0.0",
+  port: 5432,
 });
 await pool.connect();
 

@@ -24,7 +24,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgres://postgres:password@0.0.0.0:5432/catFeeder
+      - DATABASE_URL=postgres://postgres:password@db:5432/catFeeder
     command:
       - yarn
       - dev
