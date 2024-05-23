@@ -82,7 +82,9 @@ export const ingredientsQueryBuilder = ({
     ${hasIncludeIngredients || hasExcludeIngredients ? " WHERE " : ""}
     ${includeSubQuery}
     ${hasBothIncludeAndExcludeIngredients ? " AND " : ""}
-    ${excludeSubQuery};`;
+    ${excludeSubQuery}
+    LIMIT 50
+    ;`;
     
     return formattedQuery;
 };

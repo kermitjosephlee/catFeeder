@@ -12,9 +12,9 @@ export function CatFoodData() {
   }, []);
 
   return (
-    <div className="xs:columns-1 sm:columns-2 lg:columns-3 px-4">
+    <div className="columns-sm p-4 gap-4">
       {catFoodData.map((catFood: ICatFoodCard) => {
-        return <CatFoodCard {...catFood} />;
+        return <CatFoodCard key={catFood.id} {...catFood} />;
       })}
     </div>
   );
