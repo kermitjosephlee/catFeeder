@@ -1,24 +1,23 @@
 import { CatFoodData, SideBar } from "@components";
-
-export interface IResult {
-	id: number;
-	brand: string;
-	name: string;
-	image_url?: string;
-	link_url: string;
-	ingredients: string;
-	created_at?: Date;
-	updated_at?: Date;
-}
+import { IResult } from "../../App";
 
 interface IProps {
 	results: IResult[];
+	includedIngredients: string[];
+	excludedIngredients: string[];
 }
 
-export function Main({ results }: IProps) {
+export function Main({
+	results,
+	includedIngredients,
+	excludedIngredients,
+}: IProps) {
 	return (
 		<div className="flex w-full">
-			<SideBar />
+			<SideBar
+				includedIngredients={includedIngredients}
+				excludedIngredients={excludedIngredients}
+			/>
 			<CatFoodData results={results} />
 		</div>
 	);

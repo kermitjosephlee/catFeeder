@@ -1,10 +1,22 @@
+import { useForm, SubmitHandler } from "react-hook-form";
+
 interface IProps {
 	checked: boolean;
 	handleToggle: () => void;
 	handleIngredients: (ingredient: string) => void;
 }
 
+interface IFormInput {
+	ingredient: string;
+}
+
 export function TopNav({ checked, handleToggle, handleIngredients }: IProps) {
+	const { register, handleSubmit, reset } = useForm<IFormInput>();
+	const onSubmit: SubmitHandler<IFormInput> = (data) => {
+		handleIngredients(data.ingredient);
+		reset();
+	};
+
 	return (
 		<div className="navbar bg-red-100 h-36 flex items-center justify-between">
 			<div>
@@ -12,7 +24,7 @@ export function TopNav({ checked, handleToggle, handleIngredients }: IProps) {
 					<img className="h-16" src="/logo-brown.svg" alt="cat-feeder-logo" />
 				</a>
 			</div>
-			<form>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex items-center gap-2">
 					<input
 						type="checkbox"
@@ -25,6 +37,7 @@ export function TopNav({ checked, handleToggle, handleIngredients }: IProps) {
 							type="text"
 							className="grow"
 							placeholder={checked ? "Include" : "Exclude"}
+							{...register("ingredient")}
 						/>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -39,6 +52,7 @@ export function TopNav({ checked, handleToggle, handleIngredients }: IProps) {
 							/>
 						</svg>
 					</label>
+					<input type="submit" className="btn btn-primary" />
 				</div>
 			</form>
 		</div>

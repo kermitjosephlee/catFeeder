@@ -1,5 +1,5 @@
 import { CatFoodCard } from "@components";
-import { IResult as ICatFood } from "@components";
+import { IResult as ICatFood } from "../../App";
 
 interface IProps {
 	results: ICatFood[];

@@ -1,7 +1,7 @@
 import { capitalize } from "../../utils/capitalize";
 import { colors, lighterColors } from "../../utils/colors";
 // import { twMerge } from "tailwind-merge";
-import { IResult as ICatFoodCard } from "../Main/Main";
+import { IResult as ICatFoodCard } from "../../App";
 
 export function CatFoodCard({
 	id,
