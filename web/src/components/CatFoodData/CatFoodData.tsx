@@ -1,21 +1,16 @@
-import { useState, useEffect } from "react";
-import { CatFoodCard, ICatFoodCard } from "@components";
+import { CatFoodCard } from "@components";
+import { IResult as ICatFood } from "@components";
 
-export function CatFoodData() {
-  const [catFoodData, setCatFoodData] = useState([]);
+interface IProps {
+	results: ICatFood[];
+}
 
-  useEffect(() => {
-    fetch("http://localhost:3000/ingredients")
-      .then((response) => response.json())
-      .then((data) => setCatFoodData(data))
-      .catch((error) => console.error(error));
-  }, []);
-
-  return (
-    <div className="columns-sm p-4 gap-4">
-      {catFoodData.map((catFood: ICatFoodCard) => {
-        return <CatFoodCard key={catFood.id} {...catFood} />;
-      })}
-    </div>
-  );
+export function CatFoodData({ results }: IProps) {
+	return (
+		<div className="columns-sm p-4 gap-4">
+			{results.map((catFood: ICatFood) => {
+				return <CatFoodCard key={catFood.id} {...catFood} />;
+			})}
+		</div>
+	);
 }
