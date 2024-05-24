@@ -48,16 +48,16 @@ function App() {
 			.then((response) => response.json())
 			.then((res) => {
 				setResults(res);
-				// setIsLoading(false);
 			})
-			.catch((error) => console.error(error));
+			.catch((error) => console.error(error))
+			.finally(() => {
+				// setIsLoading(false);
+			});
 	}, [includedIngredients, excludedIngredients, query]);
 
 	const handleToggle = () => {
 		setChecked((prev) => !prev);
 	};
-
-	console.log({ includedIngredients, excludedIngredients });
 
 	const handleIngredients = (ingredient: string) => {
 		if (checked && !includedIngredients.includes(ingredient)) {
@@ -81,6 +81,25 @@ function App() {
 		}
 	};
 
+	const handleIngredientsReset = () => {
+		setIncludedIngredients([]);
+		setExcludedIngredients([]);
+	};
+
+	const handleIngredientCancel = (ingredient: string) => {
+		if (includedIngredients.includes(ingredient)) {
+			setIncludedIngredients(
+				includedIngredients.filter((included) => included !== ingredient)
+			);
+		}
+
+		if (excludedIngredients.includes(ingredient)) {
+			setExcludedIngredients(
+				excludedIngredients.filter((excluded) => excluded !== ingredient)
+			);
+		}
+	};
+
 	return (
 		<Suspense fallback={<div>Loading...</div>}>
 			<div className="flex flex-col w-full text-red-800">
@@ -93,6 +112,8 @@ function App() {
 					results={results}
 					includedIngredients={includedIngredients}
 					excludedIngredients={excludedIngredients}
+					handleIngredientsReset={handleIngredientsReset}
+					handleIngredientCancel={handleIngredientCancel}
 				/>
 			</div>
 		</Suspense>

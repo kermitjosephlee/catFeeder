@@ -13,7 +13,9 @@ interface IFormInput {
 export function TopNav({ checked, handleToggle, handleIngredients }: IProps) {
 	const { register, handleSubmit, reset } = useForm<IFormInput>();
 	const onSubmit: SubmitHandler<IFormInput> = (data) => {
-		handleIngredients(data.ingredient);
+		if (data.ingredient !== "") {
+			handleIngredients(data.ingredient);
+		}
 		reset();
 	};
 
