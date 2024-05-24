@@ -3914,3 +3914,83 @@
 [35m[39m
 2024-05-24 12:24:29:2429 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 151.396 ms[39m
 [35m[39m
+2024-05-24 13:00:34:034 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 396.994 ms[39m
+[35m[39m
+2024-05-24 13:00:35:035 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 207.538 ms[39m
+[35m[39m
+2024-05-24 14:52:07:527 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-24 14:52:32:5232 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-24 14:52:38:5238 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 546.646 ms[39m
+[35m[39m
+2024-05-24 14:52:38:5238 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 183.220 ms[39m
+[35m[39m
+2024-05-24 14:52:45:5245 [35mhttp[39m: [35m::1 GET /ingredients?include=CHicken 200 2120416 - 132.842 ms[39m
+[35m[39m
+2024-05-24 14:52:50:5250 [35mhttp[39m: [35m::1 GET /ingredients?include=CHicken&exclude=beef 200 1936461 - 165.266 ms[39m
+[35m[39m
+2024-05-24 14:52:57:5257 [35mhttp[39m: [35m::1 GET /ingredients?&exclude=beef 200 2648827 - 174.991 ms[39m
+[35m[39m
+2024-05-24 14:53:00:530 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 101.019 ms[39m
+[35m[39m
+2024-05-24 14:53:05:535 [35mhttp[39m: [35m::1 GET /ingredients?&exclude=Liver 200 1602845 - 126.565 ms[39m
+[35m[39m
+2024-05-24 14:53:18:5318 [35mhttp[39m: [35m::1 GET /ingredients?&exclude=Liver,Lentils 200 1431659 - 139.973 ms[39m
+[35m[39m
+2024-05-24 14:53:22:5322 [35mhttp[39m: [35m::1 GET /ingredients?&exclude=Liver,Lentils,Oat 200 1256377 - 145.628 ms[39m
+[35m[39m
+2024-05-24 14:53:26:5326 [35mhttp[39m: [35m::1 GET /ingredients?&exclude=Liver,Lentils,Oat,Duck 200 1169751 - 151.640 ms[39m
+[35m[39m
+2024-05-24 14:53:37:5337 [35mhttp[39m: [35m::1 GET /ingredients?&exclude=Liver,Lentils,Oat,Duck,Sodium 200 99361 - 160.392 ms[39m
+[35m[39m
+2024-05-24 14:53:44:5344 [35mhttp[39m: [35m::1 GET /ingredients?&exclude=Liver,Lentils,Oat,Duck,Sodium,Egg 200 62745 - 128.216 ms[39m
+[35m[39m
+2024-05-24 14:53:58:5358 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 118.394 ms[39m
+[35m[39m
+2024-05-24 15:07:08:78 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 236.589 ms[39m
+[35m[39m
+2024-05-24 15:07:08:78 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 225.123 ms[39m
+[35m[39m
+2024-05-24 15:27:59:2759 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-24 15:28:08:288 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 574.948 ms[39m
+[35m[39m
+2024-05-24 15:28:08:288 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 656.812 ms[39m
+[35m[39m
+2024-05-24 15:29:15:2915 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-24 15:29:18:2918 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 329.942 ms[39m
+[35m[39m
+2024-05-24 15:29:19:2919 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 387.500 ms[39m
+[35m[39m
+2024-05-24 15:29:24:2924 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken 200 2 - 66.704 ms[39m
+[35m[39m
+2024-05-24 15:29:52:2952 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,liver 200 2 - 102.538 ms[39m
+[35m[39m
+2024-05-24 15:31:27:3127 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,liver&exclude=salmon 200 2 - 165.572 ms[39m
+[35m[39m
+2024-05-24 15:33:01:331 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,liver&exclude=salmon,ginger 200 2 - 191.626 ms[39m
+[35m[39m
+2024-05-24 15:33:22:3322 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-24 15:33:28:3328 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 603.067 ms[39m
+[35m[39m
+2024-05-24 15:33:29:3329 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 606.156 ms[39m
+[35m[39m
+2024-05-24 15:33:35:3335 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken 304 - - 67.487 ms[39m
+[35m[39m
+2024-05-24 15:34:11:3411 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-24 15:34:15:3415 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 611.750 ms[39m
+[35m[39m
+2024-05-24 15:34:15:3415 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 494.840 ms[39m
+[35m[39m
+2024-05-24 15:34:24:3424 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken 200 2120416 - 139.802 ms[39m
+[35m[39m
+2024-05-24 15:34:32:3432 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,Liver 200 2417799 - 149.536 ms[39m
+[35m[39m
+2024-05-24 15:34:35:3435 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,Liver&exclude=Beef 200 2162245 - 168.507 ms[39m
+[35m[39m
+2024-05-24 15:34:55:3455 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,Liver&exclude=Beef,LIMIT%2010; 200 2162245 - 229.405 ms[39m
+[35m[39m
+2024-05-24 15:35:02:352 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,Liver&exclude=Beef 304 - - 225.718 ms[39m
+[35m[39m
+2024-05-24 15:35:08:358 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,Liver&exclude=Beef,Mineral 200 1261578 - 150.201 ms[39m
+[35m[39m
+2024-05-24 15:35:14:3514 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,Liver&exclude=Beef,Mineral,Supplement 200 27351 - 109.340 ms[39m
+[35m[39m

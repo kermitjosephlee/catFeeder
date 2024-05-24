@@ -68,8 +68,10 @@ export const ingredientsQueryBuilder = ({
 	const includeSubQuery = hasIncludeIngredients
 		? `(${formattedIncludeIngredients
 				.map(
-					(ingredient) =>
-						`LOWER(products.ingredients) LIKE '%' || LOWER(${ingredient}) || '%'`
+					(_, index) =>
+						`LOWER(products.ingredients) LIKE '%' || LOWER($${
+							index + 1
+						}) || '%'`
 				)
 				.join(" OR ")})`
 		: "";
@@ -77,8 +79,10 @@ export const ingredientsQueryBuilder = ({
 	const excludeSubQuery = hasExcludeIngredients
 		? `NOT (${formattedExcludeIngredients
 				.map(
-					(ingredient) =>
-						`LOWER(products.ingredients) LIKE '%' || LOWER(${ingredient}) || '%'`
+					(_, index) =>
+						`LOWER(products.ingredients) LIKE '%' || LOWER($${
+							index + formattedIncludeIngredients.length + 1
+						}) || '%'`
 				)
 				.join(" OR ")})`
 		: "";
@@ -91,5 +95,8 @@ export const ingredientsQueryBuilder = ({
     ${excludeSubQuery}
     ;`;
 
-	return formattedQuery;
+	return {
+		ingredientsQuery: formattedQuery,
+		ingredientsArray: [...includeIngredients, ...excludeIngredients],
+	};
 };
