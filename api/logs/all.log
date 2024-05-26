@@ -3994,3 +3994,43 @@
 [35m[39m
 2024-05-24 15:35:14:3514 [35mhttp[39m: [35m::1 GET /ingredients?include=Chicken,Liver&exclude=Beef,Mineral,Supplement 200 27351 - 109.340 ms[39m
 [35m[39m
+2024-05-24 16:16:41:1641 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 550.611 ms[39m
+[35m[39m
+2024-05-24 16:16:41:1641 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 365.142 ms[39m
+[35m[39m
+2024-05-24 16:44:49:4449 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 602.274 ms[39m
+[35m[39m
+2024-05-24 16:44:50:4450 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 470.652 ms[39m
+[35m[39m
+2024-05-24 16:46:22:4622 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 635.243 ms[39m
+[35m[39m
+2024-05-24 16:46:23:4623 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 301.691 ms[39m
+[35m[39m
+2024-05-24 17:14:19:1419 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 182.655 ms[39m
+[35m[39m
+2024-05-24 17:14:19:1419 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 275.675 ms[39m
+[35m[39m
+2024-05-24 17:43:22:4322 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 1497.238 ms[39m
+[35m[39m
+2024-05-24 17:43:22:4322 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 434.109 ms[39m
+[35m[39m
+2024-05-24 18:03:30:330 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 394.113 ms[39m
+[35m[39m
+2024-05-24 18:03:31:331 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 214.643 ms[39m
+[35m[39m
+2024-05-26 06:37:12:3712 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 490.139 ms[39m
+[35m[39m
+2024-05-26 06:37:12:3712 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 541.680 ms[39m
+[35m[39m
+2024-05-26 07:49:47:4947 [35mhttp[39m: [35m::1 GET /ingredients 200 2938105 - 169.306 ms[39m
+[35m[39m
+2024-05-26 07:49:47:4947 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 177.486 ms[39m
+[35m[39m
+2024-05-26 13:38:24:3824 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 13:39:12:3912 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 13:39:25:3925 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 13:41:23:4123 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 13:42:31:4231 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 13:42:40:4240 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 13:43:14:4314 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 13:43:30:4330 [32minfo[39m: [32mServer is running on port 3000[39m
