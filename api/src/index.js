@@ -38,20 +38,18 @@ const app = express();
 
 const passwordSchema = new passwordValidator();
 
-passwordSchema
-	.is()
-	.min(8)
-	.is()
-	.max(100)
-	.has()
-	.uppercase()
-	.has()
-	.lowercase()
-	.has()
-	.digits()
-	.has()
-	.not()
-	.spaces();
+passwordSchema.is().min(8);
+// .is()
+// .max(100)
+// .has()
+// .uppercase()
+// .has()
+// .lowercase()
+// .has()
+// .digits()
+// .has()
+// .not()
+// .spaces();
 
 app.use(cors());
 
@@ -137,10 +135,52 @@ passport.deserializeUser(function (email, done) {
 
 app.post(
 	"/login",
-	passport.authenticate("local", {
-		successRedirect: "/",
-		failureRedirect: "/login",
-	})
+	// passport.authenticate("local", {
+	// 	successRedirect: "/",
+	// 	failureRedirect: "/login",
+	// })
+	(req, res) => {
+		const { email, password } = req.body;
+		if (!email || !password) {
+			return res.status(400).json({ error: "Missing required fields" });
+		}
+
+		pool.query(
+			`SELECT id, first_name, last_name, email, password FROM users WHERE email = $1`,
+			[email],
+			(error, result) => {
+				if (error) {
+					logger.error(error);
+					return res.status(500).json({ error: "Error logging in - 001" });
+				}
+
+				if (result.rows.length === 0) {
+					return res.status(400).json({ error: "User not found" });
+				}
+
+				const user = result.rows[0];
+				const returnUserObj = {
+					id: user.id,
+					first_name: user.first_name,
+					last_name: user.last_name,
+					email: user.email,
+				};
+
+				if (!bcrypt.compareSync(password, user.password)) {
+					return res.status(400).json({ error: "Invalid password" });
+				}
+
+				req.login(user, (err) => {
+					if (err) {
+						logger.error(err);
+						return res.status(500).json({ error: "Error logging in - 002" });
+					}
+
+					return res.json({ message: "User logged in", user: returnUserObj });
+				});
+			}
+		);
+	}
 );
 
 app.get("/logout", function (req, res) {
@@ -149,24 +189,28 @@ app.get("/logout", function (req, res) {
 });
 
 app.post("/register", (req, res) => {
-	const { first_name, last_name, email, password } = req.body;
+	const { firstName, lastName, email, password } = req.body;
 
 	// validate required fields
-	if (!first_name || !last_name || !email || !password) {
+	if (!firstName || !lastName || !email || !password) {
+		console.log("Missing required fields");
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
 	// validate email string is an email
 	if (!EmailValidator.validate(email)) {
+		console.log("Invalid email");
 		return res.status(400).json({ error: "Invalid email" });
 	}
 
 	// validate password as defined by password schema
 	if (!passwordSchema.validate(password)) {
+		console.log("Invalid password");
 		return res.status(400).json({ error: "Invalid password" });
 	}
 
 	const hashedPassword = bcrypt.hashSync(password, SALT_ROUNDS);
+	console.log({ reqBody: req.body, hashedPassword });
 
 	// first check to see if user already exists
 	pool.query(
@@ -186,15 +230,20 @@ app.post("/register", (req, res) => {
 
 			// if user does not exist, insert user into database
 			if (result.rows.length == 0) {
+				const first_name = firstName;
+				const last_name = lastName;
+
 				pool.query(
 					`INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)`,
 					[first_name, last_name, email, hashedPassword],
-					(err, res) => {
+					(err, insertResponse) => {
 						if (err) {
 							logger.error(err);
 							return res.status(500).json({ error: "Error registering user" });
 						}
-						return res.json({ message: "User registered successfully" });
+						return res.json({
+							message: "User registered successfully",
+						});
 					}
 				);
 			}
