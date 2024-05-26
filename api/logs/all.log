@@ -4034,3 +4034,9 @@
 2024-05-26 13:42:40:4240 [32minfo[39m: [32mServer is running on port 3000[39m
 2024-05-26 13:43:14:4314 [32minfo[39m: [32mServer is running on port 3000[39m
 2024-05-26 13:43:30:4330 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 15:08:14:814 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 15:08:20:820 [32minfo[39m: [32mServer is running on port 3000[39m
+2024-05-26 15:08:22:822 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 239.359 ms[39m
+[35m[39m
+2024-05-26 15:08:23:823 [35mhttp[39m: [35m::1 GET /ingredients 304 - - 160.146 ms[39m
+[35m[39m

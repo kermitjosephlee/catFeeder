@@ -5,7 +5,7 @@ import passport from "passport";
 import bodyParser from "body-parser";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
-import { Pool } from "pg";
+import pg from "pg";
 import connectPgSimple from "connect-pg-simple";
 import cors from "cors";
 import * as EmailValidator from "email-validator";
@@ -20,7 +20,7 @@ import {
 	getStatus,
 } from "../db/queries.js";
 
-const pool = new Pool({
+const pool = new pg.Pool({
 	user: "postgres",
 	password: "password",
 	host: "0.0.0.0",
@@ -36,7 +36,7 @@ const SALT_ROUNDS = process.env.SALT_ROUNDS || 12;
 
 const app = express();
 
-const passwordSchema = passwordValidator();
+const passwordSchema = new passwordValidator();
 
 passwordSchema
 	.is()

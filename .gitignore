@@ -8,4 +8,7 @@ node_modules/
 .yarn/install-state.gz
 
 **/*.log
-api/logs/all.log
+api/logs/
+api/logs/*
+api/logs/**/*
+
