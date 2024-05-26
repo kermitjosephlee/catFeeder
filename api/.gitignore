@@ -4,3 +4,9 @@ logs
 
 **/*.log
 logs/all.log
+
+**/*.log
+logs/
+logs/*
+logs/**/*
+logs
