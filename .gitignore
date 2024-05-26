@@ -12,3 +12,4 @@ api/logs/
 api/logs/*
 api/logs/**/*
 
+api/logs/all.log
