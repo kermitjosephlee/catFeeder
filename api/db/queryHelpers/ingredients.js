@@ -73,7 +73,7 @@ export const ingredientsQueryBuilder = ({
 							index + 1
 						}) || '%'`
 				)
-				.join(" OR ")})`
+				.join(" AND ")})`
 		: "";
 
 	const excludeSubQuery = hasExcludeIngredients
