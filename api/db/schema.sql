@@ -1,6 +1,10 @@
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS ingredients;
 DROP TABLE IF EXISTS product_ingredients;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS pets;
+DROP TABLE IF EXISTS pet_products;
+DROP TABLE IF EXISTS searches;
 
 CREATE TABLE IF NOT EXISTS products (
   id SERIAL PRIMARY KEY,
@@ -28,45 +32,52 @@ CREATE TABLE IF NOT EXISTS product_ingredients (
   updated_at TIMESTAMP
 );
 
--- *** updates ingredients table with unique ingredients from products table ***
---
--- INSERT INTO ingredients (name)
--- SELECT DISTINCT LOWER(TRIM(ingredient))
--- FROM (
---     SELECT unnest(string_to_array(ingredients, ',')) AS ingredient
---     FROM products
--- ) AS subquery
--- WHERE TRIM(ingredient) <> '';
---
---
--- *** updates product_ingredients table with product_id and ingredient_id ***
---
--- INSERT INTO product_ingredients (product_id, ingredient_id)
--- SELECT 
---     products.id AS product_id,
---     ingredients.id AS ingredient_id
--- FROM 
---     products
--- CROSS JOIN LATERAL 
---     unnest(string_to_array(products.ingredients, ',')) AS ingredient_name
--- JOIN 
---     ingredients ON TRIM(ingredients.name) = TRIM(ingredient_name);
---
---
--- *** query returns products searched by ingredient name *** 
---
--- SELECT *
--- FROM products
--- JOIN product_ingredients ON products.id = product_ingredients.product_id
--- JOIN ingredients ON product_ingredients.ingredient_id = ingredients.id
--- WHERE LOWER(ingredients.name) LIKE '%' || LOWER('QUERY_INGREDIENT_NAME') || '%';
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password TEXT NOT NULL,
+  is_admin BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP,
+  deleted_at TIMESTAMP
+);
 
--- SELECT *
--- FROM products
--- JOIN product_ingredients ON products.id = product_ingredients.product_id
--- JOIN ingredients ON product_ingredients.ingredient_id = ingredients.id
--- WHERE (
---     LOWER(ingredients.name) LIKE '%' || LOWER('ingredient1') || '%' OR
---     LOWER(ingredients.name) LIKE '%' || LOWER('ingredient2') || '%' OR
---     LOWER(ingredients.name) LIKE '%' || LOWER('ingredient3') || '%'
--- );
+CREATE TABLE IF NOT EXISTS pets (
+  id SERIAL PRIMARY KEY,
+  pet_name VARCHAR(255) NOT NULL,
+  user_id INT NOT NULL,
+  species VARCHAR(255) NOT NULL,
+  breed VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP,
+  deleted_at TIMESTAMP,
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS pet_products (
+  id SERIAL PRIMARY KEY,
+  pet_id INT NOT NULL,
+  user_id INT NOT NULL,
+  product_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP,
+  deleted_at TIMESTAMP,
+  is_favorite TIMESTAMP DEFAULT NULL,
+  is_excluded TIMESTAMP DEFAULT NULL,
+  CONSTRAINT fk_pet_id FOREIGN KEY (pet_id) REFERENCES pets (id) ON DELETE CASCADE,
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS searches (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  included_ingredients TEXT NOT NULL,
+  excluded_ingredients TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP,
+  deleted_at TIMESTAMP,
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);

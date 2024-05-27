@@ -1,4 +1,4 @@
-import { CatFoodData, SideBar } from "@components";
+import { CatFoodData, IngredientsBar, SideBar } from "@components";
 import { IResult } from "../../App";
 
 interface IProps {
@@ -27,7 +27,10 @@ export function Main({
 				handleIngredientsReset={handleIngredientsReset}
 				handleIngredientCancel={handleIngredientCancel}
 			/>
-			<CatFoodData results={results} />
+			<div className="flex flex-col">
+				<IngredientsBar />
+				<CatFoodData results={results} />
+			</div>
 		</div>
 	);
 }
