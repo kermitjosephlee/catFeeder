@@ -69,9 +69,13 @@ export const ingredientsQueryBuilder = ({
 		? `(${formattedIncludeIngredients
 				.map(
 					(_, index) =>
-						`LOWER(products.ingredients) LIKE '%' || LOWER($${
+						`(LOWER(products.ingredients) LIKE '%' || LOWER($${
 							index + 1
-						}) || '%'`
+						}) || '%' OR LOWER(products.brand) LIKE '%' || LOWER($${
+							index + 1
+						}) || '%' OR LOWER(products.name) LIKE '%' || LOWER($${
+							index + 1
+						}) || '%')`
 				)
 				.join(" AND ")})`
 		: "";
@@ -80,9 +84,13 @@ export const ingredientsQueryBuilder = ({
 		? `NOT (${formattedExcludeIngredients
 				.map(
 					(_, index) =>
-						`LOWER(products.ingredients) LIKE '%' || LOWER($${
+						`(LOWER(products.ingredients) LIKE '%' || LOWER($${
 							index + formattedIncludeIngredients.length + 1
-						}) || '%'`
+						}) || '%' OR LOWER(products.brand) LIKE '%' || LOWER($${
+							index + formattedIncludeIngredients.length + 1
+						}) || '%' OR LOWER(products.name) LIKE '%' || LOWER($${
+							index + formattedIncludeIngredients.length + 1
+						}) || '%')`
 				)
 				.join(" OR ")})`
 		: "";

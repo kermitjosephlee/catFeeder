@@ -86,7 +86,7 @@ export function Main() {
 				handleIngredientsReset={handleIngredientsReset}
 				handleIngredientCancel={handleIngredientCancel}
 			/>
-			<div className="flex flex-col">
+			<div className="flex flex-col flex-grow">
 				<IngredientsBar
 					checked={checked}
 					handleIngredients={handleIngredients}

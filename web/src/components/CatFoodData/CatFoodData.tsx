@@ -1,4 +1,4 @@
-import { CatFoodCard, CatFoodSkeletons } from "@components";
+import { CatFoodCard, CatFoodSkeletons, CatFoodNoResults } from "@components";
 import { IResult as ICatFood } from "../../App";
 
 interface IProps {
@@ -23,7 +23,7 @@ export function CatFoodData({ results, isLoading }: IProps) {
 		<div className="columns-sm p-4 gap-4">
 			{showResults && <CatFoodMap results={results} />}
 			{showSkeletons && <CatFoodSkeletons />}
-			{showNoResults && <div> noreults </div>}
+			{showNoResults && <CatFoodNoResults />}
 		</div>
 	);
 }

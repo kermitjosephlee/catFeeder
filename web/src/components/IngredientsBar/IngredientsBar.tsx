@@ -28,6 +28,10 @@ export function IngredientsBar({
 		reset();
 	};
 
+	const toggleClassName = checked
+		? "toggle toggle-lg toggle-success"
+		: "toggle toggle-lg toggle-error";
+
 	return (
 		<div id="ingredients search" className="flex justify-end p-4">
 			<form className="w-1/2 min-w-96" onSubmit={handleSubmit(onSubmit)}>
@@ -37,7 +41,7 @@ export function IngredientsBar({
 						data-tip="Press Ctrl + K or Cmd + K to Toggle">
 						<input
 							type="checkbox"
-							className="toggle toggle-lg"
+							className={toggleClassName}
 							checked={checked}
 							onChange={handleToggle}
 						/>
