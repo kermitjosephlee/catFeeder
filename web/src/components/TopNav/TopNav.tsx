@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LoginDialog } from "@components";
+import { useGetUser, useSetUser } from "../../hooks";
 
 interface IProps {
 	checked: boolean;
@@ -15,6 +16,8 @@ interface IFormInput {
 export function TopNav({ checked, handleToggle, handleIngredients }: IProps) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const { register, handleSubmit, reset } = useForm<IFormInput>();
+	const user = useGetUser();
+	const setUser = useSetUser();
 	const onSubmit: SubmitHandler<IFormInput> = (data) => {
 		if (data.ingredient !== "") {
 			handleIngredients(data.ingredient);
@@ -22,8 +25,44 @@ export function TopNav({ checked, handleToggle, handleIngredients }: IProps) {
 		reset();
 	};
 
+	useEffect(() => {
+		console.log("Top NAV", { user });
+	}, [user]);
+
+	const handleLogout = () => {
+		fetch("http://localhost:3000/logout", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				console.log("logout", res);
+				return res.json();
+			})
+			.then((res) => {
+				if (res.ok && res.message === "User logged out") {
+					setUser(null);
+				} else {
+					console.log("Error is logging out", res);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {
+				sessionStorage.removeItem("user");
+			});
+	};
+
 	const toggleDialogOpen = () => {
-		setIsDialogOpen(!isDialogOpen);
+		if (!user) {
+			setIsDialogOpen(true);
+		}
+
+		if (user) {
+			handleLogout();
+		}
 	};
 
 	const handleDialogClose = () => {
@@ -69,7 +108,7 @@ export function TopNav({ checked, handleToggle, handleIngredients }: IProps) {
 					</div>
 				</form>
 				<div className="btn btn-secondary" onClick={toggleDialogOpen}>
-					Login
+					{user ? `Logout ${user.firstName}` : "Login"}
 				</div>
 			</div>
 			<LoginDialog

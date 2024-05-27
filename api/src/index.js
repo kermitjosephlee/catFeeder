@@ -159,6 +159,11 @@ app.post(
 				}
 
 				const user = result.rows[0];
+
+				if (!bcrypt.compareSync(password, user.password)) {
+					return res.status(400).json({ error: "Invalid password" });
+				}
+
 				const returnUserObj = {
 					id: user.id,
 					first_name: user.first_name,
@@ -166,26 +171,30 @@ app.post(
 					email: user.email,
 				};
 
-				if (!bcrypt.compareSync(password, user.password)) {
-					return res.status(400).json({ error: "Invalid password" });
-				}
-
 				req.login(user, (err) => {
 					if (err) {
 						logger.error(err);
 						return res.status(500).json({ error: "Error logging in - 002" });
 					}
 
-					return res.json({ message: "User logged in", user: returnUserObj });
+					console.log("session details", req.session);
+
+					return res.json({ user: returnUserObj });
 				});
 			}
 		);
 	}
 );
 
-app.get("/logout", function (req, res) {
-	req.logout();
-	res.redirect("/");
+app.post("/logout", function (req, res) {
+	req.session.destroy(function (err) {
+		if (err) {
+			logger.error(err);
+			return res.status(500).json({ error: "Error logging out" });
+		} else {
+			res.status(200).json({ message: "User logged out" });
+		}
+	});
 });
 
 app.post("/register", (req, res) => {
@@ -252,7 +261,6 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-	console.log({ req });
 	res.json({ info: "Node.js, Express, and Postgres API" });
 });
 

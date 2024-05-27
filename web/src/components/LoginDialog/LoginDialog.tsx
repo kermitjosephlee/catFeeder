@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useSetUser, useGetUser } from "../../hooks";
 
 const loginSchema = yup
 	.object({
@@ -34,12 +35,18 @@ interface IProps {
 
 export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 	const [isUserRegistration, setIsUserRegistration] = useState(false);
+	const setUser = useSetUser();
+	const user = useGetUser();
 
 	const { register, handleSubmit, reset } = useForm<IFormInput>({
 		resolver: yupResolver(
 			isUserRegistration ? registrationSchema : loginSchema
 		),
 	});
+
+	useEffect(() => {
+		console.log("LoginDialog", { user });
+	}, [user]);
 
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
 		const postURL = isUserRegistration
@@ -59,7 +66,17 @@ export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 			}
 
 			const jsonResponse = await response.json();
-			console.log(jsonResponse);
+
+			// converting keys from snake_case to camelCase
+			const responseUser = {
+				firstName: jsonResponse.user.first_name,
+				lastName: jsonResponse.user.last_name,
+				email: jsonResponse.user.email,
+				id: jsonResponse.user.id,
+			};
+
+			setUser(responseUser);
+			sessionStorage.setItem("user", JSON.stringify(responseUser));
 
 			reset();
 			handleDialogClose();
