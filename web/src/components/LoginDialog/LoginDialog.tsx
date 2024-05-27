@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useSetUser, useGetUser } from "../../hooks";
+import { useSetUser } from "../../hooks";
 
 const loginSchema = yup
 	.object({
@@ -29,14 +29,12 @@ interface IFormInput {
 
 interface IProps {
 	isDialogOpen: boolean;
-	// toggleDialogOpen: () => void;
 	handleDialogClose: () => void;
 }
 
 export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 	const [isUserRegistration, setIsUserRegistration] = useState(false);
 	const setUser = useSetUser();
-	const user = useGetUser();
 
 	const { register, handleSubmit, reset } = useForm<IFormInput>({
 		resolver: yupResolver(
@@ -44,14 +42,11 @@ export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 		),
 	});
 
-	useEffect(() => {
-		console.log("LoginDialog", { user });
-	}, [user]);
-
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
 		const postURL = isUserRegistration
 			? "http://localhost:3000/register"
 			: "http://localhost:3000/login";
+
 		try {
 			const response = await fetch(postURL, {
 				method: "POST",
@@ -94,12 +89,12 @@ export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 			className={isDialogOpen ? "modal modal-open" : "modal"}>
 			<div className="modal-box">
 				<div className="flex justify-between items-center">
-					<h3 className="font-bold text-lg">
+					<h3 className="font-bold text-2xl">
 						{isUserRegistration ? "Registration" : "Login"}
 					</h3>
 					<div>
 						<button
-							className="btn btn-ghost"
+							className="btn btn-ghost border-gray-300"
 							onClick={() => setIsUserRegistration(!isUserRegistration)}>
 							{isUserRegistration ? "Click to Login" : "Click to Register"}
 						</button>
@@ -114,31 +109,41 @@ export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 						{isUserRegistration && (
 							<>
 								<input
+									className="p-3 rounded w-3/4 border-gray-200 border-2 border-radius-2xl"
 									type="text"
 									{...register("firstName")}
 									placeholder="First Name"
 								/>
 								<input
+									className="p-3 rounded w-3/4 border-gray-200 border-2 border-radius-2xl"
 									type="text"
 									{...register("lastName")}
 									placeholder="Last Name"
 								/>
 							</>
 						)}
-						<input type="email" {...register("email")} placeholder="Email" />
 						<input
+							className="p-3 rounded w-3/4 border-gray-200 border-2 border-radius-2xl"
+							type="email"
+							{...register("email")}
+							placeholder="Email"
+						/>
+						<input
+							className="p-3 rounded w-3/4 border-gray-200 border-2 border-radius-2xl"
 							type="password"
 							{...register("password")}
 							placeholder="Password"
 						/>
 
-						<div className="flex justify-between gap-4">
+						<div className="flex justify-between gap-4 py-4">
 							<input
 								type="submit"
 								className="btn btn-secondary"
 								value="Submit"
 							/>
-							<button className="btn btn-ghost" onClick={handleDialogClose}>
+							<button
+								className="btn btn-ghost border-gray-300"
+								onClick={handleDialogClose}>
 								Close
 							</button>
 						</div>

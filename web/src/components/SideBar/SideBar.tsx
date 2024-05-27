@@ -19,14 +19,17 @@ export function SideBar({
 		includedIngredients.length > 0 || excludedIngredients.length > 0;
 
 	return (
-		<div className="flex flex-col min-w-48">
-			{resultsLength && <p>{resultsLength}</p>}
+		<div className="flex flex-col min-w-48 p-3">
+			{resultsLength && (
+				<p>
+					Match{resultsLength === 1 ? "" : "es"} {resultsLength}
+				</p>
+			)}
 
 			{hasIngredients && (
 				<button
 					className="bg-yellow-800 text-white p-2 rounded-lg m-2"
-					onClick={handleIngredientsReset}
-				>
+					onClick={handleIngredientsReset}>
 					Clear All
 				</button>
 			)}

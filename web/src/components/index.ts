@@ -1,5 +1,6 @@
 export * from "./CatFoodCard";
 export * from "./CatFoodData";
+export * from "./CatFoodSkeletons";
 export * from "./IngredientsBar";
 export * from "./IngredientPill";
 export * from "./LoginDialog";

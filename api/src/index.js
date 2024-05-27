@@ -79,10 +79,6 @@ app.use(passport.initialize());
 
 app.use(passport.session());
 
-function validatePassword(user, password) {
-	return bcrypt.compareSync(password, user.password);
-}
-
 passport.use(
 	new LocalStrategy(function (email, password, done) {
 		pool.query(
@@ -133,63 +129,58 @@ passport.deserializeUser(function (email, done) {
 
 // ------ ROUTES ------
 
-app.post(
-	"/login",
-	// passport.authenticate("local", {
-	// 	successRedirect: "/",
-	// 	failureRedirect: "/login",
-	// })
-	(req, res) => {
-		const { email, password } = req.body;
-		if (!email || !password) {
-			return res.status(400).json({ error: "Missing required fields" });
-		}
-
-		pool.query(
-			`SELECT id, first_name, last_name, email, password FROM users WHERE email = $1`,
-			[email],
-			(error, result) => {
-				if (error) {
-					logger.error(error);
-					return res.status(500).json({ error: "Error logging in - 001" });
-				}
-
-				if (result.rows.length === 0) {
-					return res.status(400).json({ error: "User not found" });
-				}
-
-				const user = result.rows[0];
-
-				if (!bcrypt.compareSync(password, user.password)) {
-					return res.status(400).json({ error: "Invalid password" });
-				}
-
-				const returnUserObj = {
-					id: user.id,
-					first_name: user.first_name,
-					last_name: user.last_name,
-					email: user.email,
-				};
-
-				req.login(user, (err) => {
-					if (err) {
-						logger.error(err);
-						return res.status(500).json({ error: "Error logging in - 002" });
-					}
-
-					console.log("session details", req.session);
-
-					return res.json({ user: returnUserObj });
-				});
-			}
-		);
+app.post("/login", (req, res) => {
+	const { email, password } = req.body;
+	if (!email || !password) {
+		return res.status(400).json({ error: "Missing required fields" });
 	}
-);
+
+	pool.query(
+		`SELECT id, first_name, last_name, email, password FROM users WHERE email = $1`,
+		[email],
+		(error, result) => {
+			if (error) {
+				logger.error(error);
+				return res.status(500).json({ error: "Error logging in - 001" });
+			}
+
+			if (result.rows.length === 0) {
+				return res.status(400).json({ error: "User not found" });
+			}
+
+			const user = result.rows[0];
+
+			if (!bcrypt.compareSync(password, user.password)) {
+				return res.status(400).json({ error: "Invalid password" });
+			}
+
+			// remove password from user object to be returned
+			const returnUserObj = {
+				id: user.id,
+				first_name: user.first_name,
+				last_name: user.last_name,
+				email: user.email,
+			};
+
+			req.login(user, (err) => {
+				if (err) {
+					logger.error(err);
+					return res.status(500).json({ error: "Error logging in - 002" });
+				}
+
+				console.log("session details", req.session);
+
+				return res.status(200).json({ user: returnUserObj });
+			});
+		}
+	);
+});
 
 app.post("/logout", function (req, res) {
 	req.session.destroy(function (err) {
 		if (err) {
 			logger.error(err);
+			console.log("logout error", { err });
 			return res.status(500).json({ error: "Error logging out" });
 		} else {
 			res.status(200).json({ message: "User logged out" });
@@ -260,7 +251,7 @@ app.post("/register", (req, res) => {
 	);
 });
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
 	res.json({ info: "Node.js, Express, and Postgres API" });
 });
 
