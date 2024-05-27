@@ -38,7 +38,7 @@ export function IngredientsBar({
 				<div className="flex items-center gap-2">
 					<div
 						className="tooltip tooltip-primary"
-						data-tip="Press Ctrl + K or Cmd + K to Toggle">
+						data-tip="Press Ctrl/Cmd + K to Toggle">
 						<input
 							type="checkbox"
 							className={toggleClassName}
@@ -65,7 +65,7 @@ export function IngredientsBar({
 							/>
 						</svg>
 					</label>
-					<input type="submit" className="btn btn-primary" />
+					<input type="submit" className="btn btn-primary" value="Search" />
 				</div>
 			</form>
 		</div>
