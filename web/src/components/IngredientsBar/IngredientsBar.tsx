@@ -1,4 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useHotkeys } from "react-hotkeys-hook";
 
 interface IFormInput {
 	ingredient: string;
@@ -15,6 +16,11 @@ export function IngredientsBar({
 }) {
 	const { register, handleSubmit, reset } = useForm<IFormInput>();
 
+	// Hotkey to toggle include/exclude
+	useHotkeys("mod+k", () => {
+		handleToggle();
+	});
+
 	const onSubmit: SubmitHandler<IFormInput> = (data) => {
 		if (data.ingredient !== "") {
 			handleIngredients(data.ingredient);
@@ -26,12 +32,16 @@ export function IngredientsBar({
 		<div id="ingredients search" className="flex justify-end p-4">
 			<form className="w-1/2 min-w-96" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex items-center gap-2">
-					<input
-						type="checkbox"
-						className="toggle toggle-lg"
-						checked={checked}
-						onChange={handleToggle}
-					/>
+					<div
+						className="tooltip tooltip-primary"
+						data-tip="Press Ctrl + K or Cmd + K to Toggle">
+						<input
+							type="checkbox"
+							className="toggle toggle-lg"
+							checked={checked}
+							onChange={handleToggle}
+						/>
+					</div>
 					<label className="input input-bordered flex items-center gap-2 w-full">
 						<input
 							type="text"
