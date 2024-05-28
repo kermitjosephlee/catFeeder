@@ -1,4 +1,6 @@
 import { IngredientEnum } from "./IngredientEnum";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 
 interface IProps {
 	ingredient: string;
@@ -18,12 +20,14 @@ export function IngredientPill({
 		<div
 			className={
 				type === IngredientEnum.INCLUDED
-					? "flex justify-between bg-green-200 rounded-xl m-2 p-2 cursor-pointer"
-					: "flex justify-between bg-red-200 rounded-xl m-2 p-2 cursor-pointer"
+					? "flex justify-between bg-green-200 m-2 px-4 cursor-pointer btn"
+					: "flex justify-between bg-red-200 m-2 px-4 cursor-pointer btn"
 			}
 			onClick={onClick}>
 			<p>{ingredient}</p>
-			<p>x</p>
+			<p>
+				<FontAwesomeIcon icon={faCircleXmark} />
+			</p>
 		</div>
 	);
 }
