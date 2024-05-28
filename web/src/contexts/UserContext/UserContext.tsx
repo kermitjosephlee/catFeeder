@@ -12,6 +12,7 @@ export type UserType = {
 	firstName: string;
 	lastName: string;
 	email: string;
+	isAdmin: boolean;
 } | null;
 
 export interface UserContextType {

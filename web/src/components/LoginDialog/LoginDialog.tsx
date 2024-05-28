@@ -68,6 +68,7 @@ export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 				lastName: jsonResponse.user.last_name,
 				email: jsonResponse.user.email,
 				id: jsonResponse.user.id,
+				isAdmin: jsonResponse.user.is_admin,
 			};
 
 			setUser(responseUser);

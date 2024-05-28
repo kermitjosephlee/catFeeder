@@ -6,7 +6,7 @@ interface IProps {
 	isLoading: boolean;
 }
 
-function CatFoodMap({ results }: { results: ICatFood[] }) {
+function CatFoodCards({ results }: { results: ICatFood[] }) {
 	return results.map((catFood: ICatFood) => {
 		return <CatFoodCard key={catFood.id} {...catFood} />;
 	});
@@ -20,7 +20,7 @@ export function CatFoodData({ results, isLoading }: IProps) {
 
 	return (
 		<div className="columns-sm p-4 gap-4">
-			{showResults && <CatFoodMap results={results} />}
+			{showResults && <CatFoodCards results={results} />}
 			{showSkeletons && <CatFoodSkeletons />}
 			{showNoResults && <CatFoodNoResults />}
 		</div>
