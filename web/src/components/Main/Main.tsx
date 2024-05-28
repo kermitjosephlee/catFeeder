@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CatFoodData, IngredientsBar, SideBar } from "@components";
 import { IResult } from "../../App";
-import { queryBuilder } from "../../utils";
+import { queryBuilder } from "@utils";
 
 const BACKEND_URL = "http://localhost:3000/ingredients";
 

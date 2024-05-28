@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LoginDialog } from "@components";
-import { useGetUser, useLogout } from "../../hooks";
+import { useGetUser, useLogout } from "@hooks";
 
 export function TopNav() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);

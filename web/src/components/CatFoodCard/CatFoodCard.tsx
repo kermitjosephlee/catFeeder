@@ -1,5 +1,4 @@
-import { capitalize } from "../../utils/capitalize";
-import { colors, lighterColors } from "../../utils/colors";
+import { colors, lighterColors, capitalize } from "@utils";
 // import { twMerge } from "tailwind-merge";
 import { IResult as ICatFoodCard } from "../../App";
 

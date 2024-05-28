@@ -1,4 +1,4 @@
-import { useSetUser } from "../useSetUser";
+import { useSetUser } from "@hooks";
 
 export function useLogout() {
 	const setUser = useSetUser();
