@@ -14,7 +14,6 @@ function CatFoodMap({ results }: { results: ICatFood[] }) {
 
 export function CatFoodData({ results, isLoading }: IProps) {
 	const noResults = results.length === 0;
-
 	const showSkeletons = isLoading && noResults;
 	const showResults = results.length > 0;
 	const showNoResults = !isLoading && noResults;
