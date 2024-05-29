@@ -62,6 +62,8 @@ export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 
 			const jsonResponse = await response.json();
 
+			console.log({ jsonResponse });
+
 			// converting keys from snake_case to camelCase
 			const responseUser = {
 				firstName: jsonResponse.user.first_name,
@@ -69,6 +71,7 @@ export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 				email: jsonResponse.user.email,
 				id: jsonResponse.user.id,
 				isAdmin: jsonResponse.user.is_admin,
+				searches: jsonResponse.user.searches,
 			};
 
 			setUser(responseUser);

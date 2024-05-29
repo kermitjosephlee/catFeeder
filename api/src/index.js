@@ -8,17 +8,18 @@ import bcrypt from "bcryptjs";
 import pg from "pg";
 import connectPgSimple from "connect-pg-simple";
 import cors from "cors";
-import * as EmailValidator from "email-validator";
 import passwordValidator from "password-validator";
 import { logger } from "../utils/logger.js";
 import { morganMiddleware } from "../middlewares/morgan.middlewares.js";
 
 import {
 	getProducts,
-	getProductsByBrand,
 	getProductsByIngredients,
 	getStatus,
+	postSearch,
 } from "../db/queries.js";
+
+import { postLogin, postLogout, postRegister } from "../auth/queries.js";
 
 const pool = new pg.Pool({
 	user: "postgres",
@@ -31,8 +32,6 @@ const pool = new pg.Pool({
 const pgSession = connectPgSimple(session);
 
 const PORT = process.env.PORT || 3000;
-
-const SALT_ROUNDS = process.env.SALT_ROUNDS || 12;
 
 const app = express();
 
@@ -114,7 +113,7 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (email, done) {
 	pool.query(
-		`SELECT id, first_name, last_name, email FROM users WHERE email = $1`,
+		`SELECT id, first_name, last_name, email FROM users WHERE email = $1;`,
 		[email],
 		function (err, result) {
 			if (err) return done(err);
@@ -129,128 +128,13 @@ passport.deserializeUser(function (email, done) {
 
 // ------ ROUTES ------
 
-app.post("/login", (req, res) => {
-	const { email, password } = req.body;
-	if (!email || !password) {
-		return res.status(400).json({ error: "Missing required fields" });
-	}
+app.post("/login", postLogin);
 
-	pool.query(
-		`SELECT id, first_name, last_name, email, password FROM users WHERE email = $1`,
-		[email],
-		(error, result) => {
-			if (error) {
-				logger.error(error);
-				return res.status(500).json({ error: "Error logging in - 001" });
-			}
+app.post("/logout", postLogout);
 
-			if (result.rows.length === 0) {
-				return res.status(400).json({ error: "User not found" });
-			}
+app.post("/register", postRegister);
 
-			const user = result.rows[0];
-
-			if (!bcrypt.compareSync(password, user.password)) {
-				return res.status(400).json({ error: "Invalid password" });
-			}
-
-			// remove password from user object to be returned
-			const returnUserObj = {
-				id: user.id,
-				first_name: user.first_name,
-				last_name: user.last_name,
-				email: user.email,
-				is_admin: user.is_admin,
-			};
-
-			req.login(user, (err) => {
-				if (err) {
-					logger.error(err);
-					return res.status(500).json({ error: "Error logging in - 002" });
-				}
-
-				console.log("session details", req.session);
-
-				return res.status(200).json({ user: returnUserObj });
-			});
-		}
-	);
-});
-
-app.post("/logout", function (req, res) {
-	req.session.destroy(function (err) {
-		if (err) {
-			logger.error(err);
-			console.log("logout error", { err });
-			return res.status(500).json({ error: "Error logging out" });
-		} else {
-			res.status(200).json({ message: "User logged out" });
-		}
-	});
-});
-
-app.post("/register", (req, res) => {
-	const { firstName, lastName, email, password } = req.body;
-
-	// validate required fields
-	if (!firstName || !lastName || !email || !password) {
-		console.log("Missing required fields");
-		return res.status(400).json({ error: "Missing required fields" });
-	}
-
-	// validate email string is an email
-	if (!EmailValidator.validate(email)) {
-		console.log("Invalid email");
-		return res.status(400).json({ error: "Invalid email" });
-	}
-
-	// validate password as defined by password schema
-	if (!passwordSchema.validate(password)) {
-		console.log("Invalid password");
-		return res.status(400).json({ error: "Invalid password" });
-	}
-
-	const hashedPassword = bcrypt.hashSync(password, SALT_ROUNDS);
-	console.log({ reqBody: req.body, hashedPassword });
-
-	// first check to see if user already exists
-	pool.query(
-		`SELECT id FROM users WHERE email = $1`,
-		[email],
-		(err, result) => {
-			// if error return error
-			if (err) {
-				logger.error(err);
-				return res.status(500).json({ error: "Error registering user" });
-			}
-
-			// if user already exists return error
-			if (result.rows.length > 0) {
-				return res.status(400).json({ error: "User already exists" });
-			}
-
-			// if user does not exist, insert user into database
-			if (result.rows.length == 0) {
-				const first_name = firstName;
-				const last_name = lastName;
-
-				pool.query(
-					`INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)`,
-					[first_name, last_name, email, hashedPassword],
-					(err, insertResponse) => {
-						if (err) {
-							logger.error(err);
-							return res.status(500).json({ error: "Error registering user" });
-						}
-						return res.json({
-							message: "User registered successfully",
-						});
-					}
-				);
-			}
-		}
-	);
-});
+app.post("/search", postSearch);
 
 app.get("/", (_, res) => {
 	res.json({ info: "Node.js, Express, and Postgres API" });
@@ -259,8 +143,6 @@ app.get("/", (_, res) => {
 app.get("/status", getStatus);
 
 app.get("/products", getProducts);
-
-app.get("/brand/:brand", getProductsByBrand);
 
 app.get("/ingredients", getProductsByIngredients);
 

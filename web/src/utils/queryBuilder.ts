@@ -1,20 +1,20 @@
 export function queryBuilder({
-	includedIngredients,
-	excludedIngredients,
+	includedSearchTerms,
+	excludedSearchTerms,
 }: {
-	includedIngredients: string[];
-	excludedIngredients: string[];
+	includedSearchTerms: string[];
+	excludedSearchTerms: string[];
 }): string {
 	const hasQuery =
-		includedIngredients.length > 0 || excludedIngredients.length > 0;
+		includedSearchTerms.length > 0 || excludedSearchTerms.length > 0;
 	const hasQueryStr = hasQuery ? "?" : "";
 	const includeStr =
-		includedIngredients.length > 0
-			? `include=${includedIngredients.join(",")}`
+		includedSearchTerms.length > 0
+			? `include=${includedSearchTerms.join(",")}`
 			: "";
 	const excludeStr =
-		excludedIngredients.length > 0
-			? `exclude=${excludedIngredients.join(",")}`
+		excludedSearchTerms.length > 0
+			? `exclude=${excludedSearchTerms.join(",")}`
 			: "";
 
 	return `${hasQueryStr}${includeStr}${

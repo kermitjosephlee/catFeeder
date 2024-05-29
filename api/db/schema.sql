@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS pet_products (
 CREATE TABLE IF NOT EXISTS searches (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
-  included_ingredients TEXT NOT NULL,
-  excluded_ingredients TEXT NOT NULL,
+  include_terms TEXT NOT NULL,
+  exclude_terms TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
   deleted_at TIMESTAMP,

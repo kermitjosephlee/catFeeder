@@ -7,12 +7,18 @@ import {
 	useState,
 } from "react";
 
+export type SearchType = {
+	includes: string[];
+	excludes: string[];
+};
+
 export type UserType = {
 	id: string;
 	firstName: string;
 	lastName: string;
 	email: string;
 	isAdmin: boolean;
+	searches?: SearchType[];
 } | null;
 
 export interface UserContextType {

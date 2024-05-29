@@ -24,15 +24,6 @@ export const getProducts = async (_, res) => {
 	return res.json(response.rows);
 };
 
-export const getProductsByBrand = async (req, res) => {
-	const brand = req.params.brand || "acana";
-	const response = await pool.query(
-		`SELECT * FROM products WHERE brand = $1;`,
-		[brand]
-	);
-	return res.json(response.rows);
-};
-
 export const getProductsByIngredients = async (req, res) => {
 	const includeIngredients = req.query.include
 		? req.query.include.split(",")
@@ -56,4 +47,34 @@ export const getProductsByIngredients = async (req, res) => {
 	});
 
 	return res.json(response.rows);
+};
+
+export const postSearch = async (req, res) => {
+	const { include, exclude, userId } = req.body;
+
+	if (!userId) {
+		return res.status(400).json({ error: "Missing required fields" });
+	}
+
+	if (!include && !exclude) {
+		return res.status(400).json({ error: "Missing required fields" });
+	}
+
+	const user_id = userId;
+	const include_terms = JSON.stringify(include);
+	const exclude_terms = JSON.stringify(exclude);
+
+	pool.query(
+		`INSERT INTO searches (user_id, include_terms, exclude_terms) VALUES ($1, $2, $3)`,
+		[user_id, include_terms, exclude_terms],
+		(err, result) => {
+			if (err) {
+				logger.error(err);
+				return res.status(500).json({ error: "Error saving search" });
+			}
+			return res.json({
+				message: "Search saved successfully",
+			});
+		}
+	);
 };

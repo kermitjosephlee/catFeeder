@@ -1,4 +1,4 @@
-export enum IngredientEnum {
+export enum SearchEnum {
 	INCLUDED = "INCLUDED",
 	EXCLUDED = "EXCLUDED",
 }

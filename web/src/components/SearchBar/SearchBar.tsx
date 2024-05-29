@@ -2,16 +2,18 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useHotkeys } from "react-hotkeys-hook";
 
 interface IFormInput {
-	ingredient: string;
+	searchTerm: string;
 }
 
-export function IngredientsBar({
+export function SearchBar({
 	checked,
-	handleIngredients,
+	resultsLength,
+	handleSearchTerm,
 	handleToggle,
 }: {
 	checked: boolean;
-	handleIngredients: (ingredient: string) => void;
+	resultsLength: number | undefined;
+	handleSearchTerm: (searchTerm: string) => void;
 	handleToggle: () => void;
 }) {
 	const { register, handleSubmit, reset } = useForm<IFormInput>();
@@ -22,8 +24,8 @@ export function IngredientsBar({
 	});
 
 	const onSubmit: SubmitHandler<IFormInput> = (data) => {
-		if (data.ingredient !== "") {
-			handleIngredients(data.ingredient);
+		if (data.searchTerm !== "") {
+			handleSearchTerm(data.searchTerm);
 		}
 		reset();
 	};
@@ -33,7 +35,8 @@ export function IngredientsBar({
 		: "toggle toggle-lg toggle-error";
 
 	return (
-		<div id="ingredients search" className="flex justify-end p-4">
+		<div id="search bar" className="flex justify-between items-center p-4">
+			{resultsLength ? <div>Matches {resultsLength}</div> : <div></div>}
 			<form className="w-1/2 min-w-96" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex items-center gap-2">
 					<div
@@ -51,7 +54,7 @@ export function IngredientsBar({
 							type="text"
 							className="grow w-full"
 							placeholder={checked ? "Include" : "Exclude"}
-							{...register("ingredient")}
+							{...register("searchTerm")}
 						/>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

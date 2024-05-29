@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CatFoodData, IngredientsBar, SideBar } from "@components";
+import { CatFoodData, SearchBar, SideBar } from "@components";
 import { IResult } from "../../App";
 import { queryBuilder } from "@utils";
 
@@ -7,14 +7,18 @@ const BACKEND_URL = "http://localhost:3000/ingredients";
 
 export function Main() {
 	const [checked, setChecked] = useState<boolean>(true); //defaults to include ingredients
-	const [includedIngredients, setIncludedIngredients] = useState<string[]>([]);
-	const [excludedIngredients, setExcludedIngredients] = useState<string[]>([]);
+	const [includedSearchTerms, setIncludedSearchTerms] = useState<string[]>([]);
+	const [excludedSearchTerms, setExcludedSearchTerms] = useState<string[]>([]);
 	const [isFirstLoading, setIsFirstLoading] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 	const [results, setResults] = useState<IResult[]>([]);
 	const query = useMemo(
-		() => queryBuilder({ includedIngredients, excludedIngredients }),
-		[includedIngredients, excludedIngredients]
+		() =>
+			queryBuilder({
+				includedSearchTerms,
+				excludedSearchTerms,
+			}),
+		[includedSearchTerms, excludedSearchTerms]
 	);
 	const resultsLength = results.length;
 
@@ -32,43 +36,43 @@ export function Main() {
 			});
 	}, [query, isFirstLoading]);
 
-	const handleIngredients = (ingredient: string) => {
-		if (checked && !includedIngredients.includes(ingredient)) {
-			setIncludedIngredients([...includedIngredients, ingredient]);
+	const handleSearchTerm = (searchTerm: string) => {
+		if (checked && !includedSearchTerms.includes(searchTerm)) {
+			setIncludedSearchTerms([...includedSearchTerms, searchTerm]);
 
-			if (excludedIngredients.includes(ingredient)) {
-				setExcludedIngredients(
-					excludedIngredients.filter((excluded) => excluded !== ingredient)
+			if (excludedSearchTerms.includes(searchTerm)) {
+				setExcludedSearchTerms(
+					excludedSearchTerms.filter((excluded) => excluded !== searchTerm)
 				);
 			}
 		}
 
-		if (!checked && !excludedIngredients.includes(ingredient)) {
-			setExcludedIngredients([...excludedIngredients, ingredient]);
+		if (!checked && !excludedSearchTerms.includes(searchTerm)) {
+			setExcludedSearchTerms([...excludedSearchTerms, searchTerm]);
 
-			if (includedIngredients.includes(ingredient)) {
-				setIncludedIngredients(
-					includedIngredients.filter((included) => included !== ingredient)
+			if (includedSearchTerms.includes(searchTerm)) {
+				setIncludedSearchTerms(
+					includedSearchTerms.filter((included) => included !== searchTerm)
 				);
 			}
 		}
 	};
 
-	const handleIngredientsReset = () => {
-		setIncludedIngredients([]);
-		setExcludedIngredients([]);
+	const handleSearchTermsReset = () => {
+		setIncludedSearchTerms([]);
+		setExcludedSearchTerms([]);
 	};
 
-	const handleIngredientCancel = (ingredient: string) => {
-		if (includedIngredients.includes(ingredient)) {
-			setIncludedIngredients(
-				includedIngredients.filter((included) => included !== ingredient)
+	const handleSearchTermCancel = (searchTerm: string) => {
+		if (includedSearchTerms.includes(searchTerm)) {
+			setIncludedSearchTerms(
+				includedSearchTerms.filter((included) => included !== searchTerm)
 			);
 		}
 
-		if (excludedIngredients.includes(ingredient)) {
-			setExcludedIngredients(
-				excludedIngredients.filter((excluded) => excluded !== ingredient)
+		if (excludedSearchTerms.includes(searchTerm)) {
+			setExcludedSearchTerms(
+				excludedSearchTerms.filter((excluded) => excluded !== searchTerm)
 			);
 		}
 	};
@@ -80,16 +84,16 @@ export function Main() {
 	return (
 		<div className="flex w-full">
 			<SideBar
-				includedIngredients={includedIngredients}
-				excludedIngredients={excludedIngredients}
-				resultsLength={resultsLength}
-				handleIngredientsReset={handleIngredientsReset}
-				handleIngredientCancel={handleIngredientCancel}
+				includedSearchTerms={includedSearchTerms}
+				excludedSearchTerms={excludedSearchTerms}
+				handleSearchTermsReset={handleSearchTermsReset}
+				handleSearchTermCancel={handleSearchTermCancel}
 			/>
 			<div className="flex flex-col flex-grow">
-				<IngredientsBar
+				<SearchBar
 					checked={checked}
-					handleIngredients={handleIngredients}
+					resultsLength={resultsLength}
+					handleSearchTerm={handleSearchTerm}
 					handleToggle={handleToggle}
 				/>
 				<CatFoodData results={results} isLoading={isLoading} />
