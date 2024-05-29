@@ -16,6 +16,7 @@ import {
 	getProducts,
 	getProductsByIngredients,
 	getStatus,
+	postCancelSearch,
 	postSearch,
 } from "../db/queries.js";
 
@@ -135,6 +136,8 @@ app.post("/logout", postLogout);
 app.post("/register", postRegister);
 
 app.post("/search", postSearch);
+
+app.post("/cancel_search", postCancelSearch);
 
 app.get("/", (_, res) => {
 	res.json({ info: "Node.js, Express, and Postgres API" });

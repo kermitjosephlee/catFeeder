@@ -7,26 +7,14 @@ import {
 	useState,
 } from "react";
 
-export type SearchType = {
-	include?: string[];
-	exclude?: string[];
-};
+import { UserType } from "@/types";
 
-export type UserType = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	isAdmin: boolean;
-	searches?: SearchType[];
-} | null;
-
-export interface UserContextType {
+export interface IUserContext {
 	user: UserType | null;
 	setUser: Dispatch<SetStateAction<UserType | null>>;
 }
 
-export const UserContext = createContext<UserContextType>({
+export const UserContext = createContext<IUserContext>({
 	user: null,
 	setUser: () => {},
 });

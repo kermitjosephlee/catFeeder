@@ -1,19 +1,18 @@
 import { useSetUser } from "@hooks";
-import { IFormInput as ILoginInput } from "@components";
 
-const LOGIN_URL = "http://localhost:3000/login";
+const CANCEL_SEARCH_URL = "http://localhost:3000/cancel_search";
 
-export function useLogin() {
+export function useCancelSearch() {
 	const setUser = useSetUser();
 
-	return async (data: ILoginInput) => {
+	return async ({ userId, searchId }: { searchId: string; userId: string }) => {
 		try {
-			const response = await fetch(LOGIN_URL, {
+			const response = await fetch(CANCEL_SEARCH_URL, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(data),
+				body: JSON.stringify({ userId, searchId }),
 			});
 
 			if (!response.ok) {
@@ -34,7 +33,7 @@ export function useLogin() {
 			setUser(responseUser);
 			sessionStorage.setItem("user", JSON.stringify(responseUser));
 		} catch (error) {
-			console.error("Error logging in", error);
+			console.error("Error canceling search", error);
 		}
 	};
 }

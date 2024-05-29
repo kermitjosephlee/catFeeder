@@ -20,13 +20,13 @@ export function SearchPill({
 		<div
 			className={
 				type === SearchEnum.INCLUDED
-					? "flex justify-between bg-green-200 m-1 px-4 cursor-pointer btn"
-					: "flex justify-between bg-red-200 m-1 px-4 cursor-pointer btn"
+					? "flex text-lg justify-between m-1 px-4 cursor-pointer btn btn-outline btn-success"
+					: "flex text-lg justify-between m-1 px-4 cursor-pointer btn btn-outline btn-error"
 			}
 			onClick={onClick}>
 			<p>{searchTerm}</p>
 			<p>
-				<FontAwesomeIcon icon={faCircleXmark} />
+				<FontAwesomeIcon size="lg" icon={faCircleXmark} />
 			</p>
 		</div>
 	);

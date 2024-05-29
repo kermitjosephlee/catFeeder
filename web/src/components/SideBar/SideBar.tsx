@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useGetUser } from "@/hooks";
+// import { useState } from "react";
+import { useGetUser, useSetUser, useSearch } from "@hooks";
 import { SearchPill, SearchEnum } from "@components";
 
 interface IProps {
@@ -16,19 +16,19 @@ export function SideBar({
 	handleSearchTermCancel,
 }: IProps) {
 	const user = useGetUser();
-	const [savedUser, setSavedUser] = useState(user);
+	const setUser = useSetUser();
+	const { isSaveSearchButtonDisabled } = useSearch();
 
-	useEffect(() => {
-		setSavedUser(user);
-	}, [user]);
+	console.log("user searches", user?.searches?.length ?? null);
 
 	const hasSearchTerms =
 		includedSearchTerms.length > 0 || excludedSearchTerms.length > 0;
 
-	const showSaveSearchButton = savedUser && hasSearchTerms;
+	const showSaveSearchButton =
+		user && hasSearchTerms && !isSaveSearchButtonDisabled;
 
 	const handleSaveSearch = () => {
-		if (!savedUser) return;
+		if (!user) return;
 
 		fetch("http://localhost:3000/search", {
 			method: "POST",
@@ -38,15 +38,28 @@ export function SideBar({
 			body: JSON.stringify({
 				include: includedSearchTerms,
 				exclude: excludedSearchTerms,
-				userId: savedUser.id,
+				userId: user.id,
 			}),
 		})
 			.then((response) => {
 				if (response.ok) {
-					console.log("Search saved!");
+					const jsonResponse = response.json();
+					return jsonResponse;
 				} else {
 					alert("Failed to save search");
 				}
+			})
+			.then((jsonResponse) => {
+				const responseUser = {
+					firstName: jsonResponse.user.first_name,
+					lastName: jsonResponse.user.last_name,
+					email: jsonResponse.user.email,
+					id: jsonResponse.user.id,
+					isAdmin: jsonResponse.user.is_admin,
+					searches: jsonResponse.user.searches,
+				};
+				setUser(responseUser);
+				sessionStorage.setItem("user", JSON.stringify(responseUser));
 			})
 			.catch((err) => console.log(err));
 	};

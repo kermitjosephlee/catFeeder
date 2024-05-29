@@ -23,17 +23,19 @@ export const postLogin = async (req, res) => {
 
 	pool.query(
 		`SELECT 
-			u.id, 
+			u.id AS user_id, 
 			u.first_name, 
 			u.last_name, 
 			u.email, 
 			u.password, 
+			s.id AS search_id,
 			s.include_terms, 
 			s.exclude_terms
 			FROM users u 
 			LEFT JOIN searches s 
 			ON u.id = s.user_id 
-			WHERE email = $1;`,
+			WHERE email = $1
+			AND s.deleted_at IS NULL;`,
 		[email],
 		(error, result) => {
 			if (error) {
@@ -53,6 +55,7 @@ export const postLogin = async (req, res) => {
 
 			const searches = result.rows.map((row) => {
 				return {
+					id: row.search_id,
 					include: JSON.parse(row.include_terms),
 					exclude: JSON.parse(row.exclude_terms),
 				};
@@ -60,7 +63,7 @@ export const postLogin = async (req, res) => {
 
 			// remove password from user object to be returned
 			const returnUserObj = {
-				id: user.id,
+				id: user.user_id,
 				first_name: user.first_name,
 				last_name: user.last_name,
 				email: user.email,

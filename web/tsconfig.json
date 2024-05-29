@@ -24,9 +24,11 @@
 		"paths": {
 			"@": ["src"],
 			"@/*": ["src/*"],
+			"@assets": ["src/assets"],
 			"@components": ["src/components"],
 			"@contexts": ["src/contexts"],
 			"@hooks": ["src/hooks"],
+			"@types": ["src/types"],
 			"@utils": ["src/utils"]
 		},
 		"types": ["node"]

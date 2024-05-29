@@ -1,17 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import { CatFoodData, SearchBar, SideBar } from "@components";
-import { IResult } from "../../App";
+import { IResult } from "@/App";
 import { queryBuilder } from "@utils";
+import { useSearch } from "@hooks";
 
 const BACKEND_URL = "http://localhost:3000/ingredients";
 
 export function Main() {
 	const [checked, setChecked] = useState<boolean>(true); //defaults to include ingredients
-	const [includedSearchTerms, setIncludedSearchTerms] = useState<string[]>([]);
-	const [excludedSearchTerms, setExcludedSearchTerms] = useState<string[]>([]);
 	const [isFirstLoading, setIsFirstLoading] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 	const [results, setResults] = useState<IResult[]>([]);
+
+	const {
+		includedSearchTerms,
+		setIncludedSearchTerms,
+		excludedSearchTerms,
+		setExcludedSearchTerms,
+		setIsSaveSearchButtonDisabled,
+	} = useSearch();
+
 	const query = useMemo(
 		() =>
 			queryBuilder({
@@ -61,6 +69,7 @@ export function Main() {
 	const handleSearchTermsReset = () => {
 		setIncludedSearchTerms([]);
 		setExcludedSearchTerms([]);
+		setIsSaveSearchButtonDisabled(false);
 	};
 
 	const handleSearchTermCancel = (searchTerm: string) => {

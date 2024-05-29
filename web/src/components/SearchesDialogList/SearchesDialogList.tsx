@@ -1,10 +1,16 @@
-import { useGetUser } from "@/hooks";
-import { SearchType } from "@/contexts";
+import { useCancelSearch, useGetUser, useSearch } from "@hooks";
+import { SearchType } from "@/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleRight } from "@fortawesome/free-regular-svg-icons";
+import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 
 export function SearchesDialogList() {
 	const user = useGetUser();
+	const cancelSearch = useCancelSearch();
+	const {
+		setIncludedSearchTerms,
+		setExcludedSearchTerms,
+		setIsSaveSearchButtonDisabled,
+	} = useSearch();
 	const searches = user?.searches;
 
 	if (!searches || searches.length === 0) {
@@ -12,7 +18,19 @@ export function SearchesDialogList() {
 	}
 
 	const handleSearch = (search: SearchType) => {
-		console.log(search);
+		const { include, exclude } = search;
+
+		if (include) {
+			setIncludedSearchTerms(include);
+		}
+		if (exclude) {
+			setExcludedSearchTerms(exclude);
+		}
+		setIsSaveSearchButtonDisabled(true);
+	};
+
+	const handleRemoveSearch = (id: string) => {
+		cancelSearch({ userId: user.id, searchId: id });
 	};
 
 	return (
@@ -20,9 +38,8 @@ export function SearchesDialogList() {
 			{searches.map((search, index) => (
 				<div
 					className="flex justify-between items-center mt-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
-					key={index}
-					onClick={() => handleSearch(search)}>
-					<div>
+					key={index}>
+					<div onClick={() => handleSearch(search)}>
 						{search.include?.map((each) => (
 							<p key={each} className="btn btn-outline btn-success mr-1">
 								{each}
@@ -34,8 +51,8 @@ export function SearchesDialogList() {
 							</p>
 						))}
 					</div>
-					<div>
-						<FontAwesomeIcon size="lg" icon={faCircleRight} />
+					<div onClick={() => handleRemoveSearch(search.id.toString())}>
+						<FontAwesomeIcon size="lg" icon={faCircleXmark} />
 					</div>
 				</div>
 			))}

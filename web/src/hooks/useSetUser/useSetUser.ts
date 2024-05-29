@@ -1,8 +1,8 @@
 import { useContext, useEffect } from "react";
-import { UserContext, UserContextType } from "@contexts";
+import { UserContext } from "@contexts";
 
 export function useSetUser() {
-	const { user, setUser } = useContext<UserContextType>(UserContext);
+	const { user, setUser } = useContext(UserContext);
 
 	useEffect(() => {
 		const sessionStorageUser = sessionStorage.getItem("user");
