@@ -2,6 +2,10 @@ import "dotenv/config";
 import pg from "pg";
 import * as EmailValidator from "email-validator";
 import bcrypt from "bcryptjs";
+import {
+	USER_SUB_QUERY,
+	userReturnObjMaker,
+} from "../helpers/getUser/getUser.js";
 
 const SALT_ROUNDS = process.env.SALT_ROUNDS || 12;
 
@@ -21,68 +25,35 @@ export const postLogin = async (req, res) => {
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
-	pool.query(
-		`SELECT 
-			u.id AS user_id, 
-			u.first_name, 
-			u.last_name, 
-			u.email, 
-			u.password, 
-			s.id AS search_id,
-			s.include_terms, 
-			s.exclude_terms
-			FROM users u 
-			LEFT JOIN searches s 
-			ON u.id = s.user_id 
-			WHERE email = $1
-			AND s.deleted_at IS NULL;`,
-		[email],
-		(error, result) => {
-			if (error) {
-				logger.error(error);
-				return res.status(500).json({ error: "Error logging in - 001" });
-			}
-
-			if (result.rows.length === 0) {
-				return res.status(400).json({ error: "User not found" });
-			}
-
-			const user = result.rows[0];
-
-			if (!bcrypt.compareSync(password, user.password)) {
-				return res.status(400).json({ error: "Invalid password" });
-			}
-
-			const searches = result.rows.map((row) => {
-				return {
-					id: row.search_id,
-					include: JSON.parse(row.include_terms),
-					exclude: JSON.parse(row.exclude_terms),
-				};
-			});
-
-			// remove password from user object to be returned
-			const returnUserObj = {
-				id: user.user_id,
-				first_name: user.first_name,
-				last_name: user.last_name,
-				email: user.email,
-				is_admin: user.is_admin,
-				searches,
-			};
-
-			req.login(user, (err) => {
-				if (err) {
-					logger.error(err);
-					return res.status(500).json({ error: "Error logging in - 002" });
-				}
-
-				console.log("session details", req.session);
-
-				return res.status(200).json({ user: returnUserObj });
-			});
+	pool.query(USER_SUB_QUERY, [email], (error, result) => {
+		if (error) {
+			logger.error(error);
+			return res.status(500).json({ error: "Error logging in - 001" });
 		}
-	);
+
+		if (result.rows.length === 0) {
+			return res.status(400).json({ error: "User not found" });
+		}
+
+		const user = result.rows[0];
+
+		if (!bcrypt.compareSync(password, user.password)) {
+			return res.status(400).json({ error: "Invalid password" });
+		}
+
+		const returnUserObj = userReturnObjMaker(result);
+
+		req.login(user, (err) => {
+			if (err) {
+				logger.error(err);
+				return res.status(500).json({ error: "Error logging in - 002" });
+			}
+
+			console.log("session details", req.session);
+
+			return res.status(200).json({ user: returnUserObj });
+		});
+	});
 };
 
 export const postLogout = async (req, res) => {
