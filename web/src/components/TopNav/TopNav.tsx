@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { LoginDialog } from "@components";
+import { LoginDialog, SearchesDialog } from "@components";
 import { useGetUser, useLogout } from "@hooks";
 
 export function TopNav() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [isSearchesDialogOpen, setIsSearchesDialogOpen] = useState(false);
 	const user = useGetUser();
 	const searchCount = user?.searches?.length;
 	const handleLogout = useLogout();
@@ -23,7 +24,11 @@ export function TopNav() {
 	};
 
 	const handleSearchClick = () => {
-		console.log("Saved Searches clicked", { user });
+		setIsSearchesDialogOpen(true);
+	};
+
+	const handleSearchesDialogClose = () => {
+		setIsSearchesDialogOpen(false);
 	};
 
 	return (
@@ -53,6 +58,10 @@ export function TopNav() {
 			<LoginDialog
 				isDialogOpen={isDialogOpen}
 				handleDialogClose={handleDialogClose}
+			/>
+			<SearchesDialog
+				isSearchesDialogOpen={isSearchesDialogOpen}
+				handleSearchesDialogClose={handleSearchesDialogClose}
 			/>
 		</>
 	);

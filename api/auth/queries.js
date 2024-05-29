@@ -51,6 +51,13 @@ export const postLogin = async (req, res) => {
 				return res.status(400).json({ error: "Invalid password" });
 			}
 
+			const searches = result.rows.map((row) => {
+				return {
+					include: JSON.parse(row.include_terms),
+					exclude: JSON.parse(row.exclude_terms),
+				};
+			});
+
 			// remove password from user object to be returned
 			const returnUserObj = {
 				id: user.id,
@@ -58,10 +65,7 @@ export const postLogin = async (req, res) => {
 				last_name: user.last_name,
 				email: user.email,
 				is_admin: user.is_admin,
-				searches: result.rows.map((row) => ({
-					include: JSON.parse(row.include_terms),
-					exclude: JSON.parse(row.exclude_terms),
-				})),
+				searches,
 			};
 
 			req.login(user, (err) => {

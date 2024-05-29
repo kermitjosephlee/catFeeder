@@ -8,8 +8,8 @@ import {
 } from "react";
 
 export type SearchType = {
-	includes: string[];
-	excludes: string[];
+	include?: string[];
+	exclude?: string[];
 };
 
 export type UserType = {

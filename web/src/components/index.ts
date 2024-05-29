@@ -5,6 +5,8 @@ export * from "./CatFoodSkeletons";
 export * from "./LoginDialog";
 export * from "./Main";
 export * from "./SearchBar";
+export * from "./SearchesDialog";
+export * from "./SearchesDialogList";
 export * from "./SearchPill";
 export * from "./SideBar";
 export * from "./TopNav";

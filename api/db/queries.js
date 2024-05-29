@@ -49,6 +49,7 @@ export const getProductsByIngredients = async (req, res) => {
 	return res.json(response.rows);
 };
 
+// saves a search to the database
 export const postSearch = async (req, res) => {
 	const { include, exclude, userId } = req.body;
 
