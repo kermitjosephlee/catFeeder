@@ -14,6 +14,22 @@ export const USER_SUB_QUERY = `SELECT
     WHERE u.id = $1 
     AND s.deleted_at IS NULL;`;
 
+export const USER_SUB_QUERY_BY_EMAIL = `SELECT 
+		u.id AS user_id, 
+		u.first_name, 
+		u.last_name, 
+		u.email, 
+		u.is_admin,
+		u.password, 
+		s.id AS search_id,
+		s.include_terms, 
+		s.exclude_terms
+		FROM users u 
+		LEFT JOIN searches s 
+		ON u.id = s.user_id 
+		WHERE u.email = $1 
+		AND s.deleted_at IS NULL;`;
+
 export function userReturnObjMaker(results) {
 	const user = results.rows[0];
 	const searches = results.rows.map((row) => {

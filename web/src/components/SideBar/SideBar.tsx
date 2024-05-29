@@ -19,8 +19,6 @@ export function SideBar({
 	const setUser = useSetUser();
 	const { isSaveSearchButtonDisabled } = useSearch();
 
-	console.log("user searches", user?.searches?.length ?? null);
-
 	const hasSearchTerms =
 		includedSearchTerms.length > 0 || excludedSearchTerms.length > 0;
 

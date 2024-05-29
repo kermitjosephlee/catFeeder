@@ -1,7 +1,6 @@
 import { useCancelSearch, useGetUser, useSearch } from "@hooks";
-import { SearchType } from "@/types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
+import { SearchType } from "@types";
+import { SearchesDialogListItem } from "@components";
 
 export function SearchesDialogList() {
 	const user = useGetUser();
@@ -35,26 +34,13 @@ export function SearchesDialogList() {
 
 	return (
 		<div className="pt-6">
-			{searches.map((search, index) => (
-				<div
-					className="flex justify-between items-center mt-2 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
-					key={index}>
-					<div onClick={() => handleSearch(search)}>
-						{search.include?.map((each) => (
-							<p key={each} className="btn btn-outline btn-success mr-1">
-								{each}
-							</p>
-						))}
-						{search.exclude?.map((each) => (
-							<p key={each} className="btn btn-outline btn-error mr-1">
-								{each}
-							</p>
-						))}
-					</div>
-					<div onClick={() => handleRemoveSearch(search.id.toString())}>
-						<FontAwesomeIcon size="lg" icon={faCircleXmark} />
-					</div>
-				</div>
+			{searches.map((search) => (
+				<SearchesDialogListItem
+					key={search.id}
+					search={search}
+					handleSearch={handleSearch}
+					handleRemoveSearch={handleRemoveSearch}
+				/>
 			))}
 		</div>
 	);

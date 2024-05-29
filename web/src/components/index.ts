@@ -7,6 +7,7 @@ export * from "./Main";
 export * from "./SearchBar";
 export * from "./SearchesDialog";
 export * from "./SearchesDialogList";
+export * from "./SearchesDialogListItem";
 export * from "./SearchPill";
 export * from "./SideBar";
 export * from "./TopNav";

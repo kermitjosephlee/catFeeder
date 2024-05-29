@@ -2,8 +2,10 @@ import "dotenv/config";
 import pg from "pg";
 import * as EmailValidator from "email-validator";
 import bcrypt from "bcryptjs";
+import { logger } from "../utils/logger.js";
 import {
-	USER_SUB_QUERY,
+	// USER_SUB_QUERY,
+	USER_SUB_QUERY_BY_EMAIL,
 	userReturnObjMaker,
 } from "../helpers/getUser/getUser.js";
 
@@ -25,7 +27,7 @@ export const postLogin = async (req, res) => {
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
-	pool.query(USER_SUB_QUERY, [email], (error, result) => {
+	pool.query(USER_SUB_QUERY_BY_EMAIL, [email], (error, result) => {
 		if (error) {
 			logger.error(error);
 			return res.status(500).json({ error: "Error logging in - 001" });
