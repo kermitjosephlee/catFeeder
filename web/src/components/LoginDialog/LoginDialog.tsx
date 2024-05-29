@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useSetUser } from "@hooks";
+import { useLogin, useRegister } from "@hooks";
 
 const loginSchema = yup
 	.object({
@@ -20,7 +20,7 @@ const registrationSchema = yup
 	})
 	.required();
 
-interface IFormInput {
+export interface IFormInput {
 	firstName?: string;
 	lastName?: string;
 	email: string;
@@ -34,7 +34,8 @@ interface IProps {
 
 export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 	const [isUserRegistration, setIsUserRegistration] = useState(false);
-	const setUser = useSetUser();
+	const login = useLogin();
+	const registerUser = useRegister();
 
 	const { register, handleSubmit, reset } = useForm<IFormInput>({
 		resolver: yupResolver(
@@ -43,48 +44,13 @@ export function LoginDialog({ isDialogOpen, handleDialogClose }: IProps) {
 	});
 
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-		const postURL = isUserRegistration
-			? "http://localhost:3000/register"
-			: "http://localhost:3000/login";
-
-		try {
-			const response = await fetch(postURL, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			});
-
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
-			}
-
-			const jsonResponse = await response.json();
-
-			console.log({ jsonResponse });
-
-			// converting keys from snake_case to camelCase
-			const responseUser = {
-				firstName: jsonResponse.user.first_name,
-				lastName: jsonResponse.user.last_name,
-				email: jsonResponse.user.email,
-				id: jsonResponse.user.id,
-				isAdmin: jsonResponse.user.is_admin,
-				searches: jsonResponse.user.searches,
-			};
-
-			setUser(responseUser);
-			sessionStorage.setItem("user", JSON.stringify(responseUser));
-
-			reset();
-			handleDialogClose();
-		} catch (error) {
-			console.error(
-				"There has been a problem with your fetch operation:",
-				error
-			);
+		if (isUserRegistration) {
+			await registerUser(data);
+		} else {
+			await login(data);
 		}
+		reset();
+		handleDialogClose();
 	};
 
 	return (

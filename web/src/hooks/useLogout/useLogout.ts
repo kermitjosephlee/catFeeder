@@ -1,27 +1,26 @@
 import { useSetUser } from "@hooks";
 
+const LOGOUT_URL = "http://localhost:3000/logout";
+
 export function useLogout() {
 	const setUser = useSetUser();
 
-	return () => {
-		fetch("http://localhost:3000/logout", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-			.then((res) => {
-				if (res.status === 200 && res.ok) {
-					setUser(null);
-				} else {
-					console.log("Error is logging out", res);
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {
-				sessionStorage.removeItem("user");
+	return async () => {
+		try {
+			const response = await fetch(LOGOUT_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
 			});
+			if (!response.ok || response.status !== 200) {
+				console.log("Network response was not ok");
+				return;
+			}
+			setUser(null);
+			sessionStorage.removeItem("user");
+		} catch (error) {
+			console.log("Error logging out", error);
+		}
 	};
 }
