@@ -16,9 +16,12 @@ export function SearchesDialogList({
 		setExcludedSearchTerms,
 		setIsSaveSearchButtonDisabled,
 	} = useSearch();
-	const searches = user?.searches;
 
-	if (!searches || searches.length === 0) {
+	const searches = user?.searches;
+	console.log({ searches });
+	const filteredSearches = searches?.filter((search) => !!search.id);
+
+	if (!filteredSearches || filteredSearches.length === 0) {
 		return <div>No searches found</div>;
 	}
 
@@ -36,7 +39,7 @@ export function SearchesDialogList({
 
 	return (
 		<div className="pt-6">
-			{searches.map((search) => (
+			{filteredSearches.map((search) => (
 				<SearchesDialogListItem
 					deleteSearchIds={deleteSearchIds}
 					key={search.id}

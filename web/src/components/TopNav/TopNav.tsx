@@ -4,10 +4,9 @@ import { useGetUser, useLogout, useSearch } from "@hooks";
 
 export function TopNav() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	// const [isSearchesDialogOpen, setIsSearchesDialogOpen] = useState(false);
-	const { isSearchesDialogOpen, setIsSearchesDialogOpen } = useSearch();
+	const { setIsSearchesDialogOpen } = useSearch();
 	const user = useGetUser();
-	const searchCount = user?.searches?.length;
+	const searchCount = user?.searches?.filter((search) => !!search.id).length;
 	const handleLogout = useLogout();
 
 	const toggleDialogOpen = () => {
@@ -41,7 +40,7 @@ export function TopNav() {
 					</a>
 				</div>
 				<div>
-					{searchCount && (
+					{searchCount && searchCount > 0 ? (
 						<div className="indicator mr-6">
 							<span className="indicator-item badge badge-primary">
 								{searchCount}
@@ -50,6 +49,8 @@ export function TopNav() {
 								Saved Searches
 							</button>
 						</div>
+					) : (
+						<div></div>
 					)}
 					<div className="btn btn-secondary" onClick={toggleDialogOpen}>
 						{user ? `Logout ${user.firstName}` : "Login"}

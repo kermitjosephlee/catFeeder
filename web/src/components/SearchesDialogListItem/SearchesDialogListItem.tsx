@@ -18,15 +18,15 @@ export function SearchesDialogListItem({
 	handleSelectDeleteSearchCheckbox,
 }: IProps) {
 	const { isDeleteMultipleModeOpen, setIsSearchesDialogOpen } = useSearch();
-
 	const user = useGetUser();
-
 	const deleteSearch = useDeleteSearch();
 
-	const checked = deleteSearchIds.includes(search.id.toString());
+	const searchId = search?.id.toString() ?? "";
+
+	const checked = deleteSearchIds.includes(searchId);
 
 	const handleCheckboxClick = () => {
-		handleSelectDeleteSearchCheckbox(search.id.toString());
+		handleSelectDeleteSearchCheckbox(searchId);
 	};
 
 	const handleRowClick = () => {
@@ -36,7 +36,7 @@ export function SearchesDialogListItem({
 
 	const handleRowDeleteClick = () => {
 		if (!user) return;
-		deleteSearch({ userId: user.id, searchIds: [search.id.toString()] });
+		deleteSearch({ userId: user.id, searchIds: [searchId] });
 		setIsSearchesDialogOpen(false);
 	};
 
