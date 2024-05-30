@@ -18,7 +18,6 @@ export function SearchesDialogList({
 	} = useSearch();
 
 	const searches = user?.searches;
-	console.log({ searches });
 	const filteredSearches = searches?.filter((search) => !!search.id);
 
 	if (!filteredSearches || filteredSearches.length === 0) {
