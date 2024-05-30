@@ -25,6 +25,6 @@ $ cd web
 $ yarn dev
 ```
 
-See in browser at `http://localhost:5173`
+See in browser at `http://localhost:8080`
 
 Test Server at `http://localhost:3000`
