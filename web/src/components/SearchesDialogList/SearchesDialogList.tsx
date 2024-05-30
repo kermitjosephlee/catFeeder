@@ -1,10 +1,16 @@
-import { useCancelSearch, useGetUser, useSearch } from "@hooks";
+import { useGetUser, useSearch } from "@hooks";
 import { SearchType } from "@types";
 import { SearchesDialogListItem } from "@components";
 
-export function SearchesDialogList() {
+export function SearchesDialogList({
+	deleteSearchIds,
+	handleSelectDeleteSearchCheckbox,
+}: {
+	deleteSearchIds: string[];
+	handleSelectDeleteSearchCheckbox: (id: string) => void;
+}) {
 	const user = useGetUser();
-	const cancelSearch = useCancelSearch();
+
 	const {
 		setIncludedSearchTerms,
 		setExcludedSearchTerms,
@@ -28,18 +34,15 @@ export function SearchesDialogList() {
 		setIsSaveSearchButtonDisabled(true);
 	};
 
-	const handleRemoveSearch = (id: string) => {
-		cancelSearch({ userId: user.id, searchId: id });
-	};
-
 	return (
 		<div className="pt-6">
 			{searches.map((search) => (
 				<SearchesDialogListItem
+					deleteSearchIds={deleteSearchIds}
 					key={search.id}
 					search={search}
+					handleSelectDeleteSearchCheckbox={handleSelectDeleteSearchCheckbox}
 					handleSearch={handleSearch}
-					handleRemoveSearch={handleRemoveSearch}
 				/>
 			))}
 		</div>

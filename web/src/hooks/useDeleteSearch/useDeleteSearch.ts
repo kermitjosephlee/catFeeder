@@ -1,18 +1,24 @@
 import { useSetUser } from "@hooks";
 
-const CANCEL_SEARCH_URL = "http://localhost:3000/cancel_search";
+const DELETE_SEARCH_URL = "http://localhost:3000/cancel_search";
 
-export function useCancelSearch() {
+export function useDeleteSearch() {
 	const setUser = useSetUser();
 
-	return async ({ userId, searchId }: { searchId: string; userId: string }) => {
+	return async ({
+		userId,
+		searchIds,
+	}: {
+		searchIds: string[];
+		userId: string;
+	}) => {
 		try {
-			const response = await fetch(CANCEL_SEARCH_URL, {
+			const response = await fetch(DELETE_SEARCH_URL, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ userId, searchId }),
+				body: JSON.stringify({ userId, searchIds }),
 			});
 
 			if (!response.ok) {

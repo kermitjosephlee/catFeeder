@@ -1,4 +1,4 @@
-export * from "./useCancelSearch";
+export * from "./useDeleteSearch";
 export * from "./useGetUser";
 export * from "./useLogin";
 export * from "./useLogout";

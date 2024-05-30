@@ -102,15 +102,17 @@ export const postSearch = async (req, res) => {
 
 // soft deletes a search from the database
 export const postCancelSearch = async (req, res) => {
-	const { userId, searchId } = req.body;
+	const { userId, searchIds } = req.body;
 
-	if (!userId || !searchId) {
+	if (!userId || !searchIds || !searchIds.length) {
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
+	const searchIdInts = searchIds.map((id) => parseInt(id, 10));
+
 	pool.query(
-		`UPDATE searches SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1`,
-		[searchId],
+		`UPDATE searches SET deleted_at = CURRENT_TIMESTAMP WHERE id = ANY($1::int[])`,
+		[searchIdInts],
 		(err, result) => {
 			if (err) {
 				logger.error(err);

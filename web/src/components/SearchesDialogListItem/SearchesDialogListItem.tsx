@@ -1,36 +1,78 @@
+import { SearchType } from "@types";
+import { useSearch, useGetUser, useDeleteSearch } from "@hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
-import { SearchType } from "@types";
+import { Checkbox, IngredientsRow } from "./subcomponents";
 
 interface IProps {
+	deleteSearchIds: string[];
 	search: SearchType;
 	handleSearch: (search: SearchType) => void;
-	handleRemoveSearch: (id: string) => void;
+	handleSelectDeleteSearchCheckbox: (id: string) => void;
 }
 
 export function SearchesDialogListItem({
+	deleteSearchIds,
 	search,
 	handleSearch,
-	handleRemoveSearch,
+	handleSelectDeleteSearchCheckbox,
 }: IProps) {
+	const { isDeleteMultipleModeOpen, setIsSearchesDialogOpen } = useSearch();
+
+	const user = useGetUser();
+
+	const deleteSearch = useDeleteSearch();
+
+	const checked = deleteSearchIds.includes(search.id.toString());
+
+	const handleCheckboxClick = () => {
+		handleSelectDeleteSearchCheckbox(search.id.toString());
+	};
+
+	const handleRowClick = () => {
+		setIsSearchesDialogOpen(false);
+		handleSearch(search);
+	};
+
+	const handleRowDeleteClick = () => {
+		if (!user) return;
+		deleteSearch({ userId: user.id, searchIds: [search.id.toString()] });
+		setIsSearchesDialogOpen(false);
+	};
+
+	const rowClassName = checked
+		? "flex items-center grow h-16 p-2 overflow-scroll rounded-lg bg-gray-200"
+		: "flex items-center grow h-16 p-2 overflow-scroll rounded-lg";
+
 	return (
 		<div
-			className="flex justify-between items-center mt-2 p-2 rounded-md hover:bg-gray-50 cursor-pointer"
+			className="flex justify-between items-center p-2 rounded-md hover:bg-gray-50 cursor-pointer"
 			key={search.id}>
-			<div onClick={() => handleSearch(search)}>
-				{search.include?.map((each) => (
-					<p key={each} className="btn btn-outline btn-success mr-1">
-						{each}
-					</p>
-				))}
-				{search.exclude?.map((each) => (
-					<p key={each} className="btn btn-outline btn-error mr-1">
-						{each}
-					</p>
-				))}
-			</div>
-			<div onClick={() => handleRemoveSearch(search.id.toString())}>
-				<FontAwesomeIcon size="lg" icon={faCircleXmark} />
+			<div className="flex w-full items-center">
+				<div className="mr-4 flex-none w-4">
+					{isDeleteMultipleModeOpen && (
+						<Checkbox checked={checked} onClick={handleCheckboxClick} />
+					)}
+				</div>
+				<div
+					style={{ scrollbarWidth: "none" }}
+					className={rowClassName}
+					onClick={handleRowClick}>
+					<IngredientsRow
+						ingredients={search.include || []}
+						isIncluded={true}
+					/>
+					<IngredientsRow
+						ingredients={search.exclude || []}
+						isIncluded={false}
+					/>
+				</div>
+
+				<div className="flex-none w-4 pl-1 ml-1" onClick={handleRowDeleteClick}>
+					{!isDeleteMultipleModeOpen && (
+						<FontAwesomeIcon size="lg" icon={faCircleXmark} />
+					)}
+				</div>
 			</div>
 		</div>
 	);
