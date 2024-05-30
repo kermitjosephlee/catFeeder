@@ -33,6 +33,8 @@ export const postLogin = async (req, res) => {
 			return res.status(500).json({ error: "Error logging in - 001" });
 		}
 
+		// getting an error for queries for users with no searches - this query will return with no rows
+		// TODO: need to fix for users with no searches
 		if (result.rows.length === 0) {
 			return res.status(400).json({ error: "User not found" });
 		}

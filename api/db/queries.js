@@ -110,27 +110,55 @@ export const postCancelSearch = async (req, res) => {
 
 	const searchIdInts = searchIds.map((id) => parseInt(id, 10));
 
+	console.log({ userId, searchIdInts });
+
 	pool.query(
 		`UPDATE searches SET deleted_at = CURRENT_TIMESTAMP WHERE id = ANY($1::int[])`,
 		[searchIdInts],
 		(err, result) => {
 			if (err) {
+				console.log({ err, result });
 				logger.error(err);
 				return res.status(500).json({ error: "Error deleting search" });
 			} else {
+				console.log("user query", { err, result });
 				pool.query(USER_SUB_QUERY, [userId], (selectError, selectResult) => {
 					if (selectError) {
+						console.log({ selectError });
 						logger.error(selectError);
 						return res
 							.status(500)
 							.json({ error: "Error getting updated user searches" });
 					}
 
+					// if no searches found, return user
 					if (selectResult.rows.length === 0) {
-						return res.status(400).json({ error: "Search not found" });
+						pool.query(
+							`SELECT id, first_name, last_name, is_admin, email FROM users WHERE id = $1;`,
+							[userId],
+							(selectUserError, selectUserResult) => {
+								if (selectUserError) {
+									logger.error(selectUserError);
+									return res
+										.status(500)
+										.json({ error: "Error getting updated user searches" });
+								}
+
+								if (selectUserResult.rows.length === 0) {
+									return res.status(400).json({ error: "User not found" });
+								}
+
+								const returnUserObj = userReturnObjMaker(selectUserResult);
+
+								return res.status(200).json({ user: returnUserObj });
+							}
+						);
 					}
 
 					const returnUserObj = userReturnObjMaker(selectResult);
+
+					const searches = returnUserObj.searches;
+					console.log({ returnUserObj, searches });
 
 					return res.status(200).json({ user: returnUserObj });
 				});

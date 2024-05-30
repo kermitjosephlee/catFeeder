@@ -4,6 +4,7 @@ import { IResult as ICatFood } from "../../App";
 interface IProps {
 	results: ICatFood[];
 	isLoading: boolean;
+	isFirstLoading: boolean;
 }
 
 function CatFoodCards({ results }: { results: ICatFood[] }) {
@@ -12,11 +13,11 @@ function CatFoodCards({ results }: { results: ICatFood[] }) {
 	});
 }
 
-export function CatFoodData({ results, isLoading }: IProps) {
+export function CatFoodData({ results, isLoading, isFirstLoading }: IProps) {
 	const noResults = results.length === 0;
 	const showSkeletons = isLoading && noResults;
 	const showResults = results.length > 0;
-	const showNoResults = !isLoading && noResults;
+	const showNoResults = !isLoading && !isFirstLoading && noResults;
 
 	return (
 		<div className="columns-sm p-4 gap-4">

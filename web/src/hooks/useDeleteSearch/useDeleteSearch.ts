@@ -9,9 +9,10 @@ export function useDeleteSearch() {
 		userId,
 		searchIds,
 	}: {
-		searchIds: string[];
 		userId: string;
+		searchIds: string[];
 	}) => {
+		console.log({ userId, searchIds, DELETE_SEARCH_URL });
 		try {
 			const response = await fetch(DELETE_SEARCH_URL, {
 				method: "POST",
@@ -21,11 +22,15 @@ export function useDeleteSearch() {
 				body: JSON.stringify({ userId, searchIds }),
 			});
 
+			console.log({ response });
+
 			if (!response.ok) {
 				throw new Error("Network response was not ok");
 			}
 
 			const jsonResponse = await response.json();
+
+			console.log({ jsonResponse });
 
 			// converting keys from snake_case to camelCase
 			const responseUser = {

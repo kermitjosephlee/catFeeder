@@ -32,16 +32,20 @@ export const USER_SUB_QUERY_BY_EMAIL = `SELECT
 
 export function userReturnObjMaker(results) {
 	const user = results.rows[0];
-	const searches = results.rows.map((row) => {
-		return {
-			id: row.search_id,
-			include: JSON.parse(row.include_terms),
-			exclude: JSON.parse(row.exclude_terms),
-		};
-	});
+
+	console.log({ user });
+
+	const searches =
+		results.rows.map((row) => {
+			return {
+				id: row.search_id,
+				include: JSON.parse(row.include_terms),
+				exclude: JSON.parse(row.exclude_terms),
+			};
+		}) || [];
 
 	return {
-		id: user.user_id,
+		id: userId,
 		first_name: user.first_name,
 		last_name: user.last_name,
 		email: user.email,

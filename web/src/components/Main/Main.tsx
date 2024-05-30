@@ -105,7 +105,11 @@ export function Main() {
 					handleSearchTerm={handleSearchTerm}
 					handleToggle={handleToggle}
 				/>
-				<CatFoodData results={results} isLoading={isLoading} />
+				<CatFoodData
+					results={results}
+					isLoading={isLoading}
+					isFirstLoading={isFirstLoading}
+				/>
 			</div>
 		</div>
 	);
