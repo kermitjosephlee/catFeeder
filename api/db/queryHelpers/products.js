@@ -4,9 +4,11 @@ const queryArrayBuilder = (arr) => {
 	return arr.map((each) => `'${each}'`);
 };
 
-export const ingredientsJoinQueryBuilder = ({
-	includeIngredients,
-	excludeIngredients,
+export const productsQueryBuilder = ({
+	includeIngredients = [],
+	excludeIngredients = [],
+	page = 1,
+	limit = 20,
 }) => {
 	const formattedIncludeIngredients =
 		queryArrayBuilder(includeIngredients) || [];
@@ -18,54 +20,16 @@ export const ingredientsJoinQueryBuilder = ({
 	const hasBothIncludeAndExcludeIngredients =
 		hasIncludeIngredients && hasExcludeIngredients;
 
-	const includeSubQuery = `NOT EXISTS (
-      SELECT 1 FROM UNNEST(ARRAY[${formattedIncludeIngredients}]) AS required_ingredient
-      WHERE NOT EXISTS (
-          SELECT 1
-          FROM product_ingredients
-          JOIN ingredients ON product_ingredients.ingredient_id = ingredients.id
-          WHERE products.id = product_ingredients.product_id
-          AND LOWER(ingredients.name) LIKE '%' || LOWER(required_ingredient) || '%'
-      )
-  )`;
+	const hasPage = !!page && page > 0;
 
-	const excludeSubQuery = `NOT EXISTS (
-      SELECT 1 FROM UNNEST(ARRAY[${formattedExcludeIngredients}]) AS unwanted_ingredient
-      WHERE EXISTS (
-          SELECT 1
-          FROM product_ingredients
-          JOIN ingredients ON product_ingredients.ingredient_id = ingredients.id
-          WHERE products.id = product_ingredients.product_id
-          AND LOWER(ingredients.name) LIKE '%' || LOWER(unwanted_ingredient) || '%'
-      )
-  )`;
+	const hasLimit = !!limit && limit > 0;
 
-	const formattedQuery = format(`SELECT products.*
-  FROM products
-  WHERE
-  ${hasIncludeIngredients ? includeSubQuery : ""}
-  ${hasBothIncludeAndExcludeIngredients ? " AND " : ""}
-  ${hasExcludeIngredients ? excludeSubQuery : ""}
- ;`);
+	// TODO: update LIMIT default from 1
+	const limitSubQuery = hasLimit ? ` LIMIT ${limit}` : "LIMIT 1";
 
-	return formattedQuery;
-};
+	const offset = page * limit;
 
-export const ingredientsQueryBuilder = ({
-	includeIngredients,
-	excludeIngredients,
-	page,
-	limit
-}) => {
-	const formattedIncludeIngredients =
-		queryArrayBuilder(includeIngredients) || [];
-	const formattedExcludeIngredients =
-		queryArrayBuilder(excludeIngredients) || [];
-
-	const hasIncludeIngredients = formattedIncludeIngredients.length > 0;
-	const hasExcludeIngredients = formattedExcludeIngredients.length > 0;
-	const hasBothIncludeAndExcludeIngredients =
-		hasIncludeIngredients && hasExcludeIngredients;
+	const offsetSubQuery = hasPage && hasLimit ? ` OFFSET ${offset}` : "";
 
 	const includeSubQuery = hasIncludeIngredients
 		? `(${formattedIncludeIngredients
@@ -103,10 +67,14 @@ export const ingredientsQueryBuilder = ({
     ${includeSubQuery}
     ${hasBothIncludeAndExcludeIngredients ? " AND " : ""}
     ${excludeSubQuery}
+    ${limitSubQuery}
+    ${offsetSubQuery}
     ;`;
 
 	return {
 		ingredientsQuery: formattedQuery,
 		ingredientsArray: [...includeIngredients, ...excludeIngredients],
+		page,
+		limit,
 	};
 };

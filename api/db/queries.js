@@ -1,6 +1,7 @@
 import "dotenv/config";
 import pg from "pg";
 import { ingredientsQueryBuilder } from "./queryHelpers/ingredients.js";
+import { productsQueryBuilder } from "./queryHelpers/products.js";
 // const pgCredentials = process.env.DB_CREDENTIALS;
 
 import {
@@ -24,9 +25,40 @@ export const getStatus = async (req, res) => {
 	return res.json(response.rows);
 };
 
-export const getProducts = async (_, res) => {
-	console.log("GET productsasdfasd");
-	const response = await pool.query("SELECT * FROM products;");
+export const getProducts = async (req, res) => {
+	const includeIngredients = req.query.include
+		? req.query.include.split(",")
+		: [];
+	const excludeIngredients = req.query.exclude
+		? req.query.exclude.split(",")
+		: [];
+
+	const page = req.query.page || 1;
+
+	const limit = req.query.limit || 10;
+
+	const { ingredientsQuery, ingredientsArray } = productsQueryBuilder({
+		includeIngredients,
+		excludeIngredients,
+		page,
+		limit,
+	});
+
+	console.log("*** INPUTS ***", {
+		ingredientsQuery,
+		ingredientsArray,
+		page,
+		limit,
+	});
+
+	const response = await pool.query(ingredientsQuery, ingredientsArray);
+
+	console.log("PRODUCT RESULTS", {
+		includeIngredients,
+		excludeIngredients,
+		rowLength: response.rows.length,
+	});
+
 	return res.json(response.rows);
 };
 
@@ -37,6 +69,11 @@ export const getProductsByIngredients = async (req, res) => {
 	const excludeIngredients = req.query.exclude
 		? req.query.exclude.split(",")
 		: [];
+
+	const page = req.query.page || 1;
+
+	const limit = req.query.limit || 10;
+
 	const { ingredientsQuery, ingredientsArray } = ingredientsQueryBuilder({
 		includeIngredients,
 		excludeIngredients,

@@ -1,13 +1,14 @@
+const PAGE_SIZE = 100;
+
 export function queryBuilder({
 	includedSearchTerms,
 	excludedSearchTerms,
+	page,
 }: {
 	includedSearchTerms: string[];
 	excludedSearchTerms: string[];
+	page: number;
 }): string {
-	const hasQuery =
-		includedSearchTerms.length > 0 || excludedSearchTerms.length > 0;
-	const hasQueryStr = hasQuery ? "?" : "";
 	const includeStr =
 		includedSearchTerms.length > 0
 			? `include=${includedSearchTerms.join(",")}`
@@ -17,7 +18,11 @@ export function queryBuilder({
 			? `exclude=${excludedSearchTerms.join(",")}`
 			: "";
 
-	return `${hasQueryStr}${includeStr}${
+	const pageStr = page.toString() || "1";
+
+	const paginationStr = `&page=${pageStr}&limit=${PAGE_SIZE}`;
+
+	return `?${includeStr}${
 		excludeStr.length > 0 ? "&" : ""
-	}${excludeStr}`;
+	}${excludeStr}${paginationStr}`;
 }
