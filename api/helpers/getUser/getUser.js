@@ -1,39 +1,16 @@
-// ignore linting for this file
-/* eslint-disable */
-
-// export const USER_SUB_QUERY = `SELECT
-//     u.id AS user_id,
-//     u.first_name,
-//     u.last_name,
-//     u.email,
-//     u.is_admin,
-//     u.password,
-//     s.id AS search_id,
-//     s.include_terms,
-//     s.exclude_terms
-//     FROM users u
-//     LEFT JOIN searches s
-//     ON u.id = s.user_id
-//     WHERE u.id = $1
-//     AND s.deleted_at IS NULL;`;
-
+import "dotenv/config";
+import pg from "pg";
 import { logger } from "../../utils/logger.js";
 
-// export const USER_SUB_QUERY_BY_EMAIL = `SELECT
-// 		u.id AS user_id,
-// 		u.first_name,
-// 		u.last_name,
-// 		u.email,
-// 		u.is_admin,
-// 		u.password,
-// 		s.id AS search_id,
-// 		s.include_terms,
-// 		s.exclude_terms
-// 		FROM users u
-// 		LEFT JOIN searches s
-// 		ON u.id = s.user_id
-// 		WHERE u.email = $1
-// 		AND s.deleted_at IS NULL;`;
+const pool = new pg.Pool({
+	user: "postgres",
+	password: "password",
+	host: "0.0.0.0",
+	port: 5432,
+	database: "catFeeder",
+});
+
+await pool.connect();
 
 export const GET_USER_BY_EMAIL = `
 	SELECT
@@ -71,47 +48,74 @@ export function userReturnObjMaker({ user, searches }) {
 		searches: searchesObj,
 	};
 
-	console.log({ returnObj });
-
 	return returnObj;
 }
 
-export function getUser(userId) {
+const poolQuery = (query, params) => {
 	return new Promise((resolve, reject) => {
-		pool
-			.query(GET_USER_BY_ID, [userId], (error, result) => {
-				if (error) {
-					reject(error);
-				}
-
-				if (result.rows.length === 0) {
-					reject("User not found");
-				}
-
-				const user = result.rows[0];
-
-				return user;
-			})
-			.then((user) => {
-				pool.query(
-					GET_SEARCHES_BY_USER_ID,
-					[userId],
-					(searchesError, searchesResult) => {
-						if (searchesError) {
-							reject(searchesError);
-						}
-
-						const searches = searchesResult.rows;
-
-						const returnUserObj = userReturnObjMaker({ user, searches });
-
-						resolve(returnUserObj);
-					}
-				);
-			})
-			.catch((error) => {
-				logger.error(error);
-				reject("Error getting user");
-			});
+		pool.query(query, params, (error, result) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(result);
+			}
+		});
 	});
+};
+
+export async function getUser(userId) {
+	try {
+		const userResult = await poolQuery(GET_USER_BY_ID, [userId]);
+
+		if (userResult.rows.length === 0) {
+			logger.error("User not found for id", userId);
+			return false;
+		}
+
+		if (userResult.rows.length > 1) {
+			logger.error("Multiple users found for id", userId);
+			return false;
+		}
+
+		const user = userResult.rows[0];
+
+		return user;
+	} catch (error) {
+		logger.error(error);
+		return false;
+	}
+}
+
+export async function getUserSearches(userId) {
+	try {
+		const searchesResult = await poolQuery(GET_SEARCHES_BY_USER_ID, [userId]);
+
+		return searchesResult.rows;
+	} catch (error) {
+		logger.error(error);
+		return false;
+	}
+}
+
+export async function getUserByEmail(email) {
+	try {
+		const userResult = await poolQuery(GET_USER_BY_EMAIL, [email]);
+
+		if (userResult.rows.length === 0) {
+			logger.error("User not found for email", email);
+			return false;
+		}
+
+		if (userResult.rows.length > 1) {
+			logger.error("Multiple users found for email", email);
+			return false;
+		}
+
+		const user = userResult.rows[0];
+
+		return user;
+	} catch (error) {
+		logger.error(error);
+		return false;
+	}
 }

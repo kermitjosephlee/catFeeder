@@ -4,9 +4,9 @@ import * as EmailValidator from "email-validator";
 import bcrypt from "bcryptjs";
 import { logger } from "../utils/logger.js";
 import {
-	GET_USER_BY_EMAIL,
-	GET_SEARCHES_BY_USER_ID,
 	userReturnObjMaker,
+	getUserSearches,
+	getUserByEmail,
 } from "../helpers/getUser/getUser.js";
 
 const SALT_ROUNDS = process.env.SALT_ROUNDS || 12;
@@ -27,49 +27,29 @@ export const postLogin = async (req, res) => {
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
-	// get user by email
-	pool.query(GET_USER_BY_EMAIL, [email], (error, result) => {
-		if (error) {
-			logger.error(error);
-			return res.status(500).json({ error: "Error logging in - 001" });
+	const user = await getUserByEmail(email);
+
+	if (!user) {
+		return res.status(400).json({ error: "User not found" });
+	}
+
+	if (!bcrypt.compareSync(password, user.password)) {
+		return res.status(400).json({ error: "Invalid password" });
+	}
+
+	const searches = await getUserSearches(user.id);
+
+	const returnUserObj = userReturnObjMaker({ user, searches });
+
+	req.login(user, (err) => {
+		if (err) {
+			logger.error(err);
+			return res.status(500).json({ error: "Error logging in - 003" });
 		}
 
-		if (result.rows.length === 0) {
-			return res.status(400).json({ error: "User not found" });
-		}
+		console.log("session details", req.session);
 
-		const user = result.rows[0];
-
-		if (!bcrypt.compareSync(password, user.password)) {
-			return res.status(400).json({ error: "Invalid password" });
-		}
-
-		// query for user searches
-		pool.query(
-			GET_SEARCHES_BY_USER_ID,
-			[user.id],
-			(searchesError, searchesResult) => {
-				if (searchesError) {
-					logger.error(searchesError);
-					return res.status(500).json({ error: "Error logging in - 002" });
-				}
-
-				const searches = searchesResult.rows;
-
-				const returnUserObj = userReturnObjMaker({ user, searches });
-
-				req.login(user, (err) => {
-					if (err) {
-						logger.error(err);
-						return res.status(500).json({ error: "Error logging in - 003" });
-					}
-
-					console.log("session details", req.session);
-
-					return res.status(200).json({ user: returnUserObj });
-				});
-			}
-		);
+		return res.status(200).json({ user: returnUserObj });
 	});
 };
 
@@ -109,40 +89,26 @@ export const postRegister = async (req, res) => {
 	const hashedPassword = bcrypt.hashSync(password, SALT_ROUNDS);
 
 	// first check to see if user already exists
-	pool.query(
-		`SELECT id FROM users WHERE email = $1`,
-		[email],
-		(err, result) => {
-			// if error return error
-			if (err) {
-				logger.error(err);
-				return res.status(500).json({ error: "Error registering user" });
-			}
+	const user = await getUserByEmail(email);
 
-			// if user already exists return error
-			if (result.rows.length > 0) {
-				return res.status(400).json({ error: "User already exists" });
-			}
+	if (user) {
+		return res.status(400).json({ error: "User already exists" });
+	} else {
+		const first_name = firstName;
+		const last_name = lastName;
 
-			// if user does not exist, insert user into database
-			if (result.rows.length == 0) {
-				const first_name = firstName;
-				const last_name = lastName;
-
-				pool.query(
-					`INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)`,
-					[first_name, last_name, email, hashedPassword],
-					(err, insertResponse) => {
-						if (err) {
-							logger.error(err);
-							return res.status(500).json({ error: "Error registering user" });
-						}
-						return res.status(200).json({
-							message: "User registered successfully",
-						});
-					}
-				);
+		pool.query(
+			`INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)`,
+			[first_name, last_name, email, hashedPassword],
+			(err, insertResponse) => {
+				if (err) {
+					logger.error(err);
+					return res.status(500).json({ error: "Error registering user" });
+				}
+				return res.status(200).json({
+					message: "User registered successfully",
+				});
 			}
-		}
-	);
+		);
+	}
 };

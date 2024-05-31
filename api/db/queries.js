@@ -4,9 +4,9 @@ import { ingredientsQueryBuilder } from "./queryHelpers/ingredients.js";
 // const pgCredentials = process.env.DB_CREDENTIALS;
 
 import {
-	GET_USER_BY_ID,
 	userReturnObjMaker,
-	GET_SEARCHES_BY_USER_ID,
+	getUser,
+	getUserSearches,
 } from "../helpers/getUser/getUser.js";
 
 const pool = new pg.Pool({
@@ -60,11 +60,7 @@ export const postSearch = async (req, res) => {
 	const { include, exclude, userId } = req.body;
 	console.log({ include, exclude, userId });
 
-	if (!userId) {
-		return res.status(400).json({ error: "Missing required fields" });
-	}
-
-	if (!include && !exclude) {
+	if (!userId || (!include && !exclude)) {
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
@@ -75,44 +71,22 @@ export const postSearch = async (req, res) => {
 	pool.query(
 		`INSERT INTO searches (user_id, include_terms, exclude_terms) VALUES ($1, $2, $3)`,
 		[user_id, include_terms, exclude_terms],
-		(err, result) => {
+		async (err, result) => {
 			if (err) {
 				logger.error(err);
 				return res.status(500).json({ error: "Error saving search" });
 			} else {
-				pool.query(GET_USER_BY_ID, [userId], (selectError, selectResult) => {
-					if (selectError) {
-						logger.error(selectError);
-						return res
-							.status(500)
-							.json({ error: "Error getting updated user searches" });
-					}
+				const user = await getUser(userId);
 
-					if (selectResult.rows.length === 0) {
-						return res.status(400).json({ error: "User not found" });
-					}
+				if (!user) {
+					return res.status(400).json({ error: "User not found" });
+				}
 
-					const user = selectResult.rows[0];
+				const searches = await getUserSearches(userId);
 
-					pool.query(
-						GET_SEARCHES_BY_USER_ID,
-						[userId],
-						(searchesError, searchesResult) => {
-							if (searchesError) {
-								logger.error(searchesError);
-								return res
-									.status(500)
-									.json({ error: "Error getting updated user searches" });
-							}
+				const returnUserObj = userReturnObjMaker({ user, searches });
 
-							const searches = searchesResult.rows;
-
-							const returnUserObj = userReturnObjMaker({ user, searches });
-
-							return res.status(200).json({ user: returnUserObj });
-						}
-					);
-				});
+				return res.status(200).json({ user: returnUserObj });
 			}
 		}
 	);
@@ -128,53 +102,21 @@ export const postCancelSearch = async (req, res) => {
 
 	const searchIdInts = searchIds.map((id) => parseInt(id, 10));
 
-	console.log({ userId, searchIdInts });
-
 	pool.query(
 		`UPDATE searches SET deleted_at = CURRENT_TIMESTAMP WHERE id = ANY($1::int[])`,
 		[searchIdInts],
-		(err, result) => {
+		async (err, result) => {
 			if (err) {
-				console.log({ err, result });
 				logger.error(err);
 				return res.status(500).json({ error: "Error deleting search" });
-			} else {
-				console.log("user query", { err, result });
-				pool.query(
-					GET_USER_BY_ID,
-					[userId],
-					(selectUserError, selectUserResult) => {
-						if (selectUserError) {
-							console.log({ selectUserError });
-							logger.error(selectUserError);
-							return res
-								.status(500)
-								.json({ error: "Error getting updated user searches" });
-						}
-
-						const user = selectUserResult.rows[0];
-
-						pool.query(
-							GET_SEARCHES_BY_USER_ID,
-							[userId],
-							(searchesError, searchesResult) => {
-								if (searchesError) {
-									logger.error(searchesError);
-									return res
-										.status(500)
-										.json({ error: "Error getting updated user searches" });
-								}
-
-								const searches = searchesResult.rows;
-
-								const returnUserObj = userReturnObjMaker({ user, searches });
-
-								return res.status(200).json({ user: returnUserObj });
-							}
-						);
-					}
-				);
 			}
+			const user = await getUser(userId);
+			if (!user) {
+				return res.status(400).json({ error: "User not found" });
+			}
+			const searches = await getUserSearches(userId);
+			const returnUserObj = userReturnObjMaker({ user, searches });
+			return res.status(200).json({ user: returnUserObj });
 		}
 	);
 };
