@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { CatFoodData, SearchBar, SideBar } from "@components";
 import { IResult } from "@/App";
 import { queryBuilder } from "@utils";
@@ -10,7 +10,8 @@ export function Main() {
 	const [checked, setChecked] = useState<boolean>(true); //defaults to include ingredients
 	const [isFirstLoading, setIsFirstLoading] = useState<boolean>(true);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [currentPage, setCurrentPage] = useState<number>(0);
+	const [productCount, setProductCount] = useState<number>(0);
 	const [results, setResults] = useState<IResult[]>([]);
 
 	const {
@@ -21,32 +22,44 @@ export function Main() {
 		setIsSaveSearchButtonDisabled,
 	} = useSearch();
 
-	const query = useMemo(
-		() =>
-			queryBuilder({
-				includedSearchTerms,
-				excludedSearchTerms,
-				page: currentPage,
-			}),
-		[includedSearchTerms, excludedSearchTerms, currentPage]
-	);
-
 	const resultsLength = results.length;
 
+	// set product count on first load
 	useEffect(() => {
 		setIsLoading(true);
+		fetch(`http://localhost:3000/product_count`)
+			.then((response) => response.json())
+			.then((data) => {
+				setProductCount(+data);
+			})
+			.catch((err) => {
+				console.error(err);
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
+	}, []);
+
+	// fetch products first time
+	useEffect(() => {
+		setIsLoading(true);
+		const query = queryBuilder({
+			includedSearchTerms,
+			excludedSearchTerms,
+			page: currentPage,
+		});
 		fetch(`${PRODUCTS_URL}${query}`)
 			.then((response) => response.json())
 			.then((res) => {
-				setResults((prev) => [...prev, ...res]);
-				setCurrentPage((prev) => prev + 1);
+				setResults([...results, ...res]);
+				setCurrentPage(currentPage + 1);
 			})
 			.catch((error) => console.error(error))
 			.finally(() => {
 				if (isFirstLoading) setIsFirstLoading(false);
 				setIsLoading(false);
 			});
-	}, [query, isFirstLoading]);
+	}, [isFirstLoading]);
 
 	const handleSearchTerm = (searchTerm: string) => {
 		if (checked && !includedSearchTerms.includes(searchTerm)) {
@@ -94,19 +107,36 @@ export function Main() {
 		setChecked((prev) => !prev);
 	};
 
-	// const handleNewPageLoad: () => Promise<void> = async () => {
-	// 	setIsLoading(true);
-	// 	fetch(`${PRODUCTS_URL}${query}`)
-	// 		.then((response) => response.json())
-	// 		.then((res) => {
-	// 			setResults((prev) => [...prev, ...res]);
-	// 			setCurrentPage((prev) => prev + 1);
-	// 		})
-	// 		.catch((error) => console.error(error))
-	// 		.finally(() => {
-	// 			setIsLoading(false);
-	// 		});
-	// };
+	const handleNextPageLoad = () => {
+		console.log("handleNextPageLoad");
+
+		const query = queryBuilder({
+			includedSearchTerms,
+			excludedSearchTerms,
+			page: currentPage,
+		});
+
+		if (isLoading) {
+			setIsLoading(true);
+		}
+
+		console.log({ query });
+
+		fetch(`${PRODUCTS_URL}${query}`)
+			.then((response) => response.json())
+			.then((res) => {
+				console.log("Handle Next Page Load", { currentPage, res });
+				setResults([...results, ...res]);
+				setCurrentPage(currentPage + 1);
+			})
+			.catch((error) => console.error(error))
+			.finally(() => {
+				if (isFirstLoading) setIsFirstLoading(false);
+				setIsLoading(false);
+			});
+
+		return;
+	};
 
 	return (
 		<div className="flex w-full">
@@ -127,6 +157,8 @@ export function Main() {
 					results={results}
 					isLoading={isLoading}
 					isFirstLoading={isFirstLoading}
+					handleNextPageLoad={handleNextPageLoad}
+					productCount={productCount}
 				/>
 			</div>
 		</div>

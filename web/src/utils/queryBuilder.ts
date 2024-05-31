@@ -1,4 +1,4 @@
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 10;
 
 export function queryBuilder({
 	includedSearchTerms,
@@ -18,7 +18,9 @@ export function queryBuilder({
 			? `exclude=${excludedSearchTerms.join(",")}`
 			: "";
 
-	const pageStr = page.toString() || "1";
+	const pageStr = page || 0;
+
+	console.log({ pageStr, type: typeof pageStr, includeStr, excludeStr });
 
 	const paginationStr = `&page=${pageStr}&limit=${PAGE_SIZE}`;
 

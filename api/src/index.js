@@ -13,6 +13,7 @@ import { logger } from "../utils/logger.js";
 import { morganMiddleware } from "../middlewares/morgan.middlewares.js";
 
 import {
+	getProductCount,
 	getProducts,
 	getProductsByIngredients,
 	getStatus,
@@ -146,6 +147,8 @@ app.get("/", (_, res) => {
 app.get("/status", getStatus);
 
 app.get("/products", getProducts);
+
+app.get("/product_count", getProductCount);
 
 app.get("/ingredients", getProductsByIngredients);
 

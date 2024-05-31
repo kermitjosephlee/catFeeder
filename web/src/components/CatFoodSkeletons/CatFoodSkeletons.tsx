@@ -1,5 +1,5 @@
 export function CatFoodSkeletons() {
-	const skeletons = Array.from({ length: 30 }, (_, i) => i);
+	const skeletons = Array.from({ length: 3 }, (_, i) => i);
 
 	return skeletons.map((skeleton) => {
 		return (

@@ -25,6 +25,12 @@ export const getStatus = async (req, res) => {
 	return res.json(response.rows);
 };
 
+export const getProductCount = async (req, res) => {
+	const response = await pool.query(`SELECT COUNT(*) FROM products;`);
+	const count = response.rows[0].count || 0;
+	return res.status(200).json(count);
+};
+
 export const getProducts = async (req, res) => {
 	const includeIngredients = req.query.include
 		? req.query.include.split(",")
@@ -33,7 +39,7 @@ export const getProducts = async (req, res) => {
 		? req.query.exclude.split(",")
 		: [];
 
-	const page = req.query.page || 1;
+	const page = req.query.page || 0;
 
 	const limit = req.query.limit || 10;
 
@@ -44,20 +50,7 @@ export const getProducts = async (req, res) => {
 		limit,
 	});
 
-	console.log("*** INPUTS ***", {
-		ingredientsQuery,
-		ingredientsArray,
-		page,
-		limit,
-	});
-
 	const response = await pool.query(ingredientsQuery, ingredientsArray);
-
-	console.log("PRODUCT RESULTS", {
-		includeIngredients,
-		excludeIngredients,
-		rowLength: response.rows.length,
-	});
 
 	return res.json(response.rows);
 };

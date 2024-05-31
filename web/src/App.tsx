@@ -10,6 +10,7 @@ export interface IResult {
 	ingredients: string;
 	created_at?: Date;
 	updated_at?: Date;
+	productCount?: number;
 }
 
 function App() {
