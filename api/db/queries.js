@@ -4,8 +4,9 @@ import { ingredientsQueryBuilder } from "./queryHelpers/ingredients.js";
 // const pgCredentials = process.env.DB_CREDENTIALS;
 
 import {
-	USER_SUB_QUERY,
+	GET_USER_BY_ID,
 	userReturnObjMaker,
+	GET_SEARCHES_BY_USER_ID,
 } from "../helpers/getUser/getUser.js";
 
 const pool = new pg.Pool({
@@ -79,7 +80,7 @@ export const postSearch = async (req, res) => {
 				logger.error(err);
 				return res.status(500).json({ error: "Error saving search" });
 			} else {
-				pool.query(USER_SUB_QUERY, [userId], (selectError, selectResult) => {
+				pool.query(GET_USER_BY_ID, [userId], (selectError, selectResult) => {
 					if (selectError) {
 						logger.error(selectError);
 						return res
@@ -91,9 +92,26 @@ export const postSearch = async (req, res) => {
 						return res.status(400).json({ error: "User not found" });
 					}
 
-					const returnUserObj = userReturnObjMaker(selectResult);
+					const user = selectResult.rows[0];
 
-					return res.status(200).json({ user: returnUserObj });
+					pool.query(
+						GET_SEARCHES_BY_USER_ID,
+						[userId],
+						(searchesError, searchesResult) => {
+							if (searchesError) {
+								logger.error(searchesError);
+								return res
+									.status(500)
+									.json({ error: "Error getting updated user searches" });
+							}
+
+							const searches = searchesResult.rows;
+
+							const returnUserObj = userReturnObjMaker({ user, searches });
+
+							return res.status(200).json({ user: returnUserObj });
+						}
+					);
 				});
 			}
 		}
@@ -122,46 +140,40 @@ export const postCancelSearch = async (req, res) => {
 				return res.status(500).json({ error: "Error deleting search" });
 			} else {
 				console.log("user query", { err, result });
-				pool.query(USER_SUB_QUERY, [userId], (selectError, selectResult) => {
-					if (selectError) {
-						console.log({ selectError });
-						logger.error(selectError);
-						return res
-							.status(500)
-							.json({ error: "Error getting updated user searches" });
-					}
+				pool.query(
+					GET_USER_BY_ID,
+					[userId],
+					(selectUserError, selectUserResult) => {
+						if (selectUserError) {
+							console.log({ selectUserError });
+							logger.error(selectUserError);
+							return res
+								.status(500)
+								.json({ error: "Error getting updated user searches" });
+						}
 
-					// if no searches found, return user
-					if (selectResult.rows.length === 0) {
+						const user = selectUserResult.rows[0];
+
 						pool.query(
-							`SELECT id, first_name, last_name, is_admin, email FROM users WHERE id = $1;`,
+							GET_SEARCHES_BY_USER_ID,
 							[userId],
-							(selectUserError, selectUserResult) => {
-								if (selectUserError) {
-									logger.error(selectUserError);
+							(searchesError, searchesResult) => {
+								if (searchesError) {
+									logger.error(searchesError);
 									return res
 										.status(500)
 										.json({ error: "Error getting updated user searches" });
 								}
 
-								if (selectUserResult.rows.length === 0) {
-									return res.status(400).json({ error: "User not found" });
-								}
+								const searches = searchesResult.rows;
 
-								const returnUserObj = userReturnObjMaker(selectUserResult);
+								const returnUserObj = userReturnObjMaker({ user, searches });
 
 								return res.status(200).json({ user: returnUserObj });
 							}
 						);
 					}
-
-					const returnUserObj = userReturnObjMaker(selectResult);
-
-					const searches = returnUserObj.searches;
-					console.log({ returnUserObj, searches });
-
-					return res.status(200).json({ user: returnUserObj });
-				});
+				);
 			}
 		}
 	);

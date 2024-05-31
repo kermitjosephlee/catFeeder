@@ -4,8 +4,8 @@ import * as EmailValidator from "email-validator";
 import bcrypt from "bcryptjs";
 import { logger } from "../utils/logger.js";
 import {
-	// USER_SUB_QUERY,
-	USER_SUB_QUERY_BY_EMAIL,
+	GET_USER_BY_EMAIL,
+	GET_SEARCHES_BY_USER_ID,
 	userReturnObjMaker,
 } from "../helpers/getUser/getUser.js";
 
@@ -27,14 +27,13 @@ export const postLogin = async (req, res) => {
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
-	pool.query(USER_SUB_QUERY_BY_EMAIL, [email], (error, result) => {
+	// get user by email
+	pool.query(GET_USER_BY_EMAIL, [email], (error, result) => {
 		if (error) {
 			logger.error(error);
 			return res.status(500).json({ error: "Error logging in - 001" });
 		}
 
-		// getting an error for queries for users with no searches - this query will return with no rows
-		// TODO: need to fix for users with no searches
 		if (result.rows.length === 0) {
 			return res.status(400).json({ error: "User not found" });
 		}
@@ -45,18 +44,32 @@ export const postLogin = async (req, res) => {
 			return res.status(400).json({ error: "Invalid password" });
 		}
 
-		const returnUserObj = userReturnObjMaker(result);
+		// query for user searches
+		pool.query(
+			GET_SEARCHES_BY_USER_ID,
+			[user.id],
+			(searchesError, searchesResult) => {
+				if (searchesError) {
+					logger.error(searchesError);
+					return res.status(500).json({ error: "Error logging in - 002" });
+				}
 
-		req.login(user, (err) => {
-			if (err) {
-				logger.error(err);
-				return res.status(500).json({ error: "Error logging in - 002" });
+				const searches = searchesResult.rows;
+
+				const returnUserObj = userReturnObjMaker({ user, searches });
+
+				req.login(user, (err) => {
+					if (err) {
+						logger.error(err);
+						return res.status(500).json({ error: "Error logging in - 003" });
+					}
+
+					console.log("session details", req.session);
+
+					return res.status(200).json({ user: returnUserObj });
+				});
 			}
-
-			console.log("session details", req.session);
-
-			return res.status(200).json({ user: returnUserObj });
-		});
+		);
 	});
 };
 
@@ -124,7 +137,7 @@ export const postRegister = async (req, res) => {
 							logger.error(err);
 							return res.status(500).json({ error: "Error registering user" });
 						}
-						return res.json({
+						return res.status(200).json({
 							message: "User registered successfully",
 						});
 					}
