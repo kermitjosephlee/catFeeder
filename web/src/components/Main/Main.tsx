@@ -94,19 +94,19 @@ export function Main() {
 		setChecked((prev) => !prev);
 	};
 
-	const handleNewPageLoad: () => Promise<void> = async () => {
-		setIsLoading(true);
-		fetch(`${PRODUCTS_URL}${query}`)
-			.then((response) => response.json())
-			.then((res) => {
-				setResults((prev) => [...prev, ...res]);
-				setCurrentPage((prev) => prev + 1);
-			})
-			.catch((error) => console.error(error))
-			.finally(() => {
-				setIsLoading(false);
-			});
-	};
+	// const handleNewPageLoad: () => Promise<void> = async () => {
+	// 	setIsLoading(true);
+	// 	fetch(`${PRODUCTS_URL}${query}`)
+	// 		.then((response) => response.json())
+	// 		.then((res) => {
+	// 			setResults((prev) => [...prev, ...res]);
+	// 			setCurrentPage((prev) => prev + 1);
+	// 		})
+	// 		.catch((error) => console.error(error))
+	// 		.finally(() => {
+	// 			setIsLoading(false);
+	// 		});
+	// };
 
 	return (
 		<div className="flex w-full">
@@ -127,7 +127,6 @@ export function Main() {
 					results={results}
 					isLoading={isLoading}
 					isFirstLoading={isFirstLoading}
-					handleNewPageLoad={handleNewPageLoad}
 				/>
 			</div>
 		</div>
