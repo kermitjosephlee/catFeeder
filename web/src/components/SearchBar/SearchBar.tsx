@@ -8,11 +8,13 @@ interface IFormInput {
 export function SearchBar({
 	checked,
 	resultsLength,
+	productCount,
 	handleSearchTerm,
 	handleToggle,
 }: {
 	checked: boolean;
 	resultsLength: number | undefined;
+	productCount: number;
 	handleSearchTerm: (searchTerm: string) => void;
 	handleToggle: () => void;
 }) {
@@ -35,8 +37,16 @@ export function SearchBar({
 		: "toggle toggle-lg toggle-error";
 
 	return (
-		<div id="search bar" className="flex justify-between items-center p-4">
-			{resultsLength ? <div>Matches {resultsLength}</div> : <div></div>}
+		<div
+			id="search bar"
+			className="flex justify-between items-center sticky top-0 bg-white p-4 pt-6">
+			{resultsLength ? (
+				<div>
+					Showing {resultsLength} of {productCount}
+				</div>
+			) : (
+				<div></div>
+			)}
 			<form className="w-1/2 min-w-96" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex items-center gap-2">
 					<div

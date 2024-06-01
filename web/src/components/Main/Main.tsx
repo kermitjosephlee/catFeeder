@@ -6,6 +6,8 @@ import { useSearch } from "@hooks";
 
 const PRODUCTS_URL = "http://localhost:3000/products";
 
+const PRODUCT_COUNT_URL = "http://localhost:3000/product_count";
+
 export function Main() {
 	const [checked, setChecked] = useState<boolean>(true); //defaults to include ingredients
 	const [isFirstLoading, setIsFirstLoading] = useState<boolean>(true);
@@ -24,17 +26,23 @@ export function Main() {
 
 	const resultsLength = results.length;
 
-	// set product count on first load
+	// set product count
 	useEffect(() => {
-		fetch(`http://localhost:3000/product_count`)
+		const query = queryBuilder({
+			includedSearchTerms,
+			excludedSearchTerms,
+		});
+
+		fetch(`${PRODUCT_COUNT_URL}${query}`)
 			.then((response) => response.json())
 			.then((data) => {
+				console.log({ data });
 				setProductCount(+data);
 			})
 			.catch((err) => {
 				console.error(err);
 			});
-	}, []);
+	}, [includedSearchTerms, excludedSearchTerms]);
 
 	// fetch products first time
 	useEffect(() => {
@@ -164,16 +172,19 @@ export function Main() {
 
 	return (
 		<div className="flex w-full">
-			<SideBar
-				includedSearchTerms={includedSearchTerms}
-				excludedSearchTerms={excludedSearchTerms}
-				handleSearchTermsReset={handleSearchTermsReset}
-				handleSearchTermCancel={handleSearchTermCancel}
-			/>
+			<div className="flex flex-col min-w-48 p-3 sticky top-0">
+				<SideBar
+					includedSearchTerms={includedSearchTerms}
+					excludedSearchTerms={excludedSearchTerms}
+					handleSearchTermsReset={handleSearchTermsReset}
+					handleSearchTermCancel={handleSearchTermCancel}
+				/>
+			</div>
 			<div className="flex flex-col flex-grow">
 				<SearchBar
 					checked={checked}
 					resultsLength={resultsLength}
+					productCount={productCount}
 					handleSearchTerm={handleSearchTerm}
 					handleToggle={handleToggle}
 				/>

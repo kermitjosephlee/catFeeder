@@ -63,10 +63,10 @@ export function SideBar({
 	};
 
 	return (
-		<div className="flex flex-col min-w-48 p-3">
+		<div className="flex flex-col pt-2 sticky top-0">
 			{hasSearchTerms && (
 				<button
-					className="bg-yellow-800 text-white p-2 m-2 btn"
+					className="bg-yellow-800 text-white px-2 m-2 btn"
 					onClick={handleSearchTermsReset}>
 					Clear All
 				</button>
