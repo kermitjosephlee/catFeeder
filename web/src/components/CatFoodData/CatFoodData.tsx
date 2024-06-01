@@ -27,24 +27,15 @@ function CatFoodCards({
 			dataLength={results.length}
 			next={handleNextPageLoad}
 			hasMore={hasMore}
-			loader={<CatFoodSkeletons />}>
+			loader={<CatFoodSkeletons />}
+			scrollThreshold="100px"
+			>
 			<ResponsiveMasonry
 				columnsCountBreakPoints={{ 300: 1, 680: 2, 1080: 3, 1200: 4 }}>
 				<Masonry gutter="10px">
 					{results.map((catFood: ICatFood) => (
 						<CatFoodCard key={catFood.id} {...catFood} />
 					))}
-
-					{/* {images.map((image) => {
-							return (
-								<img
-									key={image.id}
-									src={image.urls.regular}
-									alt={image.alt_description}
-									style={{ width: "100%", borderRadius: "8px", margin: "3px" }}
-								/>
-							);
-						})} */}
 				</Masonry>
 			</ResponsiveMasonry>
 		</InfiniteScroll>

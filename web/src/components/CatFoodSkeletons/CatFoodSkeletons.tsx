@@ -1,5 +1,7 @@
+const NUMBER_OF_SKELETONS = 3;
+
 export function CatFoodSkeletons() {
-	const skeletons = Array.from({ length: 3 }, (_, i) => i);
+	const skeletons = Array.from({ length: NUMBER_OF_SKELETONS }, (_, i) => i);
 
 	return skeletons.map((skeleton) => {
 		return (
