@@ -7,7 +7,7 @@ export function queryBuilder({
 }: {
 	includedSearchTerms: string[];
 	excludedSearchTerms: string[];
-	page: number;
+	page?: number;
 }): string {
 	const includeStr =
 		includedSearchTerms.length > 0
@@ -19,8 +19,6 @@ export function queryBuilder({
 			: "";
 
 	const pageStr = page || 0;
-
-	console.log({ pageStr, type: typeof pageStr, includeStr, excludeStr });
 
 	const paginationStr = `&page=${pageStr}&limit=${PAGE_SIZE}`;
 

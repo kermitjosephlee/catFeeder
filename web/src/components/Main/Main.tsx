@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { CatFoodData, SearchBar, SideBar } from "@components";
 import { IResult } from "@/App";
 import { queryBuilder } from "@utils";
@@ -26,7 +26,6 @@ export function Main() {
 
 	// set product count on first load
 	useEffect(() => {
-		setIsLoading(true);
 		fetch(`http://localhost:3000/product_count`)
 			.then((response) => response.json())
 			.then((data) => {
@@ -34,9 +33,6 @@ export function Main() {
 			})
 			.catch((err) => {
 				console.error(err);
-			})
-			.finally(() => {
-				setIsLoading(false);
 			});
 	}, []);
 
@@ -51,91 +47,119 @@ export function Main() {
 		fetch(`${PRODUCTS_URL}${query}`)
 			.then((response) => response.json())
 			.then((res) => {
-				setResults([...results, ...res]);
+				const updatedResults = [...results, ...res];
+				setResults(updatedResults);
 				setCurrentPage(currentPage + 1);
 			})
 			.catch((error) => console.error(error))
 			.finally(() => {
-				if (isFirstLoading) setIsFirstLoading(false);
 				setIsLoading(false);
+				setIsFirstLoading(false);
 			});
-	}, [isFirstLoading]);
+	}, []);
 
-	const handleSearchTerm = (searchTerm: string) => {
-		if (checked && !includedSearchTerms.includes(searchTerm)) {
-			setIncludedSearchTerms([...includedSearchTerms, searchTerm]);
+	// fetches data on search term change
+	// used inside useEffect
+	const handleSearchUpdateLoad = useCallback(async () => {
+		setIsLoading(true);
 
-			if (excludedSearchTerms.includes(searchTerm)) {
-				setExcludedSearchTerms(
-					excludedSearchTerms.filter((excluded) => excluded !== searchTerm)
-				);
-			}
-		}
+		const query = queryBuilder({
+			includedSearchTerms,
+			excludedSearchTerms,
+		});
 
-		if (!checked && !excludedSearchTerms.includes(searchTerm)) {
-			setExcludedSearchTerms([...excludedSearchTerms, searchTerm]);
+		const response = await fetch(`${PRODUCTS_URL}${query}`);
+		const res = await response.json();
+		await setResults(res);
+		await setIsLoading(false);
+	}, [includedSearchTerms, excludedSearchTerms]);
 
-			if (includedSearchTerms.includes(searchTerm)) {
-				setIncludedSearchTerms(
-					includedSearchTerms.filter((included) => included !== searchTerm)
-				);
-			}
-		}
-	};
+	// checks for changes in search terms and fetches new data
+	useEffect(() => {
+		handleSearchUpdateLoad();
+	}, [includedSearchTerms, excludedSearchTerms, handleSearchUpdateLoad]);
 
-	const handleSearchTermsReset = () => {
-		setIncludedSearchTerms([]);
-		setExcludedSearchTerms([]);
-		setIsSaveSearchButtonDisabled(false);
-	};
-
-	const handleSearchTermCancel = (searchTerm: string) => {
-		if (includedSearchTerms.includes(searchTerm)) {
-			setIncludedSearchTerms(
-				includedSearchTerms.filter((included) => included !== searchTerm)
-			);
-		}
-
-		if (excludedSearchTerms.includes(searchTerm)) {
-			setExcludedSearchTerms(
-				excludedSearchTerms.filter((excluded) => excluded !== searchTerm)
-			);
-		}
-	};
-
-	const handleToggle = () => {
-		setChecked((prev) => !prev);
-	};
-
+	// fetches more data on scroll
 	const handleNextPageLoad = () => {
-		console.log("handleNextPageLoad");
-
 		const query = queryBuilder({
 			includedSearchTerms,
 			excludedSearchTerms,
 			page: currentPage,
 		});
 
-		if (isLoading) {
-			setIsLoading(true);
-		}
-
-		console.log({ query });
+		setIsLoading(true);
 
 		fetch(`${PRODUCTS_URL}${query}`)
 			.then((response) => response.json())
 			.then((res) => {
 				console.log("Handle Next Page Load", { currentPage, res });
-				setResults([...results, ...res]);
+				const updatedResults = [...results, ...res];
+				setResults(updatedResults);
 				setCurrentPage(currentPage + 1);
 			})
 			.catch((error) => console.error(error))
 			.finally(() => {
-				if (isFirstLoading) setIsFirstLoading(false);
 				setIsLoading(false);
 			});
 
 		return;
+	};
+
+	const handleSearchTerm = (searchTerm: string) => {
+		if (checked && !includedSearchTerms.includes(searchTerm)) {
+			const updatedIncludedSearchTerms = [...includedSearchTerms, searchTerm];
+			setIncludedSearchTerms(updatedIncludedSearchTerms);
+
+			if (excludedSearchTerms.includes(searchTerm)) {
+				const updatedExcludedSearchTerms = excludedSearchTerms.filter(
+					(excluded) => excluded !== searchTerm
+				);
+				setExcludedSearchTerms(updatedExcludedSearchTerms);
+			}
+		}
+
+		if (!checked && !excludedSearchTerms.includes(searchTerm)) {
+			const updatedExcludedSearchTerms = [...excludedSearchTerms, searchTerm];
+			setExcludedSearchTerms(updatedExcludedSearchTerms);
+
+			if (includedSearchTerms.includes(searchTerm)) {
+				const updatedIncludedSearchTerms = includedSearchTerms.filter(
+					(included) => included !== searchTerm
+				);
+				setIncludedSearchTerms(updatedIncludedSearchTerms);
+			}
+		}
+	};
+
+	const handleSearchTermCancel = (searchTerm: string) => {
+		if (includedSearchTerms.includes(searchTerm)) {
+			const updatedIncludedSearchTerms = includedSearchTerms.filter(
+				(included) => included !== searchTerm
+			);
+			setIncludedSearchTerms(updatedIncludedSearchTerms);
+		}
+
+		if (excludedSearchTerms.includes(searchTerm)) {
+			const updatedExcludedSearchTerms = excludedSearchTerms.filter(
+				(excluded) => excluded !== searchTerm
+			);
+			setExcludedSearchTerms(updatedExcludedSearchTerms);
+		}
+		handleSearchUpdateLoad();
+	};
+
+	const handleSearchTermsReset = () => {
+		setCurrentPage(0);
+		setResults([]);
+
+		setIncludedSearchTerms([]);
+		setExcludedSearchTerms([]);
+		setIsSaveSearchButtonDisabled(false);
+		handleSearchUpdateLoad();
+	};
+
+	const handleToggle = () => {
+		setChecked((prev) => !prev);
 	};
 
 	return (
