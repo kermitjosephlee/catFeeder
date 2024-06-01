@@ -4,6 +4,64 @@ const queryArrayBuilder = (arr) => {
 	return arr.map((each) => `'${each}'`);
 };
 
+export const productCountQueryBuilder = ({
+	includeIngredients = [],
+	excludeIngredients = [],
+}) => {
+	const formattedIncludeIngredients =
+		queryArrayBuilder(includeIngredients) || [];
+	const formattedExcludeIngredients =
+		queryArrayBuilder(excludeIngredients) || [];
+
+	const hasIncludeIngredients = formattedIncludeIngredients.length > 0;
+	const hasExcludeIngredients = formattedExcludeIngredients.length > 0;
+	const hasBothIncludeAndExcludeIngredients =
+		hasIncludeIngredients && hasExcludeIngredients;
+
+	const includeSubQuery = hasIncludeIngredients
+		? `(${formattedIncludeIngredients
+				.map(
+					(_, index) =>
+						`(LOWER(products.ingredients) LIKE '%' || LOWER($${
+							index + 1
+						}) || '%' OR LOWER(products.brand) LIKE '%' || LOWER($${
+							index + 1
+						}) || '%' OR LOWER(products.name) LIKE '%' || LOWER($${
+							index + 1
+						}) || '%')`
+				)
+				.join(" AND ")})`
+		: "";
+
+	const excludeSubQuery = hasExcludeIngredients
+		? `NOT (${formattedExcludeIngredients
+				.map(
+					(_, index) =>
+						`(LOWER(products.ingredients) LIKE '%' || LOWER($${
+							index + formattedIncludeIngredients.length + 1
+						}) || '%' OR LOWER(products.brand) LIKE '%' || LOWER($${
+							index + formattedIncludeIngredients.length + 1
+						}) || '%' OR LOWER(products.name) LIKE '%' || LOWER($${
+							index + formattedIncludeIngredients.length + 1
+						}) || '%')`
+				)
+				.join(" OR ")})`
+		: "";
+
+	const formattedQuery = `SELECT COUNT(*)
+    FROM products
+    ${hasIncludeIngredients || hasExcludeIngredients ? " WHERE " : ""}
+    ${includeSubQuery}
+    ${hasBothIncludeAndExcludeIngredients ? " AND " : ""}
+    ${excludeSubQuery}
+    ;`;
+
+	return {
+		query: formattedQuery,
+		params: [...includeIngredients, ...excludeIngredients],
+	};
+};
+
 export const productsQueryBuilder = ({
 	includeIngredients = [],
 	excludeIngredients = [],

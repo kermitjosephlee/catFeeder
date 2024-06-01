@@ -1,7 +1,10 @@
 import "dotenv/config";
 import pg from "pg";
 import { ingredientsQueryBuilder } from "./queryHelpers/ingredients.js";
-import { productsQueryBuilder } from "./queryHelpers/products.js";
+import {
+	productCountQueryBuilder,
+	productsQueryBuilder,
+} from "./queryHelpers/products.js";
 // const pgCredentials = process.env.DB_CREDENTIALS;
 
 import {
@@ -26,7 +29,21 @@ export const getStatus = async (req, res) => {
 };
 
 export const getProductCount = async (req, res) => {
-	const response = await pool.query(`SELECT COUNT(*) FROM products;`);
+	const includeIngredients = req.query.include
+		? req.query.include.split(",")
+		: [];
+	const excludeIngredients = req.query.exclude
+		? req.query.exclude.split(",")
+		: [];
+
+	const { query, params } = productCountQueryBuilder({
+		includeIngredients,
+		excludeIngredients,
+	});
+
+	console.log("SELECT PRODUCT COUNT QUERY", { query });
+
+	const response = await pool.query(query, params);
 	const count = response.rows[0].count || 0;
 	return res.status(200).json(count);
 };
