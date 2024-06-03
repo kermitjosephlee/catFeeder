@@ -28,8 +28,7 @@ function CatFoodCards({
 			next={handleNextPageLoad}
 			hasMore={hasMore}
 			loader={<CatFoodSkeletons />}
-			scrollThreshold="100px"
-			>
+			scrollThreshold={0.9}>
 			<ResponsiveMasonry
 				columnsCountBreakPoints={{ 300: 1, 680: 2, 1080: 3, 1200: 4 }}>
 				<Masonry gutter="10px">

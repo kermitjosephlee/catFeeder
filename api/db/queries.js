@@ -1,11 +1,9 @@
 import "dotenv/config";
 import pg from "pg";
-import { ingredientsQueryBuilder } from "./queryHelpers/ingredients.js";
 import {
 	productCountQueryBuilder,
 	productsQueryBuilder,
 } from "./queryHelpers/products.js";
-// const pgCredentials = process.env.DB_CREDENTIALS;
 
 import {
 	userReturnObjMaker,
@@ -41,8 +39,6 @@ export const getProductCount = async (req, res) => {
 		excludeIngredients,
 	});
 
-	console.log("SELECT PRODUCT COUNT QUERY", { query });
-
 	const response = await pool.query(query, params);
 	const count = response.rows[0].count || 0;
 	return res.status(200).json(count);
@@ -68,36 +64,6 @@ export const getProducts = async (req, res) => {
 	});
 
 	const response = await pool.query(ingredientsQuery, ingredientsArray);
-
-	return res.json(response.rows);
-};
-
-export const getProductsByIngredients = async (req, res) => {
-	const includeIngredients = req.query.include
-		? req.query.include.split(",")
-		: [];
-	const excludeIngredients = req.query.exclude
-		? req.query.exclude.split(",")
-		: [];
-
-	const page = req.query.page || 1;
-
-	const limit = req.query.limit || 10;
-
-	const { ingredientsQuery, ingredientsArray } = ingredientsQueryBuilder({
-		includeIngredients,
-		excludeIngredients,
-	});
-
-	console.log({ ingredientsQuery, ingredientsArray });
-
-	const response = await pool.query(ingredientsQuery, ingredientsArray);
-
-	console.log({
-		includeIngredients,
-		excludeIngredients,
-		rowLength: response.rows.length,
-	});
 
 	return res.json(response.rows);
 };

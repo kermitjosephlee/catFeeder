@@ -28,43 +28,31 @@ export function Main() {
 
 	// set product count
 	useEffect(() => {
+		const controller = new AbortController();
+		const signal = controller.signal;
+
 		const query = queryBuilder({
 			includedSearchTerms,
 			excludedSearchTerms,
+			isProductCount: true,
 		});
 
-		fetch(`${PRODUCT_COUNT_URL}${query}`)
+		fetch(`${PRODUCT_COUNT_URL}${query}`, { signal })
 			.then((response) => response.json())
 			.then((data) => {
-				console.log({ data });
 				setProductCount(+data);
 			})
-			.catch((err) => {
-				console.error(err);
-			});
-	}, [includedSearchTerms, excludedSearchTerms]);
-
-	// fetch products first time
-	useEffect(() => {
-		setIsLoading(true);
-		const query = queryBuilder({
-			includedSearchTerms,
-			excludedSearchTerms,
-			page: currentPage,
-		});
-		fetch(`${PRODUCTS_URL}${query}`)
-			.then((response) => response.json())
-			.then((res) => {
-				const updatedResults = [...results, ...res];
-				setResults(updatedResults);
-				setCurrentPage(currentPage + 1);
+			.then(() => {
+				if (isFirstLoading) {
+					setIsFirstLoading(false);
+				}
 			})
-			.catch((error) => console.error(error))
-			.finally(() => {
-				setIsLoading(false);
-				setIsFirstLoading(false);
+			.catch((err) => {
+				console.log(signal, err);
 			});
-	}, []);
+
+		return () => controller.abort();
+	}, [includedSearchTerms, excludedSearchTerms, isFirstLoading]);
 
 	// fetches data on search term change
 	// used inside useEffect
@@ -76,10 +64,17 @@ export function Main() {
 			excludedSearchTerms,
 		});
 
-		const response = await fetch(`${PRODUCTS_URL}${query}`);
-		const res = await response.json();
+		const controller = new AbortController();
+		const signal = controller.signal;
+
+		const response = await fetch(`${PRODUCTS_URL}${query}`, { signal });
+		const res = await response.json().catch((err) => {
+			console.log(signal.aborted, err);
+		});
 		await setResults(res);
 		await setIsLoading(false);
+
+		return () => controller.abort();
 	}, [includedSearchTerms, excludedSearchTerms]);
 
 	// checks for changes in search terms and fetches new data
@@ -89,28 +84,36 @@ export function Main() {
 
 	// fetches more data on scroll
 	const handleNextPageLoad = () => {
+		if (isLoading) {
+			return;
+		}
+
 		const query = queryBuilder({
 			includedSearchTerms,
 			excludedSearchTerms,
 			page: currentPage,
 		});
 
+		const controller = new AbortController();
+		const signal = controller.signal;
+
 		setIsLoading(true);
 
-		fetch(`${PRODUCTS_URL}${query}`)
+		fetch(`${PRODUCTS_URL}${query}`, { signal })
 			.then((response) => response.json())
 			.then((res) => {
-				console.log("Handle Next Page Load", { currentPage, res });
 				const updatedResults = [...results, ...res];
 				setResults(updatedResults);
 				setCurrentPage(currentPage + 1);
 			})
-			.catch((error) => console.error(error))
+			.catch((error) => {
+				console.log(signal.aborted, error);
+			})
 			.finally(() => {
 				setIsLoading(false);
 			});
 
-		return;
+		return () => controller.abort();
 	};
 
 	const handleSearchTerm = (searchTerm: string) => {

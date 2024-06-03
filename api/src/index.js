@@ -15,7 +15,7 @@ import { morganMiddleware } from "../middlewares/morgan.middlewares.js";
 import {
 	getProductCount,
 	getProducts,
-	getProductsByIngredients,
+	// getProductsByIngredients,
 	getStatus,
 	postCancelSearch,
 	postSearch,
@@ -150,7 +150,7 @@ app.get("/products", getProducts);
 
 app.get("/product_count", getProductCount);
 
-app.get("/ingredients", getProductsByIngredients);
+// app.get("/ingredients", getProductsByIngredients);
 
 app.listen(PORT, (err) => {
 	err ? logger.error(err) : logger.info(`Server is running on port ${PORT}`);

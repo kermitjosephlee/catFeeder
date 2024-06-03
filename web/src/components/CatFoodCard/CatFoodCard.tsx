@@ -1,5 +1,4 @@
 import { colors, lighterColors, capitalize } from "@utils";
-// import { twMerge } from "tailwind-merge";
 import { IResult as ICatFoodCard } from "../../App";
 
 export function CatFoodCard({
@@ -23,11 +22,19 @@ export function CatFoodCard({
 				backgroundColor,
 				filter: "saturation(0.1)",
 			}}
-			className="text-gray-800 overflow-hidden p-4 rounded-lg my-4 mx-1/2 border-4 border-solid">
-			<a href={link_url} target="_blank">
-				<h2>{capitalizeBrand}</h2>
-				<h3>{name}</h3>
-			</a>
+			className="text-gray-800  p-4 rounded-lg my-1/2 mx-1/2 border-4 border-solid">
+			{link_url ? (
+				<a href={link_url} target="_blank">
+					<h2>{capitalizeBrand}</h2>
+					<h3>{name}</h3>
+				</a>
+			) : (
+				<>
+					<h2>{capitalizeBrand}</h2>
+					<h3>{name}</h3>
+				</>
+			)}
+
 			{/* <img src={fixedImageUrl} alt={name} /> */}
 			<p className="text-xs ">{ingredients}</p>
 		</div>
