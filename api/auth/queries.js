@@ -47,8 +47,6 @@ export const postLogin = async (req, res) => {
 			return res.status(500).json({ error: "Error logging in - 003" });
 		}
 
-		console.log("session details", req.session);
-
 		return res.status(200).json({ user: returnUserObj });
 	});
 };

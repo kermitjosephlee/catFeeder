@@ -62,11 +62,12 @@ export const productCountQueryBuilder = ({
 	};
 };
 
-export const productsQueryBuilder = ({
+export const productSearchQueryBuilder = ({
 	includeIngredients = [],
 	excludeIngredients = [],
 	page = 1,
 	limit = 20,
+	userId = null,
 }) => {
 	const formattedIncludeIngredients =
 		queryArrayBuilder(includeIngredients) || [];
@@ -82,24 +83,79 @@ export const productsQueryBuilder = ({
 
 	const hasLimit = !!limit && limit > 0;
 
+	const hasUserId = !!userId;
+
 	// TODO: update LIMIT default from 1
 	const limitSubQuery = hasLimit ? ` LIMIT ${limit}` : "LIMIT 1";
 
 	const offset = page * limit;
 
-	const offsetSubQuery = hasPage && hasLimit ? ` OFFSET ${offset}` : "";
+	const offsetSubQuery = hasPage && hasLimit ? ` OFFSET ${offset} ` : "";
+
+	const termsSubQuery = `
+	WITH terms AS (
+		SELECT 
+			user_id, 
+			LOWER(term::text) AS term, 
+			1 AS score
+		FROM 
+			searches, 
+			json_array_elements_text(include_terms::json) AS term
+		UNION ALL
+		SELECT 
+			user_id, 
+			LOWER(term::text) AS term,
+			-1 AS score
+		FROM 
+			searches,
+			json_array_elements_text(exclude_terms::json) AS term
+		${hasUserId ? `WHERE user_id = ${userId}` : ""}
+	),
+	`;
+
+	const productScoresSubQuery = `
+	product_scores AS (
+		SELECT 
+			p.id, 
+			p.brand, 
+			p.name, 
+			p.ingredients, 
+			t.user_id, 
+			SUM(t.score) AS score
+		FROM 
+			products p
+		JOIN 
+			terms t ON LOWER(p.ingredients) LIKE '%' || t.term || '%'
+		GROUP BY
+			p.id,
+			p.brand, 
+			p.name, 
+			p.ingredients, 
+			t.user_id
+	)
+	`;
+
+	const productAndProductScoresJoinSubQuery = `
+	    SELECT 
+        p.id, 
+        p.brand, 
+        p.name, 
+        p.ingredients, 
+        ps.score
+    FROM 
+        products p
+    JOIN 
+        product_scores ps ON p.id = ps.id`;
 
 	const includeSubQuery = hasIncludeIngredients
 		? `(${formattedIncludeIngredients
 				.map(
 					(_, index) =>
-						`(LOWER(products.ingredients) LIKE '%' || LOWER($${
+						`(LOWER(p.ingredients) LIKE '%' || LOWER($${
 							index + 1
-						}) || '%' OR LOWER(products.brand) LIKE '%' || LOWER($${
+						}) || '%' OR LOWER(p.brand) LIKE '%' || LOWER($${
 							index + 1
-						}) || '%' OR LOWER(products.name) LIKE '%' || LOWER($${
-							index + 1
-						}) || '%')`
+						}) || '%' OR LOWER(p.name) LIKE '%' || LOWER($${index + 1}) || '%')`
 				)
 				.join(" AND ")})`
 		: "";
@@ -108,31 +164,40 @@ export const productsQueryBuilder = ({
 		? `NOT (${formattedExcludeIngredients
 				.map(
 					(_, index) =>
-						`(LOWER(products.ingredients) LIKE '%' || LOWER($${
+						`(LOWER(p.ingredients) LIKE '%' || LOWER($${
 							index + formattedIncludeIngredients.length + 1
-						}) || '%' OR LOWER(products.brand) LIKE '%' || LOWER($${
+						}) || '%' OR LOWER(p.brand) LIKE '%' || LOWER($${
 							index + formattedIncludeIngredients.length + 1
-						}) || '%' OR LOWER(products.name) LIKE '%' || LOWER($${
+						}) || '%' OR LOWER(p.name) LIKE '%' || LOWER($${
 							index + formattedIncludeIngredients.length + 1
 						}) || '%')`
 				)
 				.join(" OR ")})`
 		: "";
 
-	const formattedQuery = `SELECT products.*
-    FROM products
+	const orderBySubQuery = " ORDER BY score DESC ";
+
+	const formattedQuery = `
+		${termsSubQuery}
+	 	${productScoresSubQuery}
+		${productAndProductScoresJoinSubQuery}
     ${hasIncludeIngredients || hasExcludeIngredients ? " WHERE " : ""}
     ${includeSubQuery}
     ${hasBothIncludeAndExcludeIngredients ? " AND " : ""}
     ${excludeSubQuery}
+		${orderBySubQuery}
     ${limitSubQuery}
     ${offsetSubQuery}
     ;`;
 
-	return {
+	const returnObj = {
 		ingredientsQuery: formattedQuery,
 		ingredientsArray: [...includeIngredients, ...excludeIngredients],
 		page,
 		limit,
 	};
+
+	console.log({ returnObj, formattedQuery: format(formattedQuery) });
+
+	return returnObj;
 };

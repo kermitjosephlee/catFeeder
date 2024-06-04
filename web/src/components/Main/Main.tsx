@@ -71,6 +71,7 @@ export function Main() {
 		const res = await response.json().catch((err) => {
 			console.log(signal.aborted, err);
 		});
+
 		await setResults(res);
 		await setIsLoading(false);
 
@@ -144,17 +145,15 @@ export function Main() {
 
 	const handleSearchTermCancel = (searchTerm: string) => {
 		if (includedSearchTerms.includes(searchTerm)) {
-			const updatedIncludedSearchTerms = includedSearchTerms.filter(
-				(included) => included !== searchTerm
+			setIncludedSearchTerms(
+				includedSearchTerms.filter((included) => included !== searchTerm)
 			);
-			setIncludedSearchTerms(updatedIncludedSearchTerms);
 		}
 
 		if (excludedSearchTerms.includes(searchTerm)) {
-			const updatedExcludedSearchTerms = excludedSearchTerms.filter(
-				(excluded) => excluded !== searchTerm
+			setExcludedSearchTerms(
+				excludedSearchTerms.filter((excluded) => excluded !== searchTerm)
 			);
-			setExcludedSearchTerms(updatedExcludedSearchTerms);
 		}
 		handleSearchUpdateLoad();
 	};

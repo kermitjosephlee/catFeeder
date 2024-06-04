@@ -36,13 +36,20 @@ export function SearchBar({
 		? "toggle toggle-lg toggle-success"
 		: "toggle toggle-lg toggle-error";
 
+	// The last load of pagination rounds up past the total productCount
+	// TODO: fix this as a DB response
+	const showingLength =
+		!!resultsLength && resultsLength >= productCount
+			? productCount
+			: resultsLength;
+
 	return (
 		<div
 			id="search bar"
 			className="flex justify-between items-center sticky top-0 bg-white p-4 pt-6">
 			{resultsLength ? (
 				<div>
-					Showing {resultsLength} of {productCount}
+					Showing {showingLength} of {productCount}
 				</div>
 			) : (
 				<div></div>

@@ -24,7 +24,10 @@ export function SearchPill({
 					: "flex text-lg justify-between m-1 px-4 cursor-pointer btn btn-outline btn-error"
 			}
 			onClick={onClick}>
-			<p>{searchTerm}</p>
+			<div className="flex items-center">
+				<p className="pr-2">{type === SearchEnum.INCLUDED ? "+" : "-"}</p>
+				<p className="overflow-hidden">{searchTerm}</p>
+			</div>
 			<p>
 				<FontAwesomeIcon size="lg" icon={faCircleXmark} />
 			</p>

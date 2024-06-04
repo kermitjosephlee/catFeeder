@@ -2,7 +2,7 @@ import "dotenv/config";
 import pg from "pg";
 import {
 	productCountQueryBuilder,
-	productsQueryBuilder,
+	productSearchQueryBuilder,
 } from "./queryHelpers/products.js";
 
 import {
@@ -45,6 +45,8 @@ export const getProductCount = async (req, res) => {
 };
 
 export const getProducts = async (req, res) => {
+	
+
 	const includeIngredients = req.query.include
 		? req.query.include.split(",")
 		: [];
@@ -56,7 +58,7 @@ export const getProducts = async (req, res) => {
 
 	const limit = req.query.limit || 10;
 
-	const { ingredientsQuery, ingredientsArray } = productsQueryBuilder({
+	const { ingredientsQuery, ingredientsArray } = productSearchQueryBuilder({
 		includeIngredients,
 		excludeIngredients,
 		page,
