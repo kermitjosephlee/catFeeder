@@ -1,49 +1,48 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "v1 of cat food review and comparison api",
-  "main": "index.js",
-  "license": "MIT",
-  "private": true,
-  "devDependencies": {
-    "cheerio": "^1.0.0-rc.12",
-    "delay": "^6.0.0",
-    "nodemon": "^3.1.0"
-  },
-  "dependencies": {
-    "axios": "^1.6.8",
-    "bcryptjs": "^2.4.3",
-    "connect-pg-simple": "^9.0.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "email-validator": "^2.0.4",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "morgan": "^1.10.0",
-    "passport": "^0.7.0",
-    "passport-local": "^1.0.0",
-    "password-validator": "^5.3.0",
-    "pg": "^8.11.5",
-    "pg-format": "^1.0.4",
-    "winston": "^3.13.0"
-  },
-  "scripts": {
-    "seed": "node seedDB.js",
-    "testDB": "node testDB.js",
-    "start": "node --require dotenv/config src/index.js",
-    "dev": "nodemon --require dotenv/config src/index.js"
-  },
-  "type": "module",
-  "nodemonConfig": {
-    "ignore": [
-      "logs",
-      "node_modules",
-      "seedDB.js",
-      "testDB.js",
-      "README.md",
-      "package.json",
-      "package-lock.json",
-      "yarn.lock"
-    ]
-  }
+	"name": "api",
+	"version": "1.0.0",
+	"description": "v1 of cat food review and comparison api",
+	"main": "index.js",
+	"license": "MIT",
+	"private": true,
+	"devDependencies": {
+		"cheerio": "^1.0.0-rc.12",
+		"delay": "^6.0.0",
+		"nodemon": "^3.1.0"
+	},
+	"dependencies": {
+		"axios": "^1.6.8",
+		"bcryptjs": "^2.4.3",
+		"connect-pg-simple": "^9.0.1",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"email-validator": "^2.0.4",
+		"express": "^4.19.2",
+		"express-session": "^1.18.0",
+		"morgan": "^1.10.0",
+		"passport": "^0.7.0",
+		"passport-local": "^1.0.0",
+		"password-validator": "^5.3.0",
+		"pg": "^8.11.5",
+		"winston": "^3.13.0"
+	},
+	"scripts": {
+		"seed": "node seedDB.js",
+		"testDB": "node testDB.js",
+		"start": "node --require dotenv/config src/index.js",
+		"dev": "nodemon --require dotenv/config src/index.js"
+	},
+	"type": "module",
+	"nodemonConfig": {
+		"ignore": [
+			"logs",
+			"node_modules",
+			"seedDB.js",
+			"testDB.js",
+			"README.md",
+			"package.json",
+			"package-lock.json",
+			"yarn.lock"
+		]
+	}
 }

@@ -85,8 +85,8 @@ export const productSearchQueryBuilder = ({
 
 	const hasUserId = !!userId;
 
-	// TODO: update LIMIT default from 1
-	const limitSubQuery = hasLimit ? ` LIMIT ${limit}` : "LIMIT 1";
+	// -- updated default limit to 86 to flag issues with pagination
+	const limitSubQuery = hasLimit ? ` LIMIT ${limit} ` : " LIMIT 86 ";
 
 	const offset = page * limit;
 
@@ -196,8 +196,6 @@ export const productSearchQueryBuilder = ({
 		page,
 		limit,
 	};
-
-	console.log({ returnObj, formattedQuery: format(formattedQuery) });
 
 	return returnObj;
 };
