@@ -1,5 +1,3 @@
-import format from "pg-format";
-
 const queryArrayBuilder = (arr) => {
 	return arr.map((each) => `'${each}'`);
 };
