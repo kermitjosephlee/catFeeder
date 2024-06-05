@@ -73,6 +73,7 @@ export function Main() {
 		});
 
 		await setResults(res);
+		await setCurrentPage(0);
 		await setIsLoading(false);
 
 		return () => controller.abort();
