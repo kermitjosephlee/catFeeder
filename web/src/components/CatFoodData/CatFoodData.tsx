@@ -4,7 +4,7 @@ import { CatFoodCard, CatFoodSkeletons, CatFoodNoResults } from "@components";
 import { IResult as ICatFood } from "../../App";
 
 interface IProps {
-	results: ICatFood[];
+	results: (ICatFood | undefined)[];
 	isLoading: boolean;
 	isFirstLoading: boolean;
 	productCount: number;
@@ -16,7 +16,7 @@ function CatFoodCards({
 	productCount,
 	handleNextPageLoad,
 }: {
-	results: ICatFood[];
+	results: (ICatFood | undefined)[];
 	productCount: number;
 	handleNextPageLoad: () => void;
 }) {
@@ -32,9 +32,10 @@ function CatFoodCards({
 			<ResponsiveMasonry
 				columnsCountBreakPoints={{ 300: 1, 680: 2, 1080: 3, 1200: 4 }}>
 				<Masonry gutter="10px">
-					{results.map((catFood: ICatFood) => (
-						<CatFoodCard key={catFood.id} {...catFood} />
-					))}
+					{results.map((catFood: ICatFood | undefined) => {
+						if (!catFood) return null;
+						return <CatFoodCard key={catFood.id} {...catFood} />;
+					})}
 				</Masonry>
 			</ResponsiveMasonry>
 		</InfiniteScroll>

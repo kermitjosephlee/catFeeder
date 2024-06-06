@@ -134,7 +134,7 @@ export const productSearchQueryBuilder = ({
 	`;
 
 	const productAndProductScoresJoinSubQuery = `
-	    SELECT 
+	    SELECT DISTINCT
         p.id, 
         p.brand, 
         p.name, 

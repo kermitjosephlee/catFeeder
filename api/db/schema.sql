@@ -133,7 +133,7 @@ BEGIN
 				p.ingredients, 
 				t.user_id
 		)
-	SELECT 
+	SELECT DISTINCT
 		p.id, 
 		p.brand, 
 		p.name, 
