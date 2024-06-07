@@ -12,6 +12,7 @@ import {
 	getUser,
 	getUserPets,
 	getUserSearches,
+	getPetById,
 } from "../helpers/getUser/getUser.js";
 
 const pool = new pg.Pool({
@@ -150,7 +151,7 @@ export const postCancelSearch = async (req, res) => {
 };
 
 export const getPets = async (req, res) => {
-	const userId = req.params.userId;
+	const userId = req.query.userId;
 
 	if (!userId) {
 		return res.status(400).json({ error: "Missing required fields" });
@@ -168,27 +169,91 @@ export const getPets = async (req, res) => {
 };
 
 export const postPet = async (req, res) => {
-	const { userId, petName } = req.body;
+	const { id, userId, petName, action } = req.body;
 
-	if (!userId || !petName) {
+	if (!id || !userId || !petName || !action) {
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
-	pool.query(
-		`INSERT INTO pets (pet_name, user_id) VALUES ($1, $2)`,
-		[petName, userId],
-		async (err, result) => {
-			if (err) {
-				logger.error(err);
-				return res.status(500).json({ error: "Error updating pet" });
-			}
-			const user = await getUser(userId);
-			if (!user) {
-				return res.status(400).json({ error: "User not found" });
-			}
-			const pets = await getUserPets(userId);
+	const pets = await getUserPets(userId);
 
-			return res.status(200).json({ pets });
+	if (!pets || pets.length === 0) {
+		return res.status(400).json({ error: "Pet not found" });
+	}
+
+	const pet = pets.filter((pet) => pet.pet_name === petName)[0] || undefined;
+
+	if (action === "CREATE") {
+		if (pet.id) {
+			return res
+				.status(400)
+				.json({ error: "Pet already exists - cannot create new pet" });
 		}
-	);
+
+		pool.query(
+			`INSERT INTO pets (pet_name, user_id) VALUES ($1, $2)`,
+			[petName, userId],
+			async (err, result) => {
+				if (err) {
+					logger.error(err);
+					return res.status(500).json({ error: "Error updating pet" });
+				}
+				const user = await getUser(userId);
+				if (!user) {
+					return res.status(400).json({ error: "User not found" });
+				}
+				const pets = await getUserPets(userId);
+
+				return res.status(200).json({ pets });
+			}
+		);
+	}
+
+	if (action === "DELETE") {
+		if (!pet) {
+			return res.status(400).json({ error: "Pet not found - action delete" });
+		}
+
+		const petId = pet.id.toString();
+
+		await pool.query(
+			`UPDATE pets SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1;`,
+			[petId]
+		);
+
+		const pets = await getUserPets(userId);
+
+		return res.status(200).json({ message: "Pet deleted", pets });
+	}
+
+	if (action === "UPDATE") {
+		if (!pet) {
+			return res.status(400).json({ error: "Pet not found - action update" });
+		}
+
+		const petId = pet.id.toString();
+		const dbPetName = pet.pet_name;
+
+		if (dbPetName === petName) {
+			return res.status(400).json({ error: "Pet name already exists" });
+		}
+
+		pool.query(
+			`UPDATE pets SET pet_name = $1, include_ WHERE id = $2`,
+			[petName, petId],
+			async (err, result) => {
+				if (err) {
+					logger.error(err);
+					return res.status(500).json({ error: "Error updating pet" });
+				}
+				const user = await getUser(userId);
+				if (!user) {
+					return res.status(400).json({ error: "User not found" });
+				}
+				const pets = await getUserPets(userId);
+
+				return res.status(200).json({ pets });
+			}
+		);
+	}
 };

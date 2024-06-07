@@ -8,6 +8,7 @@ export * from "./LoginDialog";
 export * from "./Main";
 export * from "./PetsDialog";
 export * from "./PetsDialogList";
+export * from "./PetsDialogListItem";
 export * from "./SearchBar";
 export * from "./SearchesDialog";
 export * from "./SearchesDialogList";

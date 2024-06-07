@@ -38,6 +38,13 @@ export const GET_SEARCHES_BY_USER_ID = `
 		FROM searches 
 		WHERE user_id = $1 AND deleted_at IS NULL;`;
 
+export const GET_PET_BY_ID = `
+	SELECT id as pet_id, pet_name, user_id
+		FROM pets
+		WHERE id = $1
+		AND deleted_at IS NULL;
+`;
+
 export function userReturnObjMaker({ user, searches }) {
 	const searchesObj = searches.map((row) => {
 		return {
@@ -132,6 +139,29 @@ export async function getUserByEmail(email) {
 		const user = userResult.rows[0];
 
 		return user;
+	} catch (error) {
+		logger.error(error);
+		return false;
+	}
+}
+
+export async function getPetById(petId) {
+	try {
+		const petResult = await poolQuery(GET_PET_BY_ID, [petId]);
+
+		if (petResult.rows.length === 0) {
+			logger.error("Pet not found for id", petId);
+			return false;
+		}
+
+		if (petResult.rows.length > 1) {
+			logger.error("Multiple pets found for id", petId);
+			return false;
+		}
+
+		const pet = petResult.rows[0];
+
+		return pet;
 	} catch (error) {
 		logger.error(error);
 		return false;

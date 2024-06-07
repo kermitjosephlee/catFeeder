@@ -195,7 +195,5 @@ export const productSearchQueryBuilder = ({
 		limit,
 	};
 
-	console.log({ returnObj });
-
 	return returnObj;
 };

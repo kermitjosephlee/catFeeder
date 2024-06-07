@@ -3,6 +3,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useGetUser } from "@hooks";
+import { IPets } from "@components";
+import { PostPetAction } from "@types";
 
 const PETS_URL = "http://localhost:3000/pets";
 
@@ -18,8 +20,10 @@ interface IFormInput {
 
 export function AddPetDialog({
 	handlePetsDialogClose,
+	handleNewPet,
 }: {
 	handlePetsDialogClose: () => void;
+	handleNewPet: (newPets: IPets[]) => void;
 }) {
 	const user = useGetUser();
 	const userId = user?.id;
@@ -29,10 +33,6 @@ export function AddPetDialog({
 	});
 
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-		// TODO: Implement add pet fetch post call
-		//
-		console.log({ data, userId });
-
 		fetch(`${PETS_URL}`, {
 			method: "POST",
 			headers: {
@@ -41,10 +41,21 @@ export function AddPetDialog({
 			body: JSON.stringify({
 				...data,
 				userId,
+				action: PostPetAction.ADD,
 			}),
 		})
 			.then((res) => res.json())
-			.then((data) => console.log(data))
+			.then((data) => {
+				const responsePets = data.pets.map(
+					(each: { id: string; pet_name: string }) => {
+						return {
+							id: each.id,
+							petName: each.pet_name,
+						};
+					}
+				);
+				handleNewPet(responsePets);
+			})
 			.catch((error) => console.error("Error:", error));
 
 		reset();

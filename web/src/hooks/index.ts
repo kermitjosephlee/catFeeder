@@ -1,3 +1,4 @@
+export * from "./useDeletePet";
 export * from "./useDeleteSearch";
 export * from "./useGetUser";
 export * from "./useLogin";

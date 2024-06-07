@@ -1,6 +1,11 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { useGetUser } from "@hooks";
 import { AddPetDialog, PetsDialogList } from "@components";
+
+export interface IPets {
+	id: string;
+	petName: string;
+}
 
 export function PetsDialog({
 	isPetsDialogOpen,
@@ -9,7 +14,39 @@ export function PetsDialog({
 	isPetsDialogOpen: boolean;
 	handlePetsDialogClose: () => void;
 }) {
-	const [isAddPetDialogOpen, setIsAddPetDialogOpen] = useState(true);
+	const [isAddPetDialogOpen, setIsAddPetDialogOpen] = useState(false);
+	const [pets, setPets] = useState<IPets[]>([]);
+
+	const user = useGetUser();
+	const userId = user?.id;
+
+	// fetches pets data on user change
+	useEffect(() => {
+		if (!userId) return;
+		fetch(`http://localhost:3000/pets?userId=${userId}`)
+			.then((res) => res.json())
+			.then((data) => {
+				const responsePets = data.pets.map(
+					(each: { id: string; pet_name: string }) => {
+						return {
+							id: each.id,
+							petName: each.pet_name,
+						};
+					}
+				);
+				setPets(responsePets);
+			})
+			.catch((error) => console.error("Error:", error));
+	}, [userId, setPets]);
+
+	const handleNewPet = (newPets: IPets[]) => {
+		setPets(newPets);
+	};
+
+	const handleDeletePet = (petId: string) => {
+		const updatedPets = pets.filter((pet) => pet.id !== petId);
+		setPets(updatedPets);
+	};
 
 	const handleOnClick = () => {
 		setIsAddPetDialogOpen((prev) => !prev);
@@ -17,18 +54,27 @@ export function PetsDialog({
 
 	return (
 		<dialog className={isPetsDialogOpen ? "modal modal-open" : "modal"}>
-			<div className="modal-box">
-				<div className="modal-header flex justify-between items-baseline">
-					<h3 className="font-bold text-lg pt-2">Pets</h3>
+			<div className="modal-box w-11/12 max-w-5xl h-1/2 max-h-1/2 flex flex-col justify-between">
+				<div className="modal-header flex justify-between items-baseline mb-4">
+					<h3 className="font-bold text-lg pt-2">
+						{isAddPetDialogOpen ? "Add Pet" : "Pet List"}
+					</h3>
 					<div className="btn btn-primary" onClick={() => handleOnClick()}>
-						{isAddPetDialogOpen ? "Close" : "Add Pet"}
+						{isAddPetDialogOpen ? "Pet List" : "Add Pet"}
 					</div>
 				</div>
 
 				{isAddPetDialogOpen ? (
-					<AddPetDialog handlePetsDialogClose={handlePetsDialogClose} />
+					<AddPetDialog
+						handlePetsDialogClose={handlePetsDialogClose}
+						handleNewPet={handleNewPet}
+					/>
 				) : (
-					<PetsDialogList handlePetsDialogClose={handlePetsDialogClose} />
+					<PetsDialogList
+						pets={pets}
+						handlePetsDialogClose={handlePetsDialogClose}
+						handleDeletePet={handleDeletePet}
+					/>
 				)}
 			</div>
 		</dialog>
