@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { LoginDialog, SearchesDialog } from "@components";
+import { LoginDialog, PetsDialog, SearchesDialog } from "@components";
 import { useGetUser, useLogout, useSearch } from "@hooks";
 
 export function TopNav() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [isPetsDialogOpen, setIsPetsDialogOpen] = useState(false);
 	const { setIsSearchesDialogOpen } = useSearch();
 	const user = useGetUser();
 	const searchCount = user?.searches?.filter((search) => !!search.id).length;
@@ -23,12 +24,20 @@ export function TopNav() {
 		setIsDialogOpen(false);
 	};
 
-	const handleSearchClick = () => {
+	const handleSearchesDialogOpen = () => {
 		setIsSearchesDialogOpen(true);
 	};
 
 	const handleSearchesDialogClose = () => {
 		setIsSearchesDialogOpen(false);
+	};
+
+	const handlePetsDialogOpen = () => {
+		setIsPetsDialogOpen(true);
+	};
+
+	const handlePetsDialogClose = () => {
+		setIsPetsDialogOpen(false);
 	};
 
 	return (
@@ -40,12 +49,19 @@ export function TopNav() {
 					</a>
 				</div>
 				<div>
+					<button
+						className="btn btn-secondary mr-6"
+						onClick={handlePetsDialogOpen}>
+						Pets
+					</button>
 					{searchCount && searchCount > 0 ? (
 						<div className="indicator mr-6">
 							<span className="indicator-item badge badge-primary">
 								{searchCount}
 							</span>
-							<button className="btn btn-secondary" onClick={handleSearchClick}>
+							<button
+								className="btn btn-secondary"
+								onClick={handleSearchesDialogOpen}>
 								Saved Searches
 							</button>
 						</div>
@@ -57,11 +73,16 @@ export function TopNav() {
 					</div>
 				</div>
 			</div>
+
 			<LoginDialog
 				isDialogOpen={isDialogOpen}
 				handleDialogClose={handleDialogClose}
 			/>
 			<SearchesDialog handleSearchesDialogClose={handleSearchesDialogClose} />
+			<PetsDialog
+				isPetsDialogOpen={isPetsDialogOpen}
+				handlePetsDialogClose={handlePetsDialogClose}
+			/>
 		</>
 	);
 }

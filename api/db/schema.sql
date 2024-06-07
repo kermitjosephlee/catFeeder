@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS ingredients;
 DROP TABLE IF EXISTS product_ingredients;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS pets;
+DROP TABLE IF EXISTS pet_preferences;
 DROP TABLE IF EXISTS pet_products;
 DROP TABLE IF EXISTS searches;
 
@@ -52,12 +53,21 @@ CREATE TABLE IF NOT EXISTS pets (
   id SERIAL PRIMARY KEY,
   pet_name VARCHAR(255) NOT NULL,
   user_id INT NOT NULL,
-  species VARCHAR(255) NOT NULL,
-  breed VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
   deleted_at TIMESTAMP,
   CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS pet_preferences (
+	id SERIAL PRIMARY KEY,
+	pet_id INT NOT NULL,
+	preference_type TEXT NOT NULL,
+  ingredient_name TEXT NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP,
+	deleted_at TIMESTAMP,
+	CONSTRAINT fk_pet_id FOREIGN KEY (pet_id) REFERENCES pets (id) ON DELETE NO ACTION
 );
 
 CREATE TABLE IF NOT EXISTS pet_products (

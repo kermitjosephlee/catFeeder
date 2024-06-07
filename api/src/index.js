@@ -17,8 +17,10 @@ import {
 	getProducts,
 	// getProductsByIngredients,
 	getStatus,
+	getPets,
 	postCancelSearch,
 	postSearch,
+	postPet,
 } from "../db/queries.js";
 
 import { postLogin, postLogout, postRegister } from "../auth/queries.js";
@@ -130,6 +132,10 @@ passport.deserializeUser(function (email, done) {
 
 // ------ ROUTES ------
 
+app.get("/", (_, res) => {
+	res.json({ info: "Node.js, Express, and Postgres API" });
+});
+
 app.post("/login", postLogin);
 
 app.post("/logout", postLogout);
@@ -140,17 +146,13 @@ app.post("/search", postSearch);
 
 app.post("/cancel_search", postCancelSearch);
 
-app.get("/", (_, res) => {
-	res.json({ info: "Node.js, Express, and Postgres API" });
-});
+app.post("/pets", postPet);
+
+app.get("/pets", getPets);
 
 app.get("/status", getStatus);
 
 app.get("/products", getProducts);
-
-app.get("/product_count", getProductCount);
-
-// app.get("/ingredients", getProductsByIngredients);
 
 app.listen(PORT, (err) => {
 	err ? logger.error(err) : logger.info(`Server is running on port ${PORT}`);

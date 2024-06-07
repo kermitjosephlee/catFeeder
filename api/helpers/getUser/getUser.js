@@ -24,6 +24,14 @@ export const GET_USER_BY_ID = `
 		FROM users 
 		WHERE id = $1;`;
 
+export const GET_PETS_BY_USER_ID = `
+	SELECT
+		id, pet_name
+		FROM pets
+		WHERE user_id = $1
+		AND deleted_at IS NULL;
+`;
+
 export const GET_SEARCHES_BY_USER_ID = `
 	SELECT
 		id as search_id, include_terms, exclude_terms 
@@ -91,6 +99,16 @@ export async function getUserSearches(userId) {
 		const searchesResult = await poolQuery(GET_SEARCHES_BY_USER_ID, [userId]);
 
 		return searchesResult.rows;
+	} catch (error) {
+		logger.error(error);
+		return false;
+	}
+}
+
+export async function getUserPets(userId) {
+	try {
+		const petsResult = await poolQuery(GET_PETS_BY_USER_ID, [userId]);
+		return petsResult.rows;
 	} catch (error) {
 		logger.error(error);
 		return false;

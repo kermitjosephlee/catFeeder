@@ -1,5 +1,7 @@
 import "dotenv/config";
 import pg from "pg";
+import { logger } from "../utils/logger.js";
+
 import {
 	productCountQueryBuilder,
 	productSearchQueryBuilder,
@@ -8,6 +10,7 @@ import {
 import {
 	userReturnObjMaker,
 	getUser,
+	getUserPets,
 	getUserSearches,
 } from "../helpers/getUser/getUser.js";
 
@@ -142,6 +145,50 @@ export const postCancelSearch = async (req, res) => {
 			const searches = await getUserSearches(userId);
 			const returnUserObj = userReturnObjMaker({ user, searches });
 			return res.status(200).json({ user: returnUserObj });
+		}
+	);
+};
+
+export const getPets = async (req, res) => {
+	const userId = req.params.userId;
+
+	if (!userId) {
+		return res.status(400).json({ error: "Missing required fields" });
+	}
+
+	const user = await getUser(userId);
+
+	if (!user) {
+		return res.status(400).json({ error: "User not found" });
+	}
+
+	const pets = await getUserPets(userId);
+
+	return res.status(200).json({ pets });
+};
+
+export const postPet = async (req, res) => {
+	const { userId, petName } = req.body;
+
+	if (!userId || !petName) {
+		return res.status(400).json({ error: "Missing required fields" });
+	}
+
+	pool.query(
+		`INSERT INTO pets (pet_name, user_id) VALUES ($1, $2)`,
+		[petName, userId],
+		async (err, result) => {
+			if (err) {
+				logger.error(err);
+				return res.status(500).json({ error: "Error updating pet" });
+			}
+			const user = await getUser(userId);
+			if (!user) {
+				return res.status(400).json({ error: "User not found" });
+			}
+			const pets = await getUserPets(userId);
+
+			return res.status(200).json({ pets });
 		}
 	);
 };

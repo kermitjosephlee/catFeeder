@@ -1,3 +1,4 @@
+export * from "./AddPetDialog";
 export * from "./CatFoodCard";
 export * from "./CatFoodCards";
 export * from "./CatFoodData";
@@ -5,6 +6,8 @@ export * from "./CatFoodNoResults";
 export * from "./CatFoodSkeletons";
 export * from "./LoginDialog";
 export * from "./Main";
+export * from "./PetsDialog";
+export * from "./PetsDialogList";
 export * from "./SearchBar";
 export * from "./SearchesDialog";
 export * from "./SearchesDialogList";
