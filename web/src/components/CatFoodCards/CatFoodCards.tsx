@@ -1,7 +1,7 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { CatFoodCard, CatFoodSkeletons } from "@components";
-import { IResult as ICatFood } from "../../App";
+import { IResult as ICatFood } from "@/App";
 
 export function CatFoodCards({
 	results,
