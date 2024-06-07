@@ -6,7 +6,7 @@ import { useSearch } from "@hooks";
 
 const PRODUCTS_URL = "http://localhost:3000/products";
 
-const PRODUCT_COUNT_URL = "http://localhost:3000/product_count";
+// const PRODUCT_COUNT_URL = "http://localhost:3000/product_count";
 
 export function Main() {
 	const [checked, setChecked] = useState<boolean>(true); //defaults to include ingredients
@@ -26,39 +26,9 @@ export function Main() {
 
 	const resultsLength = results.length;
 
-	// set product count
-	useEffect(() => {
-		const controller = new AbortController();
-		const signal = controller.signal;
-
-		const query = queryBuilder({
-			includedSearchTerms,
-			excludedSearchTerms,
-			isProductCount: true,
-		});
-
-		fetch(`${PRODUCT_COUNT_URL}${query}`, { signal })
-			.then((response) => response.json())
-			.then((data) => {
-				setProductCount(+data);
-			})
-			.then(() => {
-				if (isFirstLoading) {
-					setIsFirstLoading(false);
-				}
-			})
-			.catch((err) => {
-				console.log(signal, err);
-			});
-
-		return () => controller.abort();
-	}, [includedSearchTerms, excludedSearchTerms, isFirstLoading]);
-
 	// fetches data on search term change
 	// used inside useEffect
 	const handleSearchUpdateLoad = useCallback(async () => {
-		setIsLoading(true);
-
 		const query = queryBuilder({
 			includedSearchTerms,
 			excludedSearchTerms,
@@ -72,12 +42,17 @@ export function Main() {
 			console.log(signal.aborted, err);
 		});
 
-		await setResults(res);
+		await setResults(res.results);
+		await setProductCount(res.count);
 		await setCurrentPage(0);
 		await setIsLoading(false);
 
+		if (isFirstLoading) {
+			await setIsFirstLoading(false);
+		}
+
 		return () => controller.abort();
-	}, [includedSearchTerms, excludedSearchTerms]);
+	}, [includedSearchTerms, excludedSearchTerms, isFirstLoading]);
 
 	// checks for changes in search terms and fetches new data
 	useEffect(() => {
@@ -93,7 +68,7 @@ export function Main() {
 		const query = queryBuilder({
 			includedSearchTerms,
 			excludedSearchTerms,
-			page: currentPage,
+			page: currentPage + 1,
 		});
 
 		const controller = new AbortController();
@@ -104,9 +79,14 @@ export function Main() {
 		fetch(`${PRODUCTS_URL}${query}`, { signal })
 			.then((response) => response.json())
 			.then((res) => {
-				const updatedResults = [...results, ...res];
+				const updatedResults = [...results, ...res.results];
 				setResults(updatedResults);
 				setCurrentPage(currentPage + 1);
+			})
+			.then(() => {
+				if (isFirstLoading) {
+					setIsFirstLoading(false);
+				}
 			})
 			.catch((error) => {
 				console.log(signal.aborted, error);
@@ -144,29 +124,28 @@ export function Main() {
 		}
 	};
 
-	const handleSearchTermCancel = (searchTerm: string) => {
+	const handleSearchTermCancel = async (searchTerm: string) => {
 		if (includedSearchTerms.includes(searchTerm)) {
-			setIncludedSearchTerms(
-				includedSearchTerms.filter((included) => included !== searchTerm)
+			const updatedIncludedSearchTerms = includedSearchTerms.filter(
+				(included) => included !== searchTerm
 			);
+			setIncludedSearchTerms(updatedIncludedSearchTerms);
 		}
 
 		if (excludedSearchTerms.includes(searchTerm)) {
-			setExcludedSearchTerms(
-				excludedSearchTerms.filter((excluded) => excluded !== searchTerm)
+			const updatedExcludedSearchTerms = excludedSearchTerms.filter(
+				(excluded) => excluded !== searchTerm
 			);
+			setExcludedSearchTerms(updatedExcludedSearchTerms);
 		}
-		handleSearchUpdateLoad();
 	};
 
 	const handleSearchTermsReset = () => {
 		setCurrentPage(0);
 		setResults([]);
-
 		setIncludedSearchTerms([]);
 		setExcludedSearchTerms([]);
 		setIsSaveSearchButtonDisabled(false);
-		handleSearchUpdateLoad();
 	};
 
 	const handleToggle = () => {

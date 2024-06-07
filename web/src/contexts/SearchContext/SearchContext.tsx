@@ -62,4 +62,4 @@ export const SearchProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	);
 };
 
-export const UserConsumer = SearchContext.Consumer;
+export const SearchConsumer = SearchContext.Consumer;

@@ -86,6 +86,8 @@ CREATE TABLE IF NOT EXISTS searches (
   CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
+-- Function to get products with score
+-- Currently not being used in products.js > productSearchQueryBuilder
 CREATE OR REPLACE FUNCTION get_products_with_score(p_include_ingredients JSON, p_exclude_ingredients JSON)
 RETURNS TABLE(
 	id INT,

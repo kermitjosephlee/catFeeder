@@ -45,8 +45,6 @@ export const getProductCount = async (req, res) => {
 };
 
 export const getProducts = async (req, res) => {
-	
-
 	const includeIngredients = req.query.include
 		? req.query.include.split(",")
 		: [];
@@ -58,6 +56,18 @@ export const getProducts = async (req, res) => {
 
 	const limit = req.query.limit || 10;
 
+	const { productCountQuery, productCountParams } = productCountQueryBuilder({
+		includeIngredients,
+		excludeIngredients,
+	});
+
+	const productCountResponse = await pool.query(
+		productCountQuery,
+		productCountParams
+	);
+
+	const productCount = productCountResponse.rows[0].count || 0;
+
 	const { ingredientsQuery, ingredientsArray } = productSearchQueryBuilder({
 		includeIngredients,
 		excludeIngredients,
@@ -67,7 +77,7 @@ export const getProducts = async (req, res) => {
 
 	const response = await pool.query(ingredientsQuery, ingredientsArray);
 
-	return res.json(response.rows);
+	return res.json({ count: productCount, results: response.rows });
 };
 
 // saves a search to the database

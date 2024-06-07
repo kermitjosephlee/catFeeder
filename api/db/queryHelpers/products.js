@@ -55,8 +55,8 @@ export const productCountQueryBuilder = ({
     ;`;
 
 	return {
-		query: formattedQuery,
-		params: [...includeIngredients, ...excludeIngredients],
+		productCountQuery: formattedQuery,
+		productCountParams: [...includeIngredients, ...excludeIngredients],
 	};
 };
 
@@ -194,6 +194,8 @@ export const productSearchQueryBuilder = ({
 		page,
 		limit,
 	};
+
+	console.log({ returnObj });
 
 	return returnObj;
 };
