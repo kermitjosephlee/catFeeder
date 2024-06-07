@@ -1,4 +1,5 @@
 export * from "./CatFoodCard";
+export * from "./CatFoodCards";
 export * from "./CatFoodData";
 export * from "./CatFoodNoResults";
 export * from "./CatFoodSkeletons";

@@ -6,8 +6,6 @@ import { useSearch } from "@hooks";
 
 const PRODUCTS_URL = "http://localhost:3000/products";
 
-// const PRODUCT_COUNT_URL = "http://localhost:3000/product_count";
-
 export function Main() {
 	const [checked, setChecked] = useState<boolean>(true); //defaults to include ingredients
 	const [isFirstLoading, setIsFirstLoading] = useState<boolean>(true);
@@ -45,7 +43,7 @@ export function Main() {
 		await setResults(res.results);
 		await setProductCount(res.count);
 		await setCurrentPage(0);
-		await setIsLoading(false);
+		// await setIsLoading(false);
 
 		if (isFirstLoading) {
 			await setIsFirstLoading(false);
