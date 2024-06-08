@@ -1,12 +1,12 @@
-import { IPets } from "@components";
 import { useDeletePet } from "@hooks";
+import { PetType } from "@types";
 
 export function PetsDialogListItem({
 	pet,
 	handleDeletePet,
 	handlePetsDialogClose,
 }: {
-	pet: IPets;
+	pet: PetType;
 	handleDeletePet: (id: string) => void;
 	handlePetsDialogClose: () => void;
 }) {

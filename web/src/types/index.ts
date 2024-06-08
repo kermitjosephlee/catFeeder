@@ -1,3 +1,4 @@
+export * from "./enums"
+export * from "./PetType"
 export * from "./SearchType";
 export * from "./UserType";
-export * from "./enums"

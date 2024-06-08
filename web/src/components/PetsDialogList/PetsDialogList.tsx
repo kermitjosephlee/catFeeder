@@ -1,4 +1,5 @@
-import { IPets, PetsDialogListItem } from "@components";
+import { PetsDialogListItem } from "@components";
+import { PetType } from "@types";
 
 export function PetsDialogList({
 	handlePetsDialogClose,
@@ -7,7 +8,7 @@ export function PetsDialogList({
 }: {
 	handlePetsDialogClose: () => void;
 	handleDeletePet: (id: string) => void;
-	pets: IPets[];
+	pets: PetType[];
 }) {
 	return (
 		<div>

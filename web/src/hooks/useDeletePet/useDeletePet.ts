@@ -21,15 +21,11 @@ export function useDeletePet() {
 				}),
 			});
 
-			console.log({ response });
-
 			if (!response.ok) {
 				throw new Error("Network response was not ok");
 			}
 
 			const jsonResponse = await response.json();
-
-			console.log({ jsonResponse });
 
 			return jsonResponse;
 		} catch (error) {

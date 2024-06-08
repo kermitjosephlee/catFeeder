@@ -3,8 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useGetUser } from "@hooks";
-import { IPets } from "@components";
-import { PostPetAction } from "@types";
+import { PostPetAction, PetType } from "@types";
 
 const PETS_URL = "http://localhost:3000/pets";
 
@@ -23,7 +22,7 @@ export function AddPetDialog({
 	handleNewPet,
 }: {
 	handlePetsDialogClose: () => void;
-	handleNewPet: (newPets: IPets[]) => void;
+	handleNewPet: (newPets: PetType[]) => void;
 }) {
 	const user = useGetUser();
 	const userId = user?.id;

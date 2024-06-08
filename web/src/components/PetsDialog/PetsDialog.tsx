@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import { useGetUser } from "@hooks";
 import { AddPetDialog, PetsDialogList } from "@components";
-
-export interface IPets {
-	id: string;
-	petName: string;
-}
+import { PetType } from "@types";
 
 export function PetsDialog({
 	isPetsDialogOpen,
@@ -15,7 +11,7 @@ export function PetsDialog({
 	handlePetsDialogClose: () => void;
 }) {
 	const [isAddPetDialogOpen, setIsAddPetDialogOpen] = useState(false);
-	const [pets, setPets] = useState<IPets[]>([]);
+	const [pets, setPets] = useState<PetType[]>([]);
 
 	const user = useGetUser();
 	const userId = user?.id;
@@ -39,7 +35,7 @@ export function PetsDialog({
 			.catch((error) => console.error("Error:", error));
 	}, [userId, setPets]);
 
-	const handleNewPet = (newPets: IPets[]) => {
+	const handleNewPet = (newPets: PetType[]) => {
 		setPets(newPets);
 	};
 
@@ -59,7 +55,7 @@ export function PetsDialog({
 					<h3 className="font-bold text-lg pt-2">
 						{isAddPetDialogOpen ? "Add Pet" : "Pet List"}
 					</h3>
-					<div className="btn btn-primary" onClick={() => handleOnClick()}>
+					<div className="btn btn-primary" onClick={handleOnClick}>
 						{isAddPetDialogOpen ? "Pet List" : "Add Pet"}
 					</div>
 				</div>

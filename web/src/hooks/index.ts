@@ -1,5 +1,6 @@
 export * from "./useDeletePet";
 export * from "./useDeleteSearch";
+export * from "./useGetPets";
 export * from "./useGetUser";
 export * from "./useLogin";
 export * from "./useLogout";
