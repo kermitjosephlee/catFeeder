@@ -22,7 +22,7 @@ export function CatFoodCard({
 				borderColor,
 				filter: "saturation(0.1)",
 			}}
-			className="text-gray-800  bg-gray-50 p-4 rounded-lg my-1/2 mx-1/2 border-4 border-solid">
+			className="text-gray-800 bg-gray-50 p-4 rounded-lg my-1/2 mx-1/2 border-4 border-solid">
 			{link_url ? (
 				<a href={link_url} target="_blank">
 					<h1 className="font-extrabold">{capitalizeBrand}</h1>

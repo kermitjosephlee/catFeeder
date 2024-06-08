@@ -1,23 +1,20 @@
 import { PetsDialogListItem } from "@components";
-import { PetType } from "@types";
+import { usePets } from "@hooks";
 
 export function PetsDialogList({
 	handlePetsDialogClose,
-	handleDeletePet,
-	pets,
 }: {
 	handlePetsDialogClose: () => void;
-	handleDeletePet: (id: string) => void;
-	pets: PetType[];
 }) {
+	const { pets } = usePets();
+
 	return (
-		<div>
-			<div>
+		<>
+			<div className="flex flex-col flex-start overflow-scroll max-h-96">
 				{pets.map((pet) => (
 					<PetsDialogListItem
 						key={pet.id}
 						pet={pet}
-						handleDeletePet={handleDeletePet}
 						handlePetsDialogClose={handlePetsDialogClose}
 					/>
 				))}
@@ -27,6 +24,6 @@ export function PetsDialogList({
 					Close
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useGetUser } from "@hooks";
+import { useGetUser, usePets } from "@hooks";
 import { AddPetDialog, PetsDialogList } from "@components";
 import { PetType } from "@types";
 
@@ -11,7 +11,7 @@ export function PetsDialog({
 	handlePetsDialogClose: () => void;
 }) {
 	const [isAddPetDialogOpen, setIsAddPetDialogOpen] = useState(false);
-	const [pets, setPets] = useState<PetType[]>([]);
+	const { setPets } = usePets();
 
 	const user = useGetUser();
 	const userId = user?.id;
@@ -39,18 +39,13 @@ export function PetsDialog({
 		setPets(newPets);
 	};
 
-	const handleDeletePet = (petId: string) => {
-		const updatedPets = pets.filter((pet) => pet.id !== petId);
-		setPets(updatedPets);
-	};
-
 	const handleOnClick = () => {
 		setIsAddPetDialogOpen((prev) => !prev);
 	};
 
 	return (
 		<dialog className={isPetsDialogOpen ? "modal modal-open" : "modal"}>
-			<div className="modal-box w-11/12 max-w-5xl h-1/2 max-h-1/2 flex flex-col justify-between">
+			<div className="modal-box w-11/12 max-w-3xl max-h-1/2 flex flex-col flex-grow">
 				<div className="modal-header flex justify-between items-baseline mb-4">
 					<h3 className="font-bold text-lg pt-2">
 						{isAddPetDialogOpen ? "Add Pet" : "Pet List"}
@@ -59,19 +54,17 @@ export function PetsDialog({
 						{isAddPetDialogOpen ? "Pet List" : "Add Pet"}
 					</div>
 				</div>
-
-				{isAddPetDialogOpen ? (
-					<AddPetDialog
-						handlePetsDialogClose={handlePetsDialogClose}
-						handleNewPet={handleNewPet}
-					/>
-				) : (
-					<PetsDialogList
-						pets={pets}
-						handlePetsDialogClose={handlePetsDialogClose}
-						handleDeletePet={handleDeletePet}
-					/>
-				)}
+				<div>
+					{isAddPetDialogOpen ? (
+						<AddPetDialog
+							handlePetsDialogClose={handlePetsDialogClose}
+							handleNewPet={handleNewPet}
+						/>
+					) : (
+						<PetsDialogList handlePetsDialogClose={handlePetsDialogClose} />
+					)}
+				</div>
+				<div className="modal-footer"></div>
 			</div>
 		</dialog>
 	);

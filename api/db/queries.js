@@ -79,7 +79,11 @@ export const getProducts = async (req, res) => {
 		limit,
 	});
 
+	console.log({ ingredientsQuery, ingredientsArray });
+
 	const response = await pool.query(ingredientsQuery, ingredientsArray);
+
+	// console.log({ response });
 
 	return res.json({ count: productCount, results: response.rows });
 };

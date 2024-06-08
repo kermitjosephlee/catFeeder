@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { SearchProvider, UserProvider } from "@contexts";
+import { PetProvider, SearchProvider, UserProvider } from "@contexts";
 
 import App from "../App";
 
@@ -9,10 +9,12 @@ export const Route = createLazyFileRoute("/")({
 
 function Index() {
 	return (
-		<SearchProvider>
-			<UserProvider>
-				<App />
-			</UserProvider>
-		</SearchProvider>
+		<PetProvider>
+			<SearchProvider>
+				<UserProvider>
+					<App />
+				</UserProvider>
+			</SearchProvider>
+		</PetProvider>
 	);
 }

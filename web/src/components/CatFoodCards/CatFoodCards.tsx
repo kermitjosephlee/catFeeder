@@ -1,6 +1,6 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { CatFoodCard, CatFoodSkeletons } from "@components";
+import { CatFoodCard } from "@components";
 import { IResult as ICatFood } from "@/App";
 
 export function CatFoodCards({
@@ -19,7 +19,7 @@ export function CatFoodCards({
 			dataLength={results.length}
 			next={handleNextPageLoad}
 			hasMore={hasMore}
-			loader={<CatFoodSkeletons />}
+			loader={<span className="loading loading-dots loading-lg"></span>}
 			scrollThreshold={0.9}>
 			<ResponsiveMasonry
 				columnsCountBreakPoints={{ 300: 1, 680: 2, 1080: 3, 1200: 4 }}>

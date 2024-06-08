@@ -85,15 +85,19 @@ CREATE TABLE IF NOT EXISTS pet_products (
   CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
 );
 
+-- NOTE: if searches table is dropped, the product query is dependent on product results being
+-- scored by search terms. If searches table is dropped, the product query will need to be updated.
 CREATE TABLE IF NOT EXISTS searches (
   id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
+	pet_id INT,
   include_terms TEXT NOT NULL,
   exclude_terms TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP,
   deleted_at TIMESTAMP,
-  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+	CONSTRAINT fk_pet_id FOREIGN KEY (pet_id) REFERENCES pets (id) ON DELETE CASCADE
 );
 
 -- Function to get products with score

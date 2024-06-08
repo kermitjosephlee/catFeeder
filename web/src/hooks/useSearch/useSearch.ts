@@ -5,26 +5,26 @@ export function useSearch() {
 	const {
 		excludedSearchTerms,
 		includedSearchTerms,
+		isDeleteMultipleModeOpen,
 		isSaveSearchButtonDisabled,
 		isSearchesDialogOpen,
-		isDeleteMultipleModeOpen,
-		setIsDeleteMultipleModeOpen,
-		setIsSearchesDialogOpen,
 		setExcludedSearchTerms,
 		setIncludedSearchTerms,
+		setIsDeleteMultipleModeOpen,
 		setIsSaveSearchButtonDisabled,
+		setIsSearchesDialogOpen,
 	} = useContext(SearchContext);
 
 	return {
 		excludedSearchTerms,
 		includedSearchTerms,
+		isDeleteMultipleModeOpen,
 		isSaveSearchButtonDisabled,
 		isSearchesDialogOpen,
-		isDeleteMultipleModeOpen,
-		setIsDeleteMultipleModeOpen,
-		setIsSearchesDialogOpen,
 		setExcludedSearchTerms,
 		setIncludedSearchTerms,
+		setIsDeleteMultipleModeOpen,
 		setIsSaveSearchButtonDisabled,
+		setIsSearchesDialogOpen,
 	};
 }

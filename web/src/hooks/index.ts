@@ -4,6 +4,7 @@ export * from "./useGetPets";
 export * from "./useGetUser";
 export * from "./useLogin";
 export * from "./useLogout";
+export * from "./usePets";
 export * from "./useRegister";
 export * from "./useSearch";
 export * from "./useSetUser";

@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { LoginDialog, PetsDialog, SearchesDialog } from "@components";
-import { useGetUser, useLogout, useSearch } from "@hooks";
+import { useGetUser, useLogout, useSearch, usePets } from "@hooks";
 
 export function TopNav() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isPetsDialogOpen, setIsPetsDialogOpen] = useState(false);
 	const { setIsSearchesDialogOpen } = useSearch();
 	const user = useGetUser();
-	const searchCount = user?.searches?.filter((search) => !!search.id).length;
+	const { selectedPet } = usePets();
 	const handleLogout = useLogout();
+	const searchCount = user?.searches?.filter((search) => !!search.id).length;
 
 	const toggleDialogOpen = () => {
 		if (!user) {
@@ -49,11 +50,13 @@ export function TopNav() {
 					</a>
 				</div>
 				<div>
-					<button
-						className="btn btn-secondary mr-6"
-						onClick={handlePetsDialogOpen}>
-						Pets
-					</button>
+					{user && (
+						<button
+							className="btn btn-secondary mr-6"
+							onClick={handlePetsDialogOpen}>
+							{selectedPet ? selectedPet.petName : "Pets"}
+						</button>
+					)}
 					{searchCount && searchCount > 0 ? (
 						<div className="indicator mr-6">
 							<span className="indicator-item badge badge-primary">
