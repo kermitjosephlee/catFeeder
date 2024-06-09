@@ -56,7 +56,7 @@ export function SearchesDialog({
 
 	return (
 		<dialog className={isSearchesDialogOpen ? "modal modal-open" : "modal"}>
-			<div className="modal-box">
+			<div className="modal-box w-11/12 max-w-3xl">
 				<div className="modal-header flex justify-between items-baseline">
 					<h3 className="font-bold text-lg pt-2">Saved Searches</h3>
 					<div

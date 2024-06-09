@@ -72,10 +72,15 @@ export function SearchesDialogListItem({
 					/>
 				</div>
 
+				<div>
+					{pet && (
+						<p className="px-4 mr-4 rounded-full border-2">{pet.petName}</p>
+					)}
+				</div>
+
 				<div
 					className="flex-none w-4 pl-1 ml-1 flex items-center justify-end"
 					onClick={handleRowDeleteClick}>
-					{pet && <p className="pr-2">{pet.petName}</p>}
 					{!isDeleteMultipleModeOpen && (
 						<FontAwesomeIcon size="lg" icon={faCircleXmark} />
 					)}
