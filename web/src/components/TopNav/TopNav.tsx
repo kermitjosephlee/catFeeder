@@ -7,7 +7,7 @@ export function TopNav() {
 	const [isPetsDialogOpen, setIsPetsDialogOpen] = useState(false);
 	const { setIsSearchesDialogOpen } = useSearch();
 	const user = useGetUser();
-	const { selectedPet } = usePets();
+	const { selectedPet, setSelectedPetOptionOpenId } = usePets();
 	const handleLogout = useLogout();
 	const searchCount = user?.searches?.filter((search) => !!search.id).length;
 
@@ -39,6 +39,7 @@ export function TopNav() {
 
 	const handlePetsDialogClose = () => {
 		setIsPetsDialogOpen(false);
+		setSelectedPetOptionOpenId(null);
 	};
 
 	return (

@@ -2,7 +2,21 @@ import { useContext } from "react";
 import { PetContext } from "@contexts";
 
 export function usePets() {
-	const { pets, selectedPet, setPets, setSelectedPet } = useContext(PetContext);
+	const {
+		pets,
+		selectedPet,
+		selectedPetOptionOpenId,
+		setPets,
+		setSelectedPet,
+		setSelectedPetOptionOpenId,
+	} = useContext(PetContext);
 
-	return { pets, selectedPet, setPets, setSelectedPet };
+	return {
+		pets,
+		selectedPet,
+		selectedPetOptionOpenId,
+		setPets,
+		setSelectedPet,
+		setSelectedPetOptionOpenId,
+	};
 }

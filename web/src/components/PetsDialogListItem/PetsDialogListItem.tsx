@@ -1,5 +1,6 @@
 import { useDeletePet, usePets } from "@hooks";
 import { PetType } from "@types";
+import { MoreVertical } from "./subcomponents";
 
 export function PetsDialogListItem({
 	pet,
@@ -9,7 +10,14 @@ export function PetsDialogListItem({
 	handlePetsDialogClose: () => void;
 }) {
 	const deletePet = useDeletePet();
-	const { selectedPet, setSelectedPet, pets, setPets } = usePets();
+	const {
+		selectedPet,
+		setSelectedPet,
+		pets,
+		setPets,
+		selectedPetOptionOpenId,
+		setSelectedPetOptionOpenId,
+	} = usePets();
 	const petId = pet.id;
 	const petName = pet.petName;
 
@@ -40,30 +48,45 @@ export function PetsDialogListItem({
 		handlePetsDialogClose();
 	};
 
-	const styleStr = `flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-gray-800 my-1 border-2 border-solid rounded-lg px-4 cursor-pointer`;
+	const handleOptionOpenOnClick = () => {
+		if (selectedPetOptionOpenId === pet.id) {
+			setSelectedPetOptionOpenId(null);
+		} else {
+			setSelectedPetOptionOpenId(pet.id);
+		}
+		console.log({ petId });
+		console.log(selectedPetOptionOpenId === pet.id);
+	};
+
+	const styleStr = `flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-gray-800 my-1 border-2 border-solid rounded-lg p-4 cursor-pointer`;
 	const className =
 		selectedPet?.id === pet.id
 			? `${styleStr} bg-yellow-100 hover:bg-orange-100`
 			: styleStr;
 
 	return (
-		<div className={className} onClick={handleSelectOnClick}>
-			<div className="cursor-pointer">{pet.petName}</div>
-			<details className="dropdown dropdown-left">
-				<summary className="m-1 btn">options</summary>
-				<ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-24">
-					<li className="text-right">
-						<div className="text-right" onClick={handleEditOnClick}>
-							Edit
-						</div>
-					</li>
-					<li className="text-right">
-						<div className="text-right" onClick={handleDeleteOnClick}>
-							Delete
-						</div>
-					</li>
-				</ul>
-			</details>
+		<div className={className}>
+			<div className="cursor-pointer flex-grow" onClick={handleSelectOnClick}>
+				{pet.petName}
+			</div>
+
+			<div className="relative px-2">
+				<MoreVertical onClick={handleOptionOpenOnClick} />
+				{selectedPetOptionOpenId === pet.id && (
+					<ul className="p-2 shadow absolute right-6 top-0 menu z-[100] bg-base-100 rounded-box w-24">
+						<li className="text-right">
+							<div className="text-right" onClick={handleEditOnClick}>
+								Edit
+							</div>
+						</li>
+						<li className="text-right">
+							<div className="text-right" onClick={handleDeleteOnClick}>
+								Delete
+							</div>
+						</li>
+					</ul>
+				)}
+			</div>
 		</div>
 	);
 }
