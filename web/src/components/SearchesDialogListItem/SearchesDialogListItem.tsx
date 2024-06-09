@@ -1,5 +1,6 @@
 import { SearchType } from "@types";
-import { useSearch, useGetUser, useDeleteSearch } from "@hooks";
+import { useSearch, useGetUser, useDeleteSearch, usePets } from "@hooks";
+import { getPetById } from "@utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 import { Checkbox, IngredientsRow } from "./subcomponents";
@@ -20,6 +21,9 @@ export function SearchesDialogListItem({
 	const { isDeleteMultipleModeOpen, setIsSearchesDialogOpen } = useSearch();
 	const user = useGetUser();
 	const deleteSearch = useDeleteSearch();
+	const { pets } = usePets();
+	const petId = search?.pet_id ? search?.pet_id.toString() : "";
+	const pet = getPetById(pets, petId);
 
 	const searchId = search?.id.toString() ?? "";
 
@@ -68,7 +72,10 @@ export function SearchesDialogListItem({
 					/>
 				</div>
 
-				<div className="flex-none w-4 pl-1 ml-1" onClick={handleRowDeleteClick}>
+				<div
+					className="flex-none w-4 pl-1 ml-1 flex items-center justify-end"
+					onClick={handleRowDeleteClick}>
+					{pet && <p className="pr-2">{pet.petName}</p>}
 					{!isDeleteMultipleModeOpen && (
 						<FontAwesomeIcon size="lg" icon={faCircleXmark} />
 					)}

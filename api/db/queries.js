@@ -90,8 +90,8 @@ export const getProducts = async (req, res) => {
 
 // saves a search to the database
 export const postSearch = async (req, res) => {
-	const { include, exclude, userId } = req.body;
-	console.log({ include, exclude, userId });
+	const { include, exclude, userId, petId } = req.body;
+	console.log({ include, exclude, userId, petId });
 
 	if (!userId || (!include && !exclude)) {
 		return res.status(400).json({ error: "Missing required fields" });
@@ -100,10 +100,11 @@ export const postSearch = async (req, res) => {
 	const user_id = userId;
 	const include_terms = JSON.stringify(include);
 	const exclude_terms = JSON.stringify(exclude);
+	const pet_id = petId || null;
 
 	pool.query(
-		`INSERT INTO searches (user_id, include_terms, exclude_terms) VALUES ($1, $2, $3)`,
-		[user_id, include_terms, exclude_terms],
+		`INSERT INTO searches (user_id, pet_id, include_terms, exclude_terms) VALUES ($1, $2, $3, $4)`,
+		[user_id, pet_id, include_terms, exclude_terms],
 		async (err, result) => {
 			if (err) {
 				logger.error(err);

@@ -1,4 +1,4 @@
-import { useDeletePet, usePets } from "@hooks";
+import { useDeletePet, usePets, useGetUser } from "@hooks";
 import { PetType } from "@types";
 import { MoreVertical } from "./subcomponents";
 
@@ -9,6 +9,9 @@ export function PetsDialogListItem({
 	pet: PetType;
 	handlePetsDialogClose: () => void;
 }) {
+	const user = useGetUser();
+	const searches = user?.searches || [];
+
 	const deletePet = useDeletePet();
 	const {
 		selectedPet,
@@ -20,6 +23,10 @@ export function PetsDialogListItem({
 	} = usePets();
 	const petId = pet.id;
 	const petName = pet.petName;
+
+	const petSearches = searches.filter((search) => search.pet_id === pet.id);
+
+	const petSearchesCount = petSearches.length;
 
 	const handleSelectOnClick = () => {
 		if (!!selectedPet && selectedPet.id === pet.id) {
@@ -54,8 +61,6 @@ export function PetsDialogListItem({
 		} else {
 			setSelectedPetOptionOpenId(pet.id);
 		}
-		console.log({ petId });
-		console.log(selectedPetOptionOpenId === pet.id);
 	};
 
 	const styleStr = `flex justify-between items-center bg-gray-50 hover:bg-gray-100 text-gray-800 my-1 border-2 border-solid rounded-lg p-4 cursor-pointer`;
@@ -66,8 +71,16 @@ export function PetsDialogListItem({
 
 	return (
 		<div className={className}>
-			<div className="cursor-pointer flex-grow" onClick={handleSelectOnClick}>
-				{pet.petName}
+			<div
+				className="cursor-pointer flex-grow flex justify-between items-center"
+				onClick={handleSelectOnClick}>
+				<span>{pet.petName}</span>
+				{petSearchesCount > 0 && (
+					<span className="px-2 text-xs">
+						{petSearchesCount}
+						{petSearchesCount > 1 ? " searches" : " search"}
+					</span>
+				)}
 			</div>
 
 			<div className="relative px-2">

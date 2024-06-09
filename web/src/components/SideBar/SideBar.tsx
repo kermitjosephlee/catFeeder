@@ -1,5 +1,5 @@
 // import { useState } from "react";
-import { useGetUser, useSetUser, useSearch } from "@hooks";
+import { useGetUser, useSetUser, useSearch, usePets } from "@hooks";
 import { SearchPill, SearchEnum } from "@components";
 
 interface IProps {
@@ -18,6 +18,7 @@ export function SideBar({
 	const user = useGetUser();
 	const setUser = useSetUser();
 	const { isSaveSearchButtonDisabled } = useSearch();
+	const { selectedPet } = usePets();
 
 	const hasSearchTerms =
 		includedSearchTerms.length > 0 || excludedSearchTerms.length > 0;
@@ -37,6 +38,7 @@ export function SideBar({
 				include: includedSearchTerms,
 				exclude: excludedSearchTerms,
 				userId: user.id,
+				petId: selectedPet?.id,
 			}),
 		})
 			.then((response) => {
@@ -89,11 +91,18 @@ export function SideBar({
 					handleSearchTermCancel={handleSearchTermCancel}
 				/>
 			))}
-			{showSaveSearchButton && (
+			{showSaveSearchButton && !selectedPet && (
 				<button
-					className="p-2 m-2 mt-6 btn btn-primary"
+					className="p-2 m-2 mt-6 btn btn-primary overflow-hidden"
 					onClick={handleSaveSearch}>
 					Save Search
+				</button>
+			)}
+			{showSaveSearchButton && selectedPet && (
+				<button
+					className="p-2 m-2 mt-6 btn btn-primary overflow-hidden"
+					onClick={handleSaveSearch}>
+					Save for {selectedPet.petName}
 				</button>
 			)}
 		</div>

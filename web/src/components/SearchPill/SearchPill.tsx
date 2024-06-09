@@ -20,8 +20,8 @@ export function SearchPill({
 		<div
 			className={
 				type === SearchEnum.INCLUDED
-					? "flex text-lg justify-between m-1 px-4 cursor-pointer btn btn-outline btn-success"
-					: "flex text-lg justify-between m-1 px-4 cursor-pointer btn btn-outline btn-error"
+					? "flex text-lg justify-between m-1 px-4 cursor-pointer btn btn-outline btn-success overflow-hidden"
+					: "flex text-lg justify-between m-1 px-4 cursor-pointer btn btn-outline btn-error overflow-hidden"
 			}
 			onClick={onClick}>
 			<div className="flex items-center">

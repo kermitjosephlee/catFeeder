@@ -34,7 +34,7 @@ export const GET_PETS_BY_USER_ID = `
 
 export const GET_SEARCHES_BY_USER_ID = `
 	SELECT
-		id as search_id, include_terms, exclude_terms 
+		id as search_id, pet_id, include_terms, exclude_terms 
 		FROM searches 
 		WHERE user_id = $1 AND deleted_at IS NULL;`;
 
@@ -49,6 +49,7 @@ export function userReturnObjMaker({ user, searches }) {
 	const searchesObj = searches.map((row) => {
 		return {
 			id: row.search_id,
+			pet_id: row.pet_id,
 			include: JSON.parse(row.include_terms),
 			exclude: JSON.parse(row.exclude_terms),
 		};
