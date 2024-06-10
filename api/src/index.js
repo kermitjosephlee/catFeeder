@@ -13,9 +13,7 @@ import { logger } from "../utils/logger.js";
 import { morganMiddleware } from "../middlewares/morgan.middlewares.js";
 
 import {
-	getProductCount,
 	getProducts,
-	// getProductsByIngredients,
 	getStatus,
 	getPets,
 	postCancelSearch,
