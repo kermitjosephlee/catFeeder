@@ -1,6 +1,7 @@
 import "dotenv/config";
 import pg from "pg";
 import * as EmailValidator from "email-validator";
+import passwordValidator from "password-validator";
 import bcrypt from "bcryptjs";
 import { logger } from "../utils/logger.js";
 import {
@@ -11,15 +12,18 @@ import {
 
 const SALT_ROUNDS = process.env.SALT_ROUNDS || 12;
 
+const connectionString = encodeURI(process.env.PG_CREDENTIALS);
+const SSL_CERT = process.env.SSL_CERT;
+
 const pool = new pg.Pool({
-	user: "postgres",
-	password: "password",
-	host: "0.0.0.0",
-	port: 5432,
-	database: "catFeeder",
+	connectionString,
+	ssl: false,
 });
 
 await pool.connect();
+
+const passwordSchema = new passwordValidator();
+passwordSchema.is().min(8);
 
 export const postLogin = async (req, res) => {
 	const { email, password } = req.body;

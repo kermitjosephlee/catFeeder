@@ -1,15 +1,12 @@
 import "dotenv/config";
 import pg from "pg";
 
-export const pgCredentials = process.env.DB_CREDENTIALS;
-
-console.log(pgCredentials);
+const connectionString = encodeURI(process.env.PG_CREDENTIALS);
+const SSL_CERT = process.env.SSL_CERT;
 
 const pool = new pg.Pool({
-  user: "postgres",
-  password: "password",
-  host: "db",
-  port: 5432,
+	connectionString,
+	ssl: false,
 });
 
 await pool.connect();

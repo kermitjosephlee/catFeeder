@@ -23,12 +23,12 @@ import {
 
 import { postLogin, postLogout, postRegister } from "../auth/queries.js";
 
+const connectionString = encodeURI(process.env.PG_CREDENTIALS);
+const SSL_CERT = process.env.SSL_CERT;
+
 const pool = new pg.Pool({
-	user: "postgres",
-	password: "password",
-	host: "0.0.0.0",
-	port: 5432,
-	database: "catFeeder",
+	connectionString,
+	ssl: false,
 });
 
 const pgSession = connectPgSimple(session);

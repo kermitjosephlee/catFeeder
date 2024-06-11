@@ -15,12 +15,12 @@ import {
 	getPetById,
 } from "../helpers/getUser/getUser.js";
 
+const connectionString = encodeURI(process.env.PG_CREDENTIALS);
+const SSL_CERT = process.env.SSL_CERT;
+
 const pool = new pg.Pool({
-	user: "postgres",
-	password: "password",
-	host: "0.0.0.0",
-	port: 5432,
-	database: "catFeeder",
+	connectionString,
+	ssl: false,
 });
 
 await pool.connect();
@@ -174,22 +174,17 @@ export const getPets = async (req, res) => {
 };
 
 export const postPet = async (req, res) => {
-	const { id, userId, petName, action } = req.body;
+	const { userId, petName, action } = req.body;
 
-	if (!id || !userId || !petName || !action) {
+	if (!userId || !petName || !action) {
 		return res.status(400).json({ error: "Missing required fields" });
 	}
 
 	const pets = await getUserPets(userId);
 
-	if (!pets || pets.length === 0) {
-		return res.status(400).json({ error: "Pet not found" });
-	}
-
-	const pet = pets.filter((pet) => pet.pet_name === petName)[0] || undefined;
-
-	if (action === "CREATE") {
-		if (pet.id) {
+	if (action === "ADD") {
+		const pet = pets.filter((pet) => pet.pet_name === petName) || [];
+		if (pet.length === 1) {
 			return res
 				.status(400)
 				.json({ error: "Pet already exists - cannot create new pet" });
@@ -215,11 +210,12 @@ export const postPet = async (req, res) => {
 	}
 
 	if (action === "DELETE") {
-		if (!pet) {
+		const pet = pets.filter((pet) => pet.pet_name === petName) || [];
+		if (pet.length !== 1) {
 			return res.status(400).json({ error: "Pet not found - action delete" });
 		}
 
-		const petId = pet.id.toString();
+		const petId = pet[0].id.toString();
 
 		await pool.query(
 			`UPDATE pets SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1;`,
@@ -232,17 +228,20 @@ export const postPet = async (req, res) => {
 	}
 
 	if (action === "UPDATE") {
-		if (!pet) {
+		const pet = pets.filter((pet) => pet.pet_name === petName) || [];
+		if (pet.length === 0) {
 			return res.status(400).json({ error: "Pet not found - action update" });
 		}
 
-		const petId = pet.id.toString();
-		const dbPetName = pet.pet_name;
+		const petId = pet[0].id.toString();
+		const dbPetName = pet[0].pet_name;
 
 		if (dbPetName === petName) {
 			return res.status(400).json({ error: "Pet name already exists" });
 		}
 
+
+		/// *** TODO: needs to be fixed - untested.
 		pool.query(
 			`UPDATE pets SET pet_name = $1, include_ WHERE id = $2`,
 			[petName, petId],
