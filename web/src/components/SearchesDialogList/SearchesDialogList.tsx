@@ -1,4 +1,4 @@
-import { useGetUser, useSearch } from "@hooks";
+import { useGetUser, useSearch, usePets } from "@hooks";
 import { SearchType } from "@types";
 import { SearchesDialogListItem } from "@components";
 
@@ -10,6 +10,7 @@ export function SearchesDialogList({
 	handleSelectDeleteSearchCheckbox: (id: string) => void;
 }) {
 	const user = useGetUser();
+	const { selectedPet } = usePets();
 
 	const {
 		setIncludedSearchTerms,
@@ -18,7 +19,11 @@ export function SearchesDialogList({
 	} = useSearch();
 
 	const searches = user?.searches;
-	const filteredSearches = searches?.filter((search) => !!search.id);
+	const filteredSearches = selectedPet?.id
+		? searches?.filter(
+				(search) => !!search.id && search.pet_id === selectedPet.id
+			)
+		: searches?.filter((search) => !!search.id);
 
 	if (!filteredSearches || filteredSearches.length === 0) {
 		return <div>No searches found</div>;
