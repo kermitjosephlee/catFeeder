@@ -6,8 +6,6 @@ const connectionString = encodeURI(process.env.PG_CREDENTIALS);
 
 const SSL_CERT = process.env.SSL_CERT;
 
-console.log({ connectionString, SSL_CERT });
-
 const pool = new pg.Pool({
 	connectionString,
 	ssl: false,
